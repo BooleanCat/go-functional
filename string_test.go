@@ -165,6 +165,57 @@ var _ = Describe("GoFunctional", func() {
 			})
 		})
 
+		Describe("#Take", func() {
+			var (
+				n       int
+				slice   []string
+				functor functional.StringSliceFunctor
+			)
+
+			BeforeEach(func() {
+				n = 3
+				slice = []string{"a", "few", "words", "to", "say"}
+			})
+
+			JustBeforeEach(func() {
+				functor = functional.LiftStringSlice(slice).Take(n)
+			})
+
+			It("drops everything except the first n members of a slice", func() {
+				Expect(functor.Collect()).To(Equal([]string{"a", "few", "words"}))
+			})
+
+			Context("when n exceeds the number of members", func() {
+				BeforeEach(func() {
+					n = 6
+				})
+
+				It("takes all members", func() {
+					Expect(functor.Collect()).To(Equal(slice))
+				})
+			})
+
+			Context("when taking 0", func() {
+				BeforeEach(func() {
+					n = 0
+				})
+
+				It("collects to an empty slice", func() {
+					Expect(functor.Collect()).To(BeEmpty())
+				})
+			})
+
+			Context("when the input slice is empty", func() {
+				BeforeEach(func() {
+					slice = []string{}
+				})
+
+				It("collects to an empty slice", func() {
+					Expect(functor.Collect()).To(BeEmpty())
+				})
+			})
+		})
+
 		Describe("a complicated chain of operations", func() {
 			It("can filter out empty strings, convert the remaining to lower case and concatenate them", func() {
 				slice := []string{"", "a", "FEW", "strings", "", "", "to", "CoNsIdEr"}

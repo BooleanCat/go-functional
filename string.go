@@ -49,3 +49,13 @@ func (f StringSliceFunctor) Fold(initial string, op func(string, string) string)
 	}
 	return initial
 }
+
+// Take returns a new StringSliceFunctor who's underlying slice has had all
+// members after the nth dropped. If n is larger than the length of the
+// underlying slice, Take is a no-op.
+func (f StringSliceFunctor) Take(n int) StringSliceFunctor {
+	if n > len(f.slice) {
+		return f
+	}
+	return LiftStringSlice(f.slice[0:n])
+}

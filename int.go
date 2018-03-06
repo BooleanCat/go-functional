@@ -49,3 +49,13 @@ func (f IntSliceFunctor) Fold(initial int, op func(int, int) int) int {
 	}
 	return initial
 }
+
+// Take returns a new IntSliceFunctor who's underlying slice has had all
+// members after the nth dropped. If n is larger than the length of the
+// underlying slice, Take is a no-op.
+func (f IntSliceFunctor) Take(n int) IntSliceFunctor {
+	if n > len(f.slice) {
+		return f
+	}
+	return LiftIntSlice(f.slice[0:n])
+}
