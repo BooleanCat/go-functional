@@ -42,7 +42,7 @@ func (f IntSliceFunctor) Filter(op func(int) bool) IntSliceFunctor {
 // member of the underlying slice. It successively applies the input operation
 // to the result of the previous and the next value in the underlying slice. It
 // returns the final value successful operations. If the underlying slice is
-// empty then Fold retusn the initial input value.
+// empty then Fold returns the initial input value.
 func (f IntSliceFunctor) Fold(initial int, op func(int, int) int) int {
 	for _, i := range f.slice {
 		initial = op(initial, i)
