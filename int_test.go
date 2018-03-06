@@ -420,6 +420,97 @@ var _ = Describe("GoFunctional", func() {
 				})
 			})
 		})
+
+		Describe("#Filter", func() {
+			var (
+				slice   []int
+				functor functional.IntSliceErrFunctor
+				filter  func(int) (bool, error)
+			)
+
+			BeforeEach(func() {
+				slice = []int{0, 1, 2, 3, 4}
+				filter = func(i int) (bool, error) { return isEven(i), nil }
+			})
+
+			JustBeforeEach(func() {
+				functor = functional.LiftIntSlice(slice).WithErrs().Filter(filter)
+			})
+
+			It("applies a filter to all members of a slice", func() {
+				collection, err := functor.Collect()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(collection).To(Equal([]int{0, 2, 4}))
+			})
+
+			Context("when the input slice is empty", func() {
+				BeforeEach(func() {
+					slice = []int{}
+				})
+
+				It("collects to an empty slice", func() {
+					collection, err := functor.Collect()
+					Expect(err).NotTo(HaveOccurred())
+					Expect(collection).To(BeEmpty())
+				})
+
+				It("cannot cause collect to fail", func() {
+					fail := func(i int) (bool, error) { return false, errors.New("map failed") }
+					_, err := functor.Filter(fail).Collect()
+					Expect(err).NotTo(HaveOccurred())
+				})
+			})
+
+			Context("when the input slice is arbitrarily large", func() {
+				BeforeEach(func() {
+					slice = make([]int, 50000)
+					for i := range slice {
+						slice[i] = i
+					}
+				})
+
+				It("applies an operation to all members of a slice", func() {
+					expected := make([]int, 25000)
+					for i := range expected {
+						expected[i] = i * 2
+					}
+					collection, err := functor.Collect()
+					Expect(err).NotTo(HaveOccurred())
+					Expect(collection).To(Equal(expected))
+				})
+			})
+
+			Context("when the input operation returns an error", func() {
+				BeforeEach(func() {
+					filter = func(i int) (bool, error) { return false, errors.New("map failed") }
+				})
+
+				It("collects with an error", func() {
+					_, err := functor.Collect()
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError("map failed"))
+				})
+			})
+
+			Context("when the input operation returns an error later", func() {
+				BeforeEach(func() {
+					count := 0
+					filter = func(i int) (bool, error) {
+						count += 1
+						if count > 1 {
+							return false, errors.New("map failed later")
+						}
+						return false, nil
+					}
+				})
+
+				It("collects with an error", func() {
+					_, err := functor.Collect()
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError("map failed later"))
+				})
+			})
+		})
 	})
 })
 

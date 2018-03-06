@@ -9,5 +9,5 @@ import (
 
 func TestGoFunctional(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "go-functional Suite")
+	RunSpecs(t, "go-functional suite")
 }

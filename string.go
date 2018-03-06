@@ -111,3 +111,61 @@ func (f StringSliceErrFunctor) Map(op func(string) (string, error)) StringSliceE
 	}
 	return LiftStringSlice(mapped).WithErrs()
 }
+
+// Filter returns a new StringSliceErrFunctor who's underlying slice has had
+// members exluded that do not satisfy the input filter. Should an error occur,
+// the underlying slice is lost and subsequent Collect calls with always return
+// the error.
+func (f StringSliceErrFunctor) Filter(op func(string) (bool, error)) StringSliceErrFunctor {
+	if f.err != nil {
+		return f
+	}
+
+	var filtered []string
+	for i := range f.slice {
+		include, err := op(f.slice[i])
+		if err != nil {
+			return StringSliceErrFunctor{err: err}
+		}
+		if include {
+			filtered = append(filtered, f.slice[i])
+		}
+	}
+	return LiftStringSlice(filtered).WithErrs()
+}
+
+// Fold applies its input operation to the initial input value and the first
+// member of the underlying slice. It successively applies the input operation
+// to the result of the previous and the next value in the underlying slice. It
+// returns the final value successful operations. If the underlying slice is
+// empty then Fold returns the initial input value. Should an error have
+// previously occurred, that error is immediately returned.
+func (f StringSliceErrFunctor) Fold(initial string, op func(string, string) string) (string, error) {
+	if f.err != nil {
+		return "", f.err
+	}
+
+	return LiftStringSlice(f.slice).Fold(initial, op), nil
+}
+
+// Take returns a new StringSliceErrFunctor who's underlying slice has had all
+// members after the nth dropped. If n is larger than the length of the
+// underlying slice, Take is a no-op.
+func (f StringSliceErrFunctor) Take(n int) StringSliceErrFunctor {
+	if f.err != nil {
+		return f
+	}
+
+	return LiftStringSlice(f.slice).Take(n).WithErrs()
+}
+
+// Drop returns a new StringSliceErrFunctor who's underlying slice has had the
+// first n members dropped. If n is larger than the length of the underlying
+// slice, Drop returns an empty StringSliceErrFunctor.
+func (f StringSliceErrFunctor) Drop(n int) StringSliceErrFunctor {
+	if f.err != nil {
+		return f
+	}
+
+	return LiftStringSlice(f.slice).Drop(n).WithErrs()
+}
