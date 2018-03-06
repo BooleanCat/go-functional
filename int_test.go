@@ -211,6 +211,57 @@ var _ = Describe("GoFunctional", func() {
 			})
 		})
 
+		Describe("#Drop", func() {
+			var (
+				n       int
+				slice   []int
+				functor functional.IntSliceFunctor
+			)
+
+			BeforeEach(func() {
+				n = 3
+				slice = []int{0, 1, 2, 3, 4}
+			})
+
+			JustBeforeEach(func() {
+				functor = functional.LiftIntSlice(slice).Drop(n)
+			})
+
+			It("drops the first n members of a slice", func() {
+				Expect(functor.Collect()).To(Equal([]int{3, 4}))
+			})
+
+			Context("when n exceeds the number of members", func() {
+				BeforeEach(func() {
+					n = 6
+				})
+
+				It("drops all members", func() {
+					Expect(functor.Collect()).To(BeEmpty())
+				})
+			})
+
+			Context("when dropping 0", func() {
+				BeforeEach(func() {
+					n = 0
+				})
+
+				It("collects to the original underlying slice", func() {
+					Expect(functor.Collect()).To(Equal([]int{0, 1, 2, 3, 4}))
+				})
+			})
+
+			Context("when the input slice is empty", func() {
+				BeforeEach(func() {
+					slice = []int{}
+				})
+
+				It("collects to an empty slice", func() {
+					Expect(functor.Collect()).To(BeEmpty())
+				})
+			})
+		})
+
 		Describe("a complicated chain of operations", func() {
 			It("can find the sum a set of even square numbers", func() {
 				slice := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}

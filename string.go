@@ -59,3 +59,13 @@ func (f StringSliceFunctor) Take(n int) StringSliceFunctor {
 	}
 	return LiftStringSlice(f.slice[0:n])
 }
+
+// Drop returns a new StringSliceFunctor who's underlying slice has had the
+// first n members dropped. If n is larger than the length of the underlying
+// slice, Drop returns an empty StringSliceFunctor.
+func (f StringSliceFunctor) Drop(n int) StringSliceFunctor {
+	if n > len(f.slice) {
+		return LiftStringSlice([]string{})
+	}
+	return LiftStringSlice(f.slice[n:len(f.slice)])
+}
