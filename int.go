@@ -38,6 +38,12 @@ func (f IntSliceFunctor) Filter(op func(int) bool) IntSliceFunctor {
 	return LiftIntSlice(filtered)
 }
 
+// Exclude returns a new IntSliceFunctor whose underlying slice has had members
+// exluded that satisfy the input filter.
+func (f IntSliceFunctor) Exclude(op func(int) bool) IntSliceFunctor {
+	return LiftIntSlice(f.slice).Filter(negateIntOp(op))
+}
+
 // Fold applies its input operation to the initial input value and the first
 // member of the underlying slice. It successively applies the input operation
 // to the result of the previous and the next value in the underlying slice. It
@@ -134,6 +140,14 @@ func (f IntSliceErrFunctor) Filter(op func(int) (bool, error)) IntSliceErrFuncto
 	return LiftIntSlice(filtered).WithErrs()
 }
 
+// Exclude returns a new IntSliceErrFunctor whose underlying slice has had
+// members exluded that satisfy the input filter. Should an error occur, the
+// underlying slice is lost and subsequent Collect calls with always return the
+// error.
+func (f IntSliceErrFunctor) Exclude(op func(int) (bool, error)) IntSliceErrFunctor {
+	return LiftIntSlice(f.slice).WithErrs().Filter(negateIntOpWithErr(op))
+}
+
 // Fold applies its input operation to the initial input value and the first
 // member of the underlying slice. It successively applies the input operation
 // to the result of the previous and the next value in the underlying slice. It
@@ -168,4 +182,17 @@ func (f IntSliceErrFunctor) Drop(n int) IntSliceErrFunctor {
 	}
 
 	return LiftIntSlice(f.slice).Drop(n).WithErrs()
+}
+
+func negateIntOp(op func(int) bool) func(int) bool {
+	return func(i int) bool {
+		return !op(i)
+	}
+}
+
+func negateIntOpWithErr(op func(int) (bool, error)) func(int) (bool, error) {
+	return func(i int) (bool, error) {
+		result, err := op(i)
+		return !result, err
+	}
 }

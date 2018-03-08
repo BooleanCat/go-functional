@@ -38,6 +38,12 @@ func (f StringSliceFunctor) Filter(op func(string) bool) StringSliceFunctor {
 	return LiftStringSlice(filtered)
 }
 
+// Exclude returns a new StringSliceFunctor whose underlying slice has had all
+// members which satisfy the input filter excluded.
+func (f StringSliceFunctor) Exclude(op func(string) bool) StringSliceFunctor {
+	return LiftStringSlice(f.slice).Filter(negateStringOp(op))
+}
+
 // Fold applies its input operation to the initial input value and the first
 // member of the underlying slice. It successively applies the input operation
 // to the result of the previous and the next value in the underlying slice. It
@@ -112,9 +118,9 @@ func (f StringSliceErrFunctor) Map(op func(string) (string, error)) StringSliceE
 	return LiftStringSlice(mapped).WithErrs()
 }
 
-// Filter returns a new StringSliceErrFunctor who's underlying slice has had
+// Filter returns a new StringSliceErrFunctor whose underlying slice has had
 // members exluded that do not satisfy the input filter. Should an error occur,
-// the underlying slice is lost and subsequent Collect calls with always return
+// the underlying slice is lost and subsequent Collect calls will always return
 // the error.
 func (f StringSliceErrFunctor) Filter(op func(string) (bool, error)) StringSliceErrFunctor {
 	if f.err != nil {
@@ -132,6 +138,14 @@ func (f StringSliceErrFunctor) Filter(op func(string) (bool, error)) StringSlice
 		}
 	}
 	return LiftStringSlice(filtered).WithErrs()
+}
+
+// Exclude returns a new StringSliceErrFunctor whose underlying slice has had
+// members exluded that satisfy the input filter. Should an error occur, the
+// underlying slice is lost and subsequent Collect calls will always return the
+// error.
+func (f StringSliceErrFunctor) Exclude(op func(string) (bool, error)) StringSliceErrFunctor {
+	return LiftStringSlice(f.slice).WithErrs().Filter(negateStringOpWithErr(op))
 }
 
 // Fold applies its input operation to the initial input value and the first
@@ -168,4 +182,17 @@ func (f StringSliceErrFunctor) Drop(n int) StringSliceErrFunctor {
 	}
 
 	return LiftStringSlice(f.slice).Drop(n).WithErrs()
+}
+
+func negateStringOp(op func(string) bool) func(string) bool {
+	return func(s string) bool {
+		return !op(s)
+	}
+}
+
+func negateStringOpWithErr(op func(string) (bool, error)) func(string) (bool, error) {
+	return func(s string) (bool, error) {
+		result, err := op(s)
+		return !result, err
+	}
 }

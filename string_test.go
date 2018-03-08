@@ -82,26 +82,36 @@ var _ = Describe("GoFunctional", func() {
 				})
 			})
 
-			Context("when the input slice is arbitrarily large", func() {
+		})
+
+		Describe("#Exclude", func() {
+			var (
+				slice   []string
+				functor functional.StringSliceFunctor
+			)
+
+			BeforeEach(func() {
+				slice = []string{"foo", "", "bar"}
+			})
+
+			JustBeforeEach(func() {
+				functor = functional.LiftStringSlice(slice).Exclude(isNotEmpty)
+			})
+
+			It("applies an exclusion to all members of a slice", func() {
+				Expect(functor.Collect()).To(Equal([]string{""}))
+			})
+
+			Context("when the input slice is empty", func() {
 				BeforeEach(func() {
-					slice = make([]string, 50000)
-					for i := range slice {
-						if i%2 == 0 {
-							slice[i] = ""
-						} else {
-							slice[i] = "foo"
-						}
-					}
+					slice = []string{}
 				})
 
-				It("applies a filter to all members of a slice", func() {
-					expected := make([]string, 25000)
-					for i := range expected {
-						expected[i] = "foo"
-					}
-					Expect(functor.Collect()).To(Equal(expected))
+				It("collects to an empty slice", func() {
+					Expect(functor.Collect()).To(BeEmpty())
 				})
 			})
+
 		})
 
 		Describe("#Fold", func() {
@@ -415,29 +425,6 @@ var _ = Describe("GoFunctional", func() {
 				})
 			})
 
-			Context("when the input slice is arbitrarily large", func() {
-				BeforeEach(func() {
-					slice = make([]string, 10000)
-					for i := range slice {
-						if i%2 == 0 {
-							slice[i] = "foo"
-						} else {
-							slice[i] = ""
-						}
-					}
-				})
-
-				It("applies an operation to all members of a slice", func() {
-					expected := make([]string, 5000)
-					for i := range expected {
-						expected[i] = "foo"
-					}
-					collection, err := functor.Collect()
-					Expect(err).NotTo(HaveOccurred())
-					Expect(collection).To(Equal(expected))
-				})
-			})
-
 			Context("when the input operation returns an error", func() {
 				BeforeEach(func() {
 					filter = func(string) (bool, error) { return false, errors.New("map failed") }
@@ -466,6 +453,78 @@ var _ = Describe("GoFunctional", func() {
 					_, err := functor.Collect()
 					Expect(err).To(HaveOccurred())
 					Expect(err).To(MatchError("map failed later"))
+				})
+			})
+		})
+
+		Describe("#Exclude", func() {
+			var (
+				slice   []string
+				functor functional.StringSliceErrFunctor
+				exclude func(string) (bool, error)
+			)
+
+			BeforeEach(func() {
+				slice = []string{"foo", "", "bar"}
+				exclude = func(s string) (bool, error) { return s != "", nil }
+			})
+
+			JustBeforeEach(func() {
+				functor = functional.LiftStringSlice(slice).WithErrs().Exclude(exclude)
+			})
+
+			It("applies an exclusion to all members of a slice", func() {
+				collection, err := functor.Collect()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(collection).To(Equal([]string{""}))
+			})
+
+			Context("when the input slice is empty", func() {
+				BeforeEach(func() {
+					slice = []string{}
+				})
+
+				It("collects to an empty slice", func() {
+					collection, err := functor.Collect()
+					Expect(err).NotTo(HaveOccurred())
+					Expect(collection).To(BeEmpty())
+				})
+
+				It("cannot cause collect to fail", func() {
+					fail := func(string) (bool, error) { return false, errors.New("exclude failed") }
+					_, err := functor.Exclude(fail).Collect()
+					Expect(err).NotTo(HaveOccurred())
+				})
+			})
+
+			Context("when the input operation returns an error", func() {
+				BeforeEach(func() {
+					exclude = func(string) (bool, error) { return false, errors.New("exclude failed") }
+				})
+
+				It("collects with an error", func() {
+					_, err := functor.Collect()
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError("exclude failed"))
+				})
+			})
+
+			Context("when the input operation returns an error later", func() {
+				BeforeEach(func() {
+					count := 0
+					exclude = func(string) (bool, error) {
+						count += 1
+						if count > 1 {
+							return false, errors.New("exclude failed later")
+						}
+						return false, nil
+					}
+				})
+
+				It("collects with an error", func() {
+					_, err := functor.Collect()
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError("exclude failed later"))
 				})
 			})
 		})

@@ -79,21 +79,33 @@ var _ = Describe("GoFunctional", func() {
 					Expect(functor.Collect()).To(BeEmpty())
 				})
 			})
+		})
 
-			Context("when the input slice is arbitrarily large", func() {
+		Describe("#Exclude", func() {
+			var (
+				slice   []int
+				functor functional.IntSliceFunctor
+			)
+
+			BeforeEach(func() {
+				slice = []int{0, 1, 2, 3, 4}
+			})
+
+			JustBeforeEach(func() {
+				functor = functional.LiftIntSlice(slice).Exclude(isEven)
+			})
+
+			It("applies an exclusion filter to all members of a slice", func() {
+				Expect(functor.Collect()).To(Equal([]int{1, 3}))
+			})
+
+			Context("when the input slice is empty", func() {
 				BeforeEach(func() {
-					slice = make([]int, 50000)
-					for i := range slice {
-						slice[i] = i
-					}
+					slice = []int{}
 				})
 
-				It("applies a filter to all members of a slice", func() {
-					expected := make([]int, 25000)
-					for i := range expected {
-						expected[i] = i * 2
-					}
-					Expect(functor.Collect()).To(Equal(expected))
+				It("collects to an empty slice", func() {
+					Expect(functor.Collect()).To(BeEmpty())
 				})
 			})
 		})
@@ -409,25 +421,6 @@ var _ = Describe("GoFunctional", func() {
 				})
 			})
 
-			Context("when the input slice is arbitrarily large", func() {
-				BeforeEach(func() {
-					slice = make([]int, 50000)
-					for i := range slice {
-						slice[i] = i
-					}
-				})
-
-				It("applies an operation to all members of a slice", func() {
-					expected := make([]int, 25000)
-					for i := range expected {
-						expected[i] = i * 2
-					}
-					collection, err := functor.Collect()
-					Expect(err).NotTo(HaveOccurred())
-					Expect(collection).To(Equal(expected))
-				})
-			})
-
 			Context("when the input operation returns an error", func() {
 				BeforeEach(func() {
 					filter = func(i int) (bool, error) { return false, errors.New("map failed") }
@@ -444,6 +437,78 @@ var _ = Describe("GoFunctional", func() {
 				BeforeEach(func() {
 					count := 0
 					filter = func(i int) (bool, error) {
+						count += 1
+						if count > 1 {
+							return false, errors.New("map failed later")
+						}
+						return false, nil
+					}
+				})
+
+				It("collects with an error", func() {
+					_, err := functor.Collect()
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError("map failed later"))
+				})
+			})
+		})
+
+		Describe("#Exclude", func() {
+			var (
+				slice   []int
+				functor functional.IntSliceErrFunctor
+				exclude func(int) (bool, error)
+			)
+
+			BeforeEach(func() {
+				slice = []int{0, 1, 2, 3, 4}
+				exclude = func(i int) (bool, error) { return isEven(i), nil }
+			})
+
+			JustBeforeEach(func() {
+				functor = functional.LiftIntSlice(slice).WithErrs().Exclude(exclude)
+			})
+
+			It("applies an exclusion filter to all members of a slice", func() {
+				collection, err := functor.Collect()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(collection).To(Equal([]int{1, 3}))
+			})
+
+			Context("when the input slice is empty", func() {
+				BeforeEach(func() {
+					slice = []int{}
+				})
+
+				It("collects to an empty slice", func() {
+					collection, err := functor.Collect()
+					Expect(err).NotTo(HaveOccurred())
+					Expect(collection).To(BeEmpty())
+				})
+
+				It("cannot cause collect to fail", func() {
+					fail := func(i int) (bool, error) { return false, errors.New("map failed") }
+					_, err := functor.Exclude(fail).Collect()
+					Expect(err).NotTo(HaveOccurred())
+				})
+			})
+
+			Context("when the input operation returns an error", func() {
+				BeforeEach(func() {
+					exclude = func(i int) (bool, error) { return false, errors.New("map failed") }
+				})
+
+				It("collects with an error", func() {
+					_, err := functor.Collect()
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError("map failed"))
+				})
+			})
+
+			Context("when the input operation returns an error later", func() {
+				BeforeEach(func() {
+					count := 0
+					exclude = func(i int) (bool, error) {
 						count += 1
 						if count > 1 {
 							return false, errors.New("map failed later")
