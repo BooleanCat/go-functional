@@ -1,12 +1,12 @@
 package scenario_test
 
 import (
-	functional "BooleanCat/go-functional"
 	"io/ioutil"
 	"math"
 	"os"
 	"path/filepath"
 
+	functional "github.com/BooleanCat/go-functional"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

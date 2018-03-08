@@ -1,9 +1,9 @@
 package functional_test
 
 import (
-	functional "BooleanCat/go-functional"
 	"errors"
 
+	functional "github.com/BooleanCat/go-functional"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
