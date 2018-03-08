@@ -16,7 +16,7 @@ func (f IntSliceFunctor) Collect() []int {
 	return f.slice
 }
 
-// Map returns a new IntSliceFunctor who's underlying slice is the result of
+// Map returns a new IntSliceFunctor whose underlying slice is the result of
 // applying the input operation to each of its members.
 func (f IntSliceFunctor) Map(op func(int) int) IntSliceFunctor {
 	mapped := make([]int, 0, len(f.slice))
@@ -26,7 +26,7 @@ func (f IntSliceFunctor) Map(op func(int) int) IntSliceFunctor {
 	return LiftIntSlice(mapped)
 }
 
-// Filter returns a new IntSliceFunctor who's underlying slice has had members
+// Filter returns a new IntSliceFunctor whose underlying slice has had members
 // exluded that do not satisfy the input filter.
 func (f IntSliceFunctor) Filter(op func(int) bool) IntSliceFunctor {
 	var filtered []int
@@ -50,7 +50,7 @@ func (f IntSliceFunctor) Fold(initial int, op func(int, int) int) int {
 	return initial
 }
 
-// Take returns a new IntSliceFunctor who's underlying slice has had all
+// Take returns a new IntSliceFunctor whose underlying slice has had all
 // members after the nth dropped. If n is larger than the length of the
 // underlying slice, Take is a no-op.
 func (f IntSliceFunctor) Take(n int) IntSliceFunctor {
@@ -60,7 +60,7 @@ func (f IntSliceFunctor) Take(n int) IntSliceFunctor {
 	return LiftIntSlice(f.slice[0:n])
 }
 
-// Drop returns a new IntSliceFunctor who's underlying slice has had the first
+// Drop returns a new IntSliceFunctor whose underlying slice has had the first
 // n members dropped. If n is larger than the length of the underlying slice,
 // Drop returns an empty StringSliceFunctor.
 func (f IntSliceFunctor) Drop(n int) IntSliceFunctor {
@@ -92,7 +92,7 @@ func (f IntSliceErrFunctor) Collect() ([]int, error) {
 	return f.slice, nil
 }
 
-// Map returns a new IntSliceErrFunctor who's underlying slice is the result of
+// Map returns a new IntSliceErrFunctor whose underlying slice is the result of
 // applying the input operation to each of its members. Should an error occur,
 // the underlying slice is lost and subsequent Collect calls will always return
 // the error.
@@ -112,7 +112,7 @@ func (f IntSliceErrFunctor) Map(op func(int) (int, error)) IntSliceErrFunctor {
 	return LiftIntSlice(mapped).WithErrs()
 }
 
-// Filter returns a new IntSliceErrFunctor who's underlying slice has had
+// Filter returns a new IntSliceErrFunctor whose underlying slice has had
 // members exluded that do not satisfy the input filter. Should an error occur,
 // the underlying slice is lost and subsequent Collect calls with always return
 // the error.
@@ -148,7 +148,7 @@ func (f IntSliceErrFunctor) Fold(initial int, op func(int, int) int) (int, error
 	return LiftIntSlice(f.slice).Fold(initial, op), nil
 }
 
-// Take returns a new IntSliceErrFunctor who's underlying slice has had all
+// Take returns a new IntSliceErrFunctor whose underlying slice has had all
 // members after the nth dropped. If n is larger than the length of the
 // underlying slice, Take is a no-op.
 func (f IntSliceErrFunctor) Take(n int) IntSliceErrFunctor {
@@ -159,7 +159,7 @@ func (f IntSliceErrFunctor) Take(n int) IntSliceErrFunctor {
 	return LiftIntSlice(f.slice).Take(n).WithErrs()
 }
 
-// Drop returns a new IntSliceErrFunctor who's underlying slice has had the
+// Drop returns a new IntSliceErrFunctor whose underlying slice has had the
 // first n members dropped. If n is larger than the length of the underlying
 // slice, Drop returns an empty StringSliceFunctor.
 func (f IntSliceErrFunctor) Drop(n int) IntSliceErrFunctor {
