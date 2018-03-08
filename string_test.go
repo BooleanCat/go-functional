@@ -52,22 +52,6 @@ var _ = Describe("GoFunctional", func() {
 				})
 			})
 
-			Context("when the input slice is arbitrarily large", func() {
-				BeforeEach(func() {
-					slice = make([]string, 50000)
-					for i := range slice {
-						slice[i] = "a"
-					}
-				})
-
-				It("applies an operation to all members of a slice", func() {
-					expected := make([]string, 50000)
-					for i := range expected {
-						expected[i] = "A"
-					}
-					Expect(functor.Collect()).To(Equal(expected))
-				})
-			})
 		})
 
 		Describe("#Filter", func() {
@@ -148,22 +132,6 @@ var _ = Describe("GoFunctional", func() {
 				})
 			})
 
-			Context("when the input slice is arbitrarily large", func() {
-				BeforeEach(func() {
-					slice = make([]string, 10000)
-					for i := range slice {
-						slice[i] = "foo"
-					}
-				})
-
-				It("applies a fold over all members of a slice", func() {
-					expected := "please"
-					for i := 0; i < 10000; i++ {
-						expected += "foo"
-					}
-					Expect(folded).To(Equal(expected))
-				})
-			})
 		})
 
 		Describe("#Take", func() {
@@ -372,25 +340,6 @@ var _ = Describe("GoFunctional", func() {
 					fail := func(string) (string, error) { return "", errors.New("map failed") }
 					_, err := functor.Map(fail).Collect()
 					Expect(err).NotTo(HaveOccurred())
-				})
-			})
-
-			Context("when the input slice is arbitrarily large", func() {
-				BeforeEach(func() {
-					slice = make([]string, 10000)
-					for i := range slice {
-						slice[i] = "foo"
-					}
-				})
-
-				It("applies an operation to all members of a slice", func() {
-					expected := make([]string, 10000)
-					for i := range expected {
-						expected[i] = "foobaz"
-					}
-					collection, err := functor.Collect()
-					Expect(err).NotTo(HaveOccurred())
-					Expect(collection).To(Equal(expected))
 				})
 			})
 
