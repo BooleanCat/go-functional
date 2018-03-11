@@ -1,0 +1,198 @@
+// Package functional implements functional operations for slices of go primitives
+package functional
+
+// {{.TypeCapital}}SliceFunctor implements functional operations for type []{{.Type}}
+type {{.TypeCapital}}SliceFunctor struct {
+	slice []{{.Type}}
+}
+
+// Lift{{.TypeCapital}}Slice creates an {{.TypeCapital}}SliceFunctor from a []{{.Type}}
+func Lift{{.TypeCapital}}Slice(slice []{{.Type}}) {{.TypeCapital}}SliceFunctor {
+	return {{.TypeCapital}}SliceFunctor{slice: slice}
+}
+
+// Collect returns the underlying []{{.Type}}
+func (f {{.TypeCapital}}SliceFunctor) Collect() []{{.Type}} {
+	return f.slice
+}
+
+// Map returns a new {{.TypeCapital}}SliceFunctor whose underlying slice is the result of
+// applying the input operation to each of its members.
+func (f {{.TypeCapital}}SliceFunctor) Map(op func({{.Type}}) {{.Type}}) {{.TypeCapital}}SliceFunctor {
+	mapped := make([]{{.Type}}, 0, len(f.slice))
+	for _, i := range f.slice {
+		mapped = append(mapped, op(i))
+	}
+	return Lift{{.TypeCapital}}Slice(mapped)
+}
+
+// Filter returns a new {{.TypeCapital}}SliceFunctor whose underlying slice has had members
+// exluded that do not satisfy the input filter.
+func (f {{.TypeCapital}}SliceFunctor) Filter(op func({{.Type}}) bool) {{.TypeCapital}}SliceFunctor {
+	var filtered []{{.Type}}
+	for _, i := range f.slice {
+		if op(i) {
+			filtered = append(filtered, i)
+		}
+	}
+	return Lift{{.TypeCapital}}Slice(filtered)
+}
+
+// Exclude returns a new {{.TypeCapital}}SliceFunctor whose underlying slice has had members
+// exluded that satisfy the input filter.
+func (f {{.TypeCapital}}SliceFunctor) Exclude(op func({{.Type}}) bool) {{.TypeCapital}}SliceFunctor {
+	return Lift{{.TypeCapital}}Slice(f.slice).Filter(negate{{.TypeCapital}}Op(op))
+}
+
+// Fold applies its input operation to the initial input value and the first
+// member of the underlying slice. It successively applies the input operation
+// to the result of the previous and the next value in the underlying slice. It
+// returns the final value successful operations. If the underlying slice is
+// empty then Fold returns the initial input value.
+func (f {{.TypeCapital}}SliceFunctor) Fold(initial {{.Type}}, op func({{.Type}}, {{.Type}}) {{.Type}}) {{.Type}} {
+	for _, i := range f.slice {
+		initial = op(initial, i)
+	}
+	return initial
+}
+
+// Take returns a new {{.TypeCapital}}SliceFunctor whose underlying slice has had all
+// members after the nth dropped. If n is larger than the length of the
+// underlying slice, Take is a no-op.
+func (f {{.TypeCapital}}SliceFunctor) Take(n int) {{.TypeCapital}}SliceFunctor {
+	if n > len(f.slice) {
+		return f
+	}
+	return Lift{{.TypeCapital}}Slice(f.slice[0:n])
+}
+
+// Drop returns a new {{.TypeCapital}}SliceFunctor whose underlying slice has had the first
+// n members dropped. If n is larger than the length of the underlying slice,
+// Drop returns an empty StringSliceFunctor.
+func (f {{.TypeCapital}}SliceFunctor) Drop(n int) {{.TypeCapital}}SliceFunctor {
+	if n > len(f.slice) {
+		return Lift{{.TypeCapital}}Slice([]{{.Type}}{})
+	}
+	return Lift{{.TypeCapital}}Slice(f.slice[n:len(f.slice)])
+}
+
+// WithErrs creates an {{.TypeCapital}}SliceErrFunctor from a {{.TypeCapital}}SliceFunctor.
+func (f {{.TypeCapital}}SliceFunctor) WithErrs() {{.TypeCapital}}SliceErrFunctor {
+	return {{.TypeCapital}}SliceErrFunctor{slice: f.slice}
+}
+
+// {{.TypeCapital}}SliceErrFunctor behaves like {{.TypeCapital}}SliceFunctor except that operations
+// performed over the underlying slice are allowed to return errors. Should
+// an error occur then the {{.TypeCapital}}SliceErrFunctor's future operations do nothing
+// except that Collect will return the error that occurred.
+type {{.TypeCapital}}SliceErrFunctor struct {
+	slice []{{.Type}}
+	err   error
+}
+
+// Collect returns the underlying []{{.Type}} or an error if one has occurred.
+func (f {{.TypeCapital}}SliceErrFunctor) Collect() ([]{{.Type}}, error) {
+	if f.err != nil {
+		return nil, f.err
+	}
+	return f.slice, nil
+}
+
+// Map returns a new {{.TypeCapital}}SliceErrFunctor whose underlying slice is the result of
+// applying the input operation to each of its members. Should an error occur,
+// the underlying slice is lost and subsequent Collect calls will always return
+// the error.
+func (f {{.TypeCapital}}SliceErrFunctor) Map(op func({{.Type}}) ({{.Type}}, error)) {{.TypeCapital}}SliceErrFunctor {
+	if f.err != nil {
+		return f
+	}
+
+	mapped := make([]{{.Type}}, len(f.slice))
+	for i := range f.slice {
+		new, err := op(f.slice[i])
+		if err != nil {
+			return {{.TypeCapital}}SliceErrFunctor{err: err}
+		}
+		mapped[i] = new
+	}
+	return Lift{{.TypeCapital}}Slice(mapped).WithErrs()
+}
+
+// Filter returns a new {{.TypeCapital}}SliceErrFunctor whose underlying slice has had
+// members exluded that do not satisfy the input filter. Should an error occur,
+// the underlying slice is lost and subsequent Collect calls will always return
+// the error.
+func (f {{.TypeCapital}}SliceErrFunctor) Filter(op func({{.Type}}) (bool, error)) {{.TypeCapital}}SliceErrFunctor {
+	if f.err != nil {
+		return f
+	}
+
+	var filtered []{{.Type}}
+	for i := range f.slice {
+		include, err := op(f.slice[i])
+		if err != nil {
+			return {{.TypeCapital}}SliceErrFunctor{err: err}
+		}
+		if include {
+			filtered = append(filtered, f.slice[i])
+		}
+	}
+	return Lift{{.TypeCapital}}Slice(filtered).WithErrs()
+}
+
+// Exclude returns a new {{.TypeCapital}}SliceErrFunctor whose underlying slice has had
+// members exluded that satisfy the input filter. Should an error occur, the
+// underlying slice is lost and subsequent Collect calls will always return the
+// error.
+func (f {{.TypeCapital}}SliceErrFunctor) Exclude(op func({{.Type}}) (bool, error)) {{.TypeCapital}}SliceErrFunctor {
+	return Lift{{.TypeCapital}}Slice(f.slice).WithErrs().Filter(negate{{.TypeCapital}}OpWithErr(op))
+}
+
+// Fold applies its input operation to the initial input value and the first
+// member of the underlying slice. It successively applies the input operation
+// to the result of the previous and the next value in the underlying slice. It
+// returns the final value successful operations. If the underlying slice is
+// empty then Fold returns the initial input value. Should an error have
+// previously occurred, that error is immediately returned.
+func (f {{.TypeCapital}}SliceErrFunctor) Fold(initial {{.Type}}, op func({{.Type}}, {{.Type}}) {{.Type}}) ({{.Type}}, error) {
+	if f.err != nil {
+		return initial, f.err
+	}
+
+	return Lift{{.TypeCapital}}Slice(f.slice).Fold(initial, op), nil
+}
+
+// Take returns a new {{.TypeCapital}}SliceErrFunctor whose underlying slice has had all
+// members after the nth dropped. If n is larger than the length of the
+// underlying slice, Take is a no-op.
+func (f {{.TypeCapital}}SliceErrFunctor) Take(n int) {{.TypeCapital}}SliceErrFunctor {
+	if f.err != nil {
+		return f
+	}
+
+	return Lift{{.TypeCapital}}Slice(f.slice).Take(n).WithErrs()
+}
+
+// Drop returns a new {{.TypeCapital}}SliceErrFunctor whose underlying slice has had the
+// first n members dropped. If n is larger than the length of the underlying
+// slice, Drop returns an empty {{.TypeCapital}}SliceErrFunctor.
+func (f {{.TypeCapital}}SliceErrFunctor) Drop(n int) {{.TypeCapital}}SliceErrFunctor {
+	if f.err != nil {
+		return f
+	}
+
+	return Lift{{.TypeCapital}}Slice(f.slice).Drop(n).WithErrs()
+}
+
+func negate{{.TypeCapital}}Op(op func({{.Type}}) bool) func({{.Type}}) bool {
+	return func({{.ShortVar}} {{.Type}}) bool {
+		return !op({{.ShortVar}})
+	}
+}
+
+func negate{{.TypeCapital}}OpWithErr(op func({{.Type}}) (bool, error)) func({{.Type}}) (bool, error) {
+	return func({{.ShortVar}} {{.Type}}) (bool, error) {
+		result, err := op({{.ShortVar}})
+		return !result, err
+	}
+}
