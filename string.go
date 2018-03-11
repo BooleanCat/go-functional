@@ -26,8 +26,8 @@ func (f StringSliceFunctor) Map(op func(string) string) StringSliceFunctor {
 	return LiftStringSlice(mapped)
 }
 
-// Filter returns a new StringSliceFunctor whose underlying slice has had
-// members exluded that do not satisfy the input filter.
+// Filter returns a new StringSliceFunctor whose underlying slice has had members
+// exluded that do not satisfy the input filter.
 func (f StringSliceFunctor) Filter(op func(string) bool) StringSliceFunctor {
 	var filtered []string
 	for _, i := range f.slice {
@@ -38,8 +38,8 @@ func (f StringSliceFunctor) Filter(op func(string) bool) StringSliceFunctor {
 	return LiftStringSlice(filtered)
 }
 
-// Exclude returns a new StringSliceFunctor whose underlying slice has had all
-// members which satisfy the input filter excluded.
+// Exclude returns a new StringSliceFunctor whose underlying slice has had members
+// exluded that satisfy the input filter.
 func (f StringSliceFunctor) Exclude(op func(string) bool) StringSliceFunctor {
 	return LiftStringSlice(f.slice).Filter(negateStringOp(op))
 }
@@ -66,9 +66,9 @@ func (f StringSliceFunctor) Take(n int) StringSliceFunctor {
 	return LiftStringSlice(f.slice[0:n])
 }
 
-// Drop returns a new StringSliceFunctor whose underlying slice has had the
-// first n members dropped. If n is larger than the length of the underlying
-// slice, Drop returns an empty StringSliceFunctor.
+// Drop returns a new StringSliceFunctor whose underlying slice has had the first
+// n members dropped. If n is larger than the length of the underlying slice,
+// Drop returns an empty StringSliceFunctor.
 func (f StringSliceFunctor) Drop(n int) StringSliceFunctor {
 	if n > len(f.slice) {
 		return LiftStringSlice([]string{})
@@ -98,10 +98,10 @@ func (f StringSliceErrFunctor) Collect() ([]string, error) {
 	return f.slice, nil
 }
 
-// Map returns a new StringSliceErrFunctor whose underlying slice is the result
-// of applying the input operation to each of its members. Should an error
-// occur, the underlying slice is lost and subsequent Collect calls will always
-// return the error.
+// Map returns a new StringSliceErrFunctor whose underlying slice is the result of
+// applying the input operation to each of its members. Should an error occur,
+// the underlying slice is lost and subsequent Collect calls will always return
+// the error.
 func (f StringSliceErrFunctor) Map(op func(string) (string, error)) StringSliceErrFunctor {
 	if f.err != nil {
 		return f
@@ -156,7 +156,7 @@ func (f StringSliceErrFunctor) Exclude(op func(string) (bool, error)) StringSlic
 // previously occurred, that error is immediately returned.
 func (f StringSliceErrFunctor) Fold(initial string, op func(string, string) string) (string, error) {
 	if f.err != nil {
-		return "", f.err
+		return initial, f.err
 	}
 
 	return LiftStringSlice(f.slice).Fold(initial, op), nil
