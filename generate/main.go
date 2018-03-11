@@ -9,16 +9,25 @@ import (
 )
 
 type FunctorTemplate struct {
-	Type        string
-	TypeCapital string
-	ShortVar    string
+	Type                  string
+	FunctorName           string
+	FunctorErrName        string
+	LiftFuncName          string
+	NegateFuncName        string
+	NegateWithErrFuncName string
+	TypeVar               string
 }
 
 func NewFunctorTemplate(t string) FunctorTemplate {
+	title := strings.Title(t)
 	return FunctorTemplate{
-		Type:        strings.ToLower(t),
-		TypeCapital: strings.ToUpper(t[0:1]) + strings.ToLower(t[1:]),
-		ShortVar:    strings.ToLower(t[0:1]),
+		Type:                  strings.ToLower(t),
+		FunctorName:           title + "SliceFunctor",
+		FunctorErrName:        title + "SliceErrFunctor",
+		LiftFuncName:          "Lift" + title + "Slice",
+		NegateFuncName:        "negate" + title + "Op",
+		NegateWithErrFuncName: "negate" + title + "OpWithErr",
+		TypeVar:               strings.ToLower(t[0:1]),
 	}
 }
 
