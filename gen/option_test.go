@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Option", func() {
+var _ = Describe("option", func() {
 	When("string", func() {
 		It("generates expected code", func() {
 			expected := clean(`
