@@ -8,35 +8,35 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("drop", func() {
+var _ = Describe("take", func() {
 	When("string", func() {
 		It("generates expected code", func() {
 			expected := clean(`
 				package fstring
 
-				type DropIter struct {
+				type TakeIter struct {
 					iter Iter
 					n    int
 				}
 
-				func NewDrop(iter Iter, n int) *DropIter {
-					return &DropIter{
+				func NewTake(iter Iter, n int) *TakeIter {
+					return &TakeIter{
 						iter: iter,
 						n:    n,
 					}
 				}
 
-				func (iter *DropIter) Next() Option {
-					for iter.n > 0 {
-						iter.n--
-						iter.iter.Next()
+				func (iter *TakeIter) Next() Option {
+					if iter.n <= 0 {
+						return None()
 					}
 
+					iter.n--
 					return iter.iter.Next()
 				}
 			`)
 
-			Expect(fmt.Sprintf("%#v", gen.Drop("string"))).To(Equal(expected))
+			Expect(fmt.Sprintf("%#v", gen.Take("string"))).To(Equal(expected))
 		})
 	})
 
@@ -45,29 +45,29 @@ var _ = Describe("drop", func() {
 			expected := clean(`
 				package fint
 
-				type DropIter struct {
+				type TakeIter struct {
 					iter Iter
 					n    int
 				}
 
-				func NewDrop(iter Iter, n int) *DropIter {
-					return &DropIter{
+				func NewTake(iter Iter, n int) *TakeIter {
+					return &TakeIter{
 						iter: iter,
 						n:    n,
 					}
 				}
 
-				func (iter *DropIter) Next() Option {
-					for iter.n > 0 {
-						iter.n--
-						iter.iter.Next()
+				func (iter *TakeIter) Next() Option {
+					if iter.n <= 0 {
+						return None()
 					}
 
+					iter.n--
 					return iter.iter.Next()
 				}
 			`)
 
-			Expect(fmt.Sprintf("%#v", gen.Drop("int"))).To(Equal(expected))
+			Expect(fmt.Sprintf("%#v", gen.Take("int"))).To(Equal(expected))
 		})
 	})
 })
