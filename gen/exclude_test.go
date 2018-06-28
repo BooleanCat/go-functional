@@ -28,7 +28,7 @@ var _ = Describe("exclude", func() {
 
 				func (iter ExcludeIter) Next() Option {
 					for {
-						if option := iter.iter.Next(); !option.Present() || iter.exclude(option.Value) {
+						if option := iter.iter.Next(); !option.Present() || !iter.exclude(option.Value) {
 							return option
 						}
 					}
@@ -58,7 +58,7 @@ var _ = Describe("exclude", func() {
 
 				func (iter ExcludeIter) Next() Option {
 					for {
-						if option := iter.iter.Next(); !option.Present() || iter.exclude(option.Value) {
+						if option := iter.iter.Next(); !option.Present() || !iter.exclude(option.Value) {
 							return option
 						}
 					}
