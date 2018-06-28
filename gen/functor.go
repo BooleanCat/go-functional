@@ -8,6 +8,10 @@ func Functor(t string) *jen.File {
 	f.Type().Id("Functor").Struct(jen.Id("iter").Id("Iter"))
 	f.Line()
 
+	f.Func().Id("New").Params(jen.Id("iter").Id("Iter")).Op("*").Id("Functor").Block(
+		jen.Return(jen.Op("&").Id("Functor").Values(jen.Dict{jen.Id("iter"): jen.Id("iter")})),
+	)
+
 	f.Type().Id("Lifted").Struct(
 		jen.Id("slice").Index().Id(t),
 		jen.Id("index").Int(),

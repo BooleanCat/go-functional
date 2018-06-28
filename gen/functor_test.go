@@ -18,6 +18,10 @@ var _ = Describe("fun", func() {
 					iter Iter
 				}
 
+				func New(iter Iter) *Functor {
+					return &Functor{iter: iter}
+				}
+
 				type Lifted struct {
 					slice []string
 					index int
@@ -81,6 +85,10 @@ var _ = Describe("fun", func() {
 
 				type Functor struct {
 					iter Iter
+				}
+
+				func New(iter Iter) *Functor {
+					return &Functor{iter: iter}
 				}
 
 				type Lifted struct {
