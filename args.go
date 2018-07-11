@@ -18,3 +18,16 @@ func parseArgs() (Args, error) {
 	}
 	return args, nil
 }
+
+func isErrHelp(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	flagErr, ok := err.(*flags.Error)
+	if !ok {
+		return false
+	}
+
+	return flagErr.Type == flags.ErrHelp
+}

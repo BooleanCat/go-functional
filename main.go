@@ -25,6 +25,9 @@ func (g generator) do(typeName string) error {
 
 func main() {
 	args, err := parseArgs()
+	if isErrHelp(err) {
+		os.Exit(0)
+	}
 	exitOn(err)
 
 	err = os.Mkdir("f"+args.Positional.TypeName, 0755)
