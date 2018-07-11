@@ -87,7 +87,7 @@ type Counter struct {
 func (c *Counter) Next() fint.Option {
   next := c.i
   c.i++
-  return Some(next)
+  return fint.Some(next)
 }
 ```
 
