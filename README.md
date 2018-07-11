@@ -37,11 +37,11 @@ The basic building blocks of go-functional are `Iterator`s and `Option`s. An
 value. For example, for functional helpers generated for the `string` type:
 
 ```go
-a := fstring.Some("foo")  # holds the value `foo`
-b := fstring.None()  # holds no value
+a := fstring.Some("foo")  // holds the value `foo`
+b := fstring.None()  // holds no value
 a.Present()  # true
 b.Present()  # false
-a.Value  # The underlying value of the option.
+a.Value  // The underlying value of the option.
 ```
 
 Options should always be checked for the presence of a value before using
