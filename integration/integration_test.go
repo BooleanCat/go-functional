@@ -122,6 +122,37 @@ var _ = Describe("go-functional", func() {
 			Expect(cmd.Run()).To(Succeed())
 		})
 
+		It("generates a type wrapper for slices", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"reflect"
+					"somebin/fstring"
+				)
+
+				func prependFoo(s fstring.T) fstring.T {
+					return "foo" + s
+				}
+
+				func main() {
+					slice := []string{"bar", "baz"}
+					newSlice := fstring.Lift(fstring.TFrom(slice)).Map(prependFoo).Collect()
+					expected := []fstring.T{"foobar", "foobaz"}
+
+					if !reflect.DeepEqual(newSlice, expected) {
+						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
 		It("generates a type wrapper for map functions", func() {
 			cmd := goFunctionalCommand(someBinPath, "string")
 			Expect(cmd.Run()).To(Succeed())
@@ -146,6 +177,35 @@ var _ = Describe("go-functional", func() {
 
 					if !reflect.DeepEqual(newSlice, expected) {
 						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates a type wrapper for fold functions", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"somebin/fstring"
+				)
+
+				func prepend(a, b string) string {
+					return a + b
+				}
+
+				func main() {
+					slice := []fstring.T{"foo", "bar"}
+					result := fstring.Lift(slice).Fold("", fstring.Π(prepend))
+
+					if result != "foobar" {
+						panic(fmt.Sprintf("expected %s to equal foobar", result))
 					}
 				}
 			`))
