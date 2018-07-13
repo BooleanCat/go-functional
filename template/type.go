@@ -9,3 +9,13 @@ func TFrom(s []interface{}) []T {
 	}
 	return slice
 }
+
+func Lambda(f func(interface{}) interface{}) func(T) T {
+	return func(a T) T {
+		return T(f(interface{}(a)))
+	}
+}
+
+func Λ(f func(interface{}) interface{}) func(T) T {
+	return Lambda(f)
+}

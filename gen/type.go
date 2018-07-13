@@ -8,13 +8,41 @@ func Type(typeName string) *jen.File {
 	f.Type().Id("T").Id(typeName)
 	f.Line()
 
-	f.Func().Id("TFrom").Params(jen.Id("s").Index().Id(typeName)).Index().Id("T").Block(
-		jen.Id("slice").Op(":=").Make(jen.Index().Id("T"), jen.Len(jen.Id("s"))),
-		jen.For().Id("i").Op(":=").Range().Id("s").Block(
-			jen.Id("slice").Index(jen.Id("i")).Op("=").Id("T").Call(jen.Id("s").Index(jen.Id("i"))),
-		),
-		jen.Return(jen.Id("slice")),
-	)
+	// f.Func().Id("TFrom").Params(jen.Id("s").Index().Id(typeName)).Index().Id("T").Block(
+	// 	jen.Id("slice").Op(":=").Make(jen.Index().Id("T"), jen.Len(jen.Id("s"))),
+	// 	jen.For().Id("i").Op(":=").Range().Id("s").Block(
+	// 		jen.Id("slice").Index(jen.Id("i")).Op("=").Id("T").Call(jen.Id("s").Index(jen.Id("i"))),
+	// 	),
+	// 	jen.Return(jen.Id("slice")),
+	// )
+	// f.Line()
+
+	f.Add(lambdaFunc(typeName))
+	f.Line()
+
+	f.Add(lambdaShortFunc(typeName))
 
 	return f
+}
+
+func lambdaFunc(typeName string) *jen.Statement {
+	return jen.Func().Id("Lambda").Params(jen.Id("f").Add(typedFunc(typeName))).Add(genericFunc(typeName)).Block(
+		jen.Return(jen.Func().Params(jen.Id("a").Id("T")).Id("T").Block(
+			jen.Return(jen.Id("T").Call(jen.Id("f").Call(jen.Id(typeName).Call(jen.Id("a"))))),
+		)),
+	)
+}
+
+func lambdaShortFunc(typeName string) *jen.Statement {
+	return jen.Func().Id("Λ").Params(jen.Id("f").Add(typedFunc(typeName))).Add(genericFunc(typeName)).Block(
+		jen.Return(jen.Id("Lambda").Call(jen.Id("f"))),
+	)
+}
+
+func typedFunc(typeName string) *jen.Statement {
+	return jen.Func().Params(jen.Id(typeName)).Id(typeName)
+}
+
+func genericFunc(typeName string) *jen.Statement {
+	return jen.Func().Params(jen.Id("T")).Id("T")
 }
