@@ -17,15 +17,35 @@ func TypeFileContent(typeName string) *jen.File {
 	)
 	f.Line()
 
+	// Generates...
+	// func Lambda(f func(<T>) <T>) func(T) T {
+	//   return func(a T) T {
+	//     return T(f(<T>(a)))
+	//   }
+	// }
 	f.Add(lambdaFunc(typeName))
 	f.Line()
 
+	// Generates...
+	// func Λ(f func(<T>) <T>) func(T) T {
+	//   return Lamba(f)
+	// }
 	f.Add(lambdaShortFunc(typeName))
 	f.Line()
 
+	// Generates...
+	// func TFold(f func(<T>, <T>) <T>) func(T, T) T {
+	//   return func(a, b T) T {
+	//     return T(f(<T>(a), <T>(b)))
+	//   }
+	// }
 	f.Add(foldFunc(typeName))
 	f.Line()
 
+	// Generates...
+	// func Π(f func(<T>, <T>) <T>) func(T, T) T {
+	//   return TFold(f)
+	// }
 	f.Add(foldShortFunc(typeName))
 
 	return f
