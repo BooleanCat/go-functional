@@ -2,7 +2,7 @@ package gen
 
 import "github.com/dave/jennifer/jen"
 
-func Type(typeName string) *jen.File {
+func TypeFileContent(typeName string) *jen.File {
 	f := jen.NewFile("f" + typeName)
 
 	f.Type().Id("T").Id(typeName)
