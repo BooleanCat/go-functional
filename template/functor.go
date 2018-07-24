@@ -51,6 +51,11 @@ func (f *Functor) Map(op func(T) T) *Functor {
 	return f
 }
 
+func (f *Functor) Chain(iter Iter) *Functor {
+	f.iter = NewChain(f.iter, iter)
+	return f
+}
+
 func (f *Functor) Fold(initial T, op foldOp) T {
 	return Fold(f.iter, initial, op)
 }

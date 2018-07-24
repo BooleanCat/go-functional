@@ -46,6 +46,7 @@ func templateFiles() []string {
 		"map.go",
 		"option.go",
 		"take.go",
+		"chain.go",
 	}
 }
 

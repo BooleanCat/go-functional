@@ -269,14 +269,6 @@ func (f Foo) Next() Option {
 }
 ```
 
-### Implement chain
-
-```go
-a := []int{1, 2, 3}
-b := []int{4, 5}
-fint.Lift(a).Chain(fint.Lift(b)).Collect() == []int{1, 2, 3, 4, 5}
-```
-
 ### Consider offering pre-generated builtin helpers
 
 Maybe I could pre-generate helpers for int, string, bool and float? Maybe attach
