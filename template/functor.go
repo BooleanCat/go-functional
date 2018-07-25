@@ -51,8 +51,8 @@ func (f *Functor) Map(op func(T) T) *Functor {
 	return f
 }
 
-func (f *Functor) Chain(iter Iter) *Functor {
-	f.iter = NewChain(f.iter, iter)
+func (f *Functor) Chain(iters ...Iter) *Functor {
+	f.iter = NewChain(append([]Iter{f.iter}, iters...)...)
 	return f
 }
 

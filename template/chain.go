@@ -1,19 +1,26 @@
 package template
 
 type ChainIter struct {
-	first  Iter
-	second Iter
+	iters []Iter
+	i     int
 }
 
-func NewChain(first, second Iter) *ChainIter {
-	return &ChainIter{first, second}
+func NewChain(iters ...Iter) *ChainIter {
+	return &ChainIter{iters: iters}
 }
 
 func (iter *ChainIter) Next() Option {
-	next := iter.first.Next()
-	if next.Present() {
+	for {
+		if len(iter.iters) <= iter.i {
+			return None()
+		}
+
+		next := iter.iters[iter.i].Next()
+		if !next.Present() {
+			iter.i++
+			continue
+		}
+
 		return next
 	}
-
-	return iter.second.Next()
 }
