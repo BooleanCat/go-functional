@@ -17,7 +17,7 @@ func collect(iter Iter) tSlice {
 	}
 }
 
-func Fold(iter Iter, initial T, op foldOp) T {
+func fold(iter Iter, initial T, op foldFunc) T {
 	result := initial
 	for {
 		next := iter.Next()
@@ -25,8 +25,6 @@ func Fold(iter Iter, initial T, op foldOp) T {
 			return result
 		}
 
-		result = op(result, next.Value)
+		result = T(op(fromT(result), fromT(next.Value)))
 	}
 }
-
-type foldOp func(T, T) T

@@ -26,14 +26,14 @@ var _ = Describe("iter", func() {
 
 	Describe("Fold", func() {
 		It("applies the fold operation sequentially to iterator items", func() {
-			sum := func(a, b template.T) template.T { return toInt(a) + toInt(b) }
+			sum := func(a, b interface{}) interface{} { return toInt(a) + toInt(b) }
 			result := template.New(NewCounter()).Take(6).Fold(0, sum)
 			Expect(toInt(result)).To(Equal(15))
 		})
 
 		When("folding an empty iterator", func() {
 			It("returns the initial value", func() {
-				alwaysTen := func(_, _ template.T) template.T { return 15 }
+				alwaysTen := func(_, _ interface{}) interface{} { return 15 }
 				result := template.New(NewCounter()).Take(0).Fold(7, alwaysTen)
 				Expect(toInt(result)).To(Equal(7))
 			})

@@ -55,7 +55,3 @@ func (f *Functor) Chain(iters ...Iter) *Functor {
 	f.iter = NewChain(append([]Iter{f.iter}, iters...)...)
 	return f
 }
-
-func (f *Functor) Fold(initial T, op foldOp) T {
-	return Fold(f.iter, initial, op)
-}

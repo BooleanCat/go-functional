@@ -121,34 +121,5 @@ var _ = Describe("go-functional", func() {
 
 			Expect(cmd.Run()).To(Succeed())
 		})
-
-		It("generates a type wrapper for fold functions", func() {
-			cmd := goFunctionalCommand(someBinPath, "string")
-			Expect(cmd.Run()).To(Succeed())
-
-			cmd = makeFunctionalSample(workDir, "somebin", clean(`
-				package main
-
-				import (
-					"fmt"
-					"somebin/fstring"
-				)
-
-				func prepend(a, b string) string {
-					return a + b
-				}
-
-				func main() {
-					slice := []string{"foo", "bar"}
-					result := fstring.Lift(slice).Fold("", fstring.Π(prepend))
-
-					if result != "foobar" {
-						panic(fmt.Sprintf("expected %s to equal foobar", result))
-					}
-				}
-			`))
-
-			Expect(cmd.Run()).To(Succeed())
-		})
 	})
 })
