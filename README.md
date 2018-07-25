@@ -16,13 +16,13 @@ You could then use the generated `fint` package to find those primes:
 
 ```go
 type Counter struct {
-  i int
+  i fint.T
 }
 
 func (c *Counter) Next() fint.Option {
-  option := fint.Some(c.i)
+  next := c.i
   c.i++
-  return option
+  return fint.Some(next)
 }
 
 func getPrimes() []int {
@@ -64,13 +64,13 @@ type Alphabet struct {
 }
 
 func (a *Alphabet) Next() fstring.Option {
-  if a.letter > 0x7A {
+  if a.letter > 25 {
     return fstring.None()
   }
 
   next := a.letter + 0x61
   a.letter++
-  return fstring.Some(string(next))
+  return fstring.Some(fstring.T(next))
 }
 ```
 
@@ -81,7 +81,7 @@ would be an infinite counter:
 
 ```go
 type Counter struct {
-  i int
+  i fint.T
 }
 
 func (c *Counter) Next() fint.Option {
@@ -102,9 +102,9 @@ slices, an example is the prime number finder above. Slices may be "lifted" to
 `Functors`; let's choose only even numbers from a slice of integers:
 
 ```go
-isEven := func(value int) bool { return value % 2 == 0 }
-a := []int{1, 2, 3, 4, 5, 6, 7}
-a = fint.Lift(a).Filter(isEven).Collect()
+isEven := func(value fint.T) bool { return value%2 == 0 }
+numbers := []fint.T{1, 2, 3, 4, 5, 6, 7}
+numbers = fint.Lift(numbers).Filter(isEven).Collect()
 ```
 
 ## Laziness?
@@ -113,14 +113,14 @@ Yep, functor operations are lazy. In the example below, `expensiveOp` is only
 computed twice:
 
 ```go
-func expensiveOp(value int) int {
+func expensiveOp(value fint.T) fint.T {
   time.Sleep(time.Second)
   return value * 2
 }
 
 ...
 
-a := fint.New(new(Counter)).Map(expensiveOp).Take(2).Collect()
+_ = fint.New(new(Counter)).Map(expensiveOp).Take(2).Collect()
 ```
 
 ## Functor operations
@@ -130,9 +130,9 @@ a := fint.New(new(Counter)).Map(expensiveOp).Take(2).Collect()
 Drop the first `n` values from the Functor.
 
 ```go
-a := []int{1, 2, 3, 4, 5}
-a = fint.Lift(a).Drop(2).Collect()
-a == []int{3, 4, 5}
+numbers := []fint.T{1, 2, 3, 4, 5}
+numbers = fint.Lift(numbers).Drop(2).Collect()
+numbers == []fint.T{3, 4, 5}
 ```
 
 ### Take
@@ -140,9 +140,9 @@ a == []int{3, 4, 5}
 Take the first `n` values from the Functor:
 
 ```go
-a := []int{1, 2, 3, 4, 5}
-a = fint.Lift(a).Take(3).Collect()
-a == []int{1, 2, 3}
+numbers := []fint.T{1, 2, 3, 4, 5}
+numbers = fint.Lift(numbers).Take(3).Collect()
+numbers == []fint.T{1, 2, 3}
 ```
 
 ### Filter
@@ -150,9 +150,9 @@ a == []int{1, 2, 3}
 Keep only values that satisfying `filter(value) == true`:
 
 ```go
-a := []int{1, 2, 3, 4, 5}
-a = fint.Lift(a).Filter(func(value) bool { return value < 3 }).Collect()
-a == []int{1, 2}
+numbers := []fint.T{1, 2, 3, 4, 5}
+numbers = fint.Lift(numbers).Filter(func(value fint.T) bool { return value < 3 }).Collect()
+numbers == []fint.T{1, 2}
 ```
 
 ### Exclude
@@ -160,9 +160,9 @@ a == []int{1, 2}
 Drop all values that satisfy `exclude(value) == true`:
 
 ```go
-a := []int{1, 2, 3, 4, 5}
-a = fint.Lift(a).Exclude(func(value) bool { return value < 3 }).Collect()
-a == []int{3, 4, 5}
+numbers := []fint.T{1, 2, 3, 4, 5}
+numbers = fint.Lift(numbers).Exclude(func(value fint.T) bool { return value < 3 }).Collect()
+numbers == []fint.T{3, 4, 5}
 ```
 
 ### Map
@@ -170,10 +170,10 @@ a == []int{3, 4, 5}
 Apply an operation to each value yielded by the Functor's iterator:
 
 ```go
-double := func(value int) int { return value * 2 }
-a := []int{1, 2, 3, 4, 5}
-a = fint.Lift(a).Map(double).Collect()
-a == []int{2, 4, 6, 8, 10}
+double := func(value fint.T) fint.T { return value * 2 }
+numbers := []fint.T{1, 2, 3, 4, 5}
+numbers = fint.Lift(numbers).Map(double).Collect()
+numbers == []fint.T{2, 4, 6, 8, 10}
 ```
 
 ### Fold
@@ -182,8 +182,8 @@ Apply an operation to each value yielded by Functor's iterator and the previous
 Fold result. For example, adding the first 100 integers:
 
 ```go
-sum := func(a, b int) int { return a + b }
-a := fint.New(new(Counter)).Take(100).Fold(0, sum)
+sum := func(a, b fint.T) fint.T { return a + b }
+numbers := fint.New(new(Counter)).Take(100).Fold(0, sum)
 ```
 
 The first argument to Fold is the value to use as the first "previous fold
