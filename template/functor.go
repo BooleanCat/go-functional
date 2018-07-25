@@ -9,11 +9,11 @@ func New(iter Iter) *Functor {
 }
 
 type Lifted struct {
-	slice []T
+	slice tSlice
 	index int
 }
 
-func Lift(slice []T) *Functor {
+func Lift(slice tSlice) *Functor {
 	return &Functor{iter: &Lifted{slice: slice}}
 }
 
@@ -23,7 +23,7 @@ func (f *Lifted) Next() Option {
 	}
 
 	f.index++
-	return Some(f.slice[f.index-1])
+	return Some(T(f.slice[f.index-1]))
 }
 
 func (f *Functor) Filter(filter func(T) bool) *Functor {

@@ -72,7 +72,7 @@ var _ = Describe("go-functional", func() {
 				}
 
 				func main() {
-					slice := []fint.T{1, 2, 3}
+					slice := []int{1, 2, 3}
 					newSlice := fint.Lift(slice).Filter(isOdd).Collect()
 					expected := []fint.T{1, 3}
 
@@ -109,40 +109,9 @@ var _ = Describe("go-functional", func() {
 				}
 
 				func main() {
-					slice := []fstring.T{"", "", "bar", ""}
+					slice := []string{"", "", "bar", ""}
 					newSlice := fstring.Lift(slice).Exclude(isEmpty).Map(prependFoo).Collect()
 					expected := []fstring.T{"foobar"}
-
-					if !reflect.DeepEqual(newSlice, expected) {
-						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))
-					}
-				}
-			`))
-
-			Expect(cmd.Run()).To(Succeed())
-		})
-
-		It("generates a type wrapper for slices", func() {
-			cmd := goFunctionalCommand(someBinPath, "string")
-			Expect(cmd.Run()).To(Succeed())
-
-			cmd = makeFunctionalSample(workDir, "somebin", clean(`
-				package main
-
-				import (
-					"fmt"
-					"reflect"
-					"somebin/fstring"
-				)
-
-				func prependFoo(s fstring.T) fstring.T {
-					return "foo" + s
-				}
-
-				func main() {
-					slice := []string{"bar", "baz"}
-					newSlice := fstring.Lift(fstring.TFrom(slice)).Map(prependFoo).Collect()
-					expected := []fstring.T{"foobar", "foobaz"}
 
 					if !reflect.DeepEqual(newSlice, expected) {
 						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))
@@ -171,7 +140,7 @@ var _ = Describe("go-functional", func() {
 				}
 
 				func main() {
-					slice := []fstring.T{"bar", "baz"}
+					slice := []string{"bar", "baz"}
 					newSlice := fstring.Lift(slice).Map(fstring.Λ(prependFoo)).Collect()
 					expected := []fstring.T{"foobar", "foobaz"}
 
@@ -201,7 +170,7 @@ var _ = Describe("go-functional", func() {
 				}
 
 				func main() {
-					slice := []fstring.T{"foo", "bar"}
+					slice := []string{"foo", "bar"}
 					result := fstring.Lift(slice).Fold("", fstring.Π(prepend))
 
 					if result != "foobar" {
