@@ -100,7 +100,7 @@ var _ = Describe("go-functional", func() {
 					"somebin/fstring"
 				)
 
-				func isEmpty(s fstring.T) bool {
+				func isEmpty(s string) bool {
 					return s == ""
 				}
 

@@ -8,7 +8,7 @@ import (
 
 var _ = Describe("ExcludeIter", func() {
 	It("excludes items from the Iterator that pass the exclusion check", func() {
-		lessThanFive := func(i template.T) bool {
+		lessThanFive := func(i interface{}) bool {
 			value, ok := i.(int)
 			Expect(ok).To(BeTrue())
 			return value < 5

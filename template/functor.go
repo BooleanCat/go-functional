@@ -31,7 +31,7 @@ func (f *Functor) Filter(filter filterFunc) *Functor {
 	return f
 }
 
-func (f *Functor) Exclude(exclude func(T) bool) *Functor {
+func (f *Functor) Exclude(exclude filterFunc) *Functor {
 	f.iter = NewExclude(f.iter, exclude)
 	return f
 }
