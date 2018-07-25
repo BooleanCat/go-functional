@@ -4,8 +4,8 @@ type Iter interface {
 	Next() Option
 }
 
-func Collect(iter Iter) []T {
-	slice := []T{}
+func collect(iter Iter) tSlice {
+	slice := tSlice{}
 
 	for {
 		option := iter.Next()
@@ -13,7 +13,7 @@ func Collect(iter Iter) []T {
 			return slice
 		}
 
-		slice = append(slice, option.Value)
+		slice = append(slice, fromT(option.Value))
 	}
 }
 

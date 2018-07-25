@@ -6,6 +6,14 @@ type (
 	mapFunc func(interface{}) interface{}
 )
 
+func Collect(iter Iter) []interface{} {
+	return collect(iter)
+}
+
+func (f *Functor) Collect() []interface{} {
+	return Collect(f.iter)
+}
+
 func fromT(value T) interface{} {
 	return interface{}(value)
 }

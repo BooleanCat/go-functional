@@ -18,6 +18,14 @@ func TypeFileContent(typeName string) *jen.File {
 		jen.Return(jen.Id(typeName).Call(jen.Id("value"))),
 	)
 
+	f.Func().Id("Collect").Params(jen.Id("iter").Id("Iter")).Index().Id(typeName).Block(
+		jen.Return(jen.Id("collect").Call(jen.Id("iter"))),
+	)
+
+	f.Func().Params(jen.Id("f").Op("*").Id("Functor")).Id("Collect").Params().Index().Id(typeName).Block(
+		jen.Return(jen.Id("Collect").Call(jen.Id("f").Dot("iter"))),
+	)
+
 	// Generates...
 	// func TFold(f func(<T>, <T>) <T>) func(T, T) T {
 	//   return func(a, b T) T {

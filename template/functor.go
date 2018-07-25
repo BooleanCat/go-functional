@@ -59,7 +59,3 @@ func (f *Functor) Chain(iters ...Iter) *Functor {
 func (f *Functor) Fold(initial T, op foldOp) T {
 	return Fold(f.iter, initial, op)
 }
-
-func (f *Functor) Collect() []T {
-	return Collect(f.iter)
-}

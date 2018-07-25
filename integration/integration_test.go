@@ -74,7 +74,7 @@ var _ = Describe("go-functional", func() {
 				func main() {
 					slice := []int{1, 2, 3}
 					newSlice := fint.Lift(slice).Filter(isOdd).Collect()
-					expected := []fint.T{1, 3}
+					expected := []int{1, 3}
 
 					if !reflect.DeepEqual(newSlice, expected) {
 						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))
@@ -111,7 +111,7 @@ var _ = Describe("go-functional", func() {
 				func main() {
 					slice := []string{"", "", "bar", ""}
 					newSlice := fstring.Lift(slice).Exclude(isEmpty).Map(prependFoo).Collect()
-					expected := []fstring.T{"foobar"}
+					expected := []string{"foobar"}
 
 					if !reflect.DeepEqual(newSlice, expected) {
 						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))

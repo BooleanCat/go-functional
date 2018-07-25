@@ -15,7 +15,7 @@ var _ = Describe("ChainIter", func() {
 		first := template.NewTake(template.NewDrop(NewCounter(), 4), 2)
 
 		result := template.Collect(template.NewChain(first, second, third))
-		expected := []template.T{4, 5, 2, 3, 0, 1}
+		expected := []interface{}{4, 5, 2, 3, 0, 1}
 		Expect(reflect.DeepEqual(result, expected)).To(BeTrue())
 	})
 
