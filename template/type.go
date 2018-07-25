@@ -1,10 +1,11 @@
 package template
 
 type (
-	T        interface{}
-	tSlice   []interface{}
-	mapFunc  func(interface{}) interface{}
-	foldFunc func(interface{}, interface{}) interface{}
+	T          interface{}
+	tSlice     []interface{}
+	mapFunc    func(interface{}) interface{}
+	foldFunc   func(interface{}, interface{}) interface{}
+	filterFunc func(interface{}) bool
 )
 
 func Collect(iter Iter) []interface{} {

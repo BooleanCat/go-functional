@@ -67,7 +67,7 @@ var _ = Describe("go-functional", func() {
 					"somebin/fint"
 				)
 
-				func isOdd(n fint.T) bool {
+				func isOdd(n int) bool {
 					return n % 2 == 1
 				}
 

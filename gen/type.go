@@ -17,6 +17,9 @@ func TypeFileContent(typeName string) *jen.File {
 	f.Type().Id("foldFunc").Func().Params(jen.Id(typeName), jen.Id(typeName)).Id(typeName)
 	f.Line()
 
+	f.Type().Id("filterFunc").Func().Params(jen.Id(typeName)).Bool()
+	f.Line()
+
 	f.Func().Id("fromT").Params(jen.Id("value").Id("T")).Id(typeName).Block(
 		jen.Return(jen.Id(typeName).Call(jen.Id("value"))),
 	)

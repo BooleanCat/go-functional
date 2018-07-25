@@ -26,7 +26,7 @@ func (f *Lifted) Next() Option {
 	return Some(T(f.slice[f.index-1]))
 }
 
-func (f *Functor) Filter(filter func(T) bool) *Functor {
+func (f *Functor) Filter(filter filterFunc) *Functor {
 	f.iter = NewFilter(f.iter, filter)
 	return f
 }
