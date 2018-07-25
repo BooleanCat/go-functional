@@ -8,7 +8,7 @@ import (
 
 var _ = Describe("MapIter", func() {
 	It("applies the map operation to each item", func() {
-		double := func(value template.T) template.T {
+		double := func(value interface{}) interface{} {
 			i, ok := value.(int)
 			Expect(ok).To(BeTrue())
 			return interface{}(i * 2)

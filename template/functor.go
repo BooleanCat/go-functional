@@ -46,7 +46,7 @@ func (f *Functor) Take(n int) *Functor {
 	return f
 }
 
-func (f *Functor) Map(op func(T) T) *Functor {
+func (f *Functor) Map(op mapFunc) *Functor {
 	f.iter = NewMap(f.iter, op)
 	return f
 }

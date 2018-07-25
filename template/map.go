@@ -2,10 +2,10 @@ package template
 
 type MapIter struct {
 	iter Iter
-	op   func(T) T
+	op   mapFunc
 }
 
-func NewMap(iter Iter, op func(T) T) MapIter {
+func NewMap(iter Iter, op mapFunc) MapIter {
 	return MapIter{iter: iter, op: op}
 }
 
@@ -15,5 +15,5 @@ func (iter MapIter) Next() Option {
 		return next
 	}
 
-	return Some(iter.op(next.Value))
+	return Some(T(iter.op(fromT(next.Value))))
 }

@@ -104,7 +104,7 @@ var _ = Describe("go-functional", func() {
 					return s == ""
 				}
 
-				func prependFoo(s fstring.T) fstring.T {
+				func prependFoo(s string) string {
 					return "foo" + s
 				}
 
@@ -112,37 +112,6 @@ var _ = Describe("go-functional", func() {
 					slice := []string{"", "", "bar", ""}
 					newSlice := fstring.Lift(slice).Exclude(isEmpty).Map(prependFoo).Collect()
 					expected := []fstring.T{"foobar"}
-
-					if !reflect.DeepEqual(newSlice, expected) {
-						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))
-					}
-				}
-			`))
-
-			Expect(cmd.Run()).To(Succeed())
-		})
-
-		It("generates a type wrapper for map functions", func() {
-			cmd := goFunctionalCommand(someBinPath, "string")
-			Expect(cmd.Run()).To(Succeed())
-
-			cmd = makeFunctionalSample(workDir, "somebin", clean(`
-				package main
-
-				import (
-					"fmt"
-					"reflect"
-					"somebin/fstring"
-				)
-
-				func prependFoo(s string) string {
-					return "foo" + s
-				}
-
-				func main() {
-					slice := []string{"bar", "baz"}
-					newSlice := fstring.Lift(slice).Map(fstring.Λ(prependFoo)).Collect()
-					expected := []fstring.T{"foobar", "foobaz"}
 
 					if !reflect.DeepEqual(newSlice, expected) {
 						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))
