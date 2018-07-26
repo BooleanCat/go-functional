@@ -38,6 +38,7 @@ func generateSourceFiles(typeName string) error {
 
 func templateFiles() []string {
 	return []string{
+		"chain.go",
 		"drop.go",
 		"exclude.go",
 		"filter.go",
@@ -45,8 +46,8 @@ func templateFiles() []string {
 		"iter.go",
 		"map.go",
 		"option.go",
+		"repeat.go",
 		"take.go",
-		"chain.go",
 	}
 }
 
