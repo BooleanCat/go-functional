@@ -94,6 +94,153 @@ var _ = Describe("go-functional", func() {
 			cmd = makeFunctionalSample(workDir, "somebin", clean(`
 				package main
 
+				import "somebin/fstring"
+
+				func main() {
+					_ = []fstring.T{"", "", "bar", ""}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Lift", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import "somebin/fstring"
+
+				func main() {
+					slice := []string{"", "", "bar", ""}
+					_ = fstring.Lift(slice)
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Collect", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"reflect"
+					"somebin/fstring"
+				)
+
+				func main() {
+					slice := []string{"bar", "foo"}
+					result := fstring.Lift(slice).Collect()
+					expected := []string{"bar", "foo"}
+
+					if !reflect.DeepEqual(expected, result) {
+						panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Drop", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"reflect"
+					"somebin/fstring"
+				)
+
+				func main() {
+					slice := []string{"bar", "foo", "baz"}
+					result := fstring.Lift(slice).Drop(2).Collect()
+					expected := []string{"baz"}
+
+					if !reflect.DeepEqual(expected, result) {
+						panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Take", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"reflect"
+					"somebin/fstring"
+				)
+
+				func main() {
+					slice := []string{"bar", "foo", "baz"}
+					result := fstring.Lift(slice).Take(2).Collect()
+					expected := []string{"bar", "foo"}
+
+					if !reflect.DeepEqual(expected, result) {
+						panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Filter", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"reflect"
+					"somebin/fstring"
+				)
+
+				func hasLen3(s string) bool {
+					return len(s) == 3
+				}
+
+				func main() {
+					slice := []string{"bar", "foos", "baz"}
+					result := fstring.Lift(slice).Filter(hasLen3).Collect()
+					expected := []string{"bar", "baz"}
+
+					if !reflect.DeepEqual(expected, result) {
+						panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Exclude", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
 				import (
 					"fmt"
 					"reflect"
@@ -104,17 +251,98 @@ var _ = Describe("go-functional", func() {
 					return s == ""
 				}
 
+				func main() {
+					slice := []string{"", "foos", "baz"}
+					result := fstring.Lift(slice).Exclude(isEmpty).Collect()
+					expected := []string{"foos", "baz"}
+
+					if !reflect.DeepEqual(expected, result) {
+						panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Repeat", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"reflect"
+					"somebin/fstring"
+				)
+
+				func main() {
+					result := fstring.New(fstring.NewRepeat("foo")).Take(3).Collect()
+					expected := []string{"foo", "foo", "foo"}
+
+					if !reflect.DeepEqual(expected, result) {
+						panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Chain", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"reflect"
+					"somebin/fstring"
+				)
+
+				func main() {
+					foos := fstring.NewRepeat("foo")
+					bars := fstring.NewRepeat("bar")
+					result := fstring.New(foos).Take(2).Chain(bars).Take(4).Collect()
+					expected := []string{"foo", "foo", "bar", "bar"}
+
+					if !reflect.DeepEqual(expected, result) {
+						panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+					}
+				}
+			`))
+
+			Expect(cmd.Run()).To(Succeed())
+		})
+
+		It("generates with Map", func() {
+			cmd := goFunctionalCommand(someBinPath, "string")
+			Expect(cmd.Run()).To(Succeed())
+
+			cmd = makeFunctionalSample(workDir, "somebin", clean(`
+				package main
+
+				import (
+					"fmt"
+					"reflect"
+					"somebin/fstring"
+				)
+
 				func prependFoo(s string) string {
 					return "foo" + s
 				}
 
 				func main() {
-					slice := []string{"", "", "bar", ""}
-					newSlice := fstring.Lift(slice).Exclude(isEmpty).Map(prependFoo).Collect()
-					expected := []string{"foobar"}
+					slice := []string{"bar", "baz"}
+					result := fstring.Lift(slice).Map(prependFoo).Collect()
+					expected := []string{"foobar", "foobaz"}
 
-					if !reflect.DeepEqual(newSlice, expected) {
-						panic(fmt.Sprintf("expected %#v to equal %#v", expected, newSlice))
+					if !reflect.DeepEqual(expected, result) {
+						panic(fmt.Sprintf("expected %v to equal %v", expected, result))
 					}
 				}
 			`))
