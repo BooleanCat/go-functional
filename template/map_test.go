@@ -9,14 +9,12 @@ import (
 var _ = Describe("MapIter", func() {
 	It("applies the map operation to each item", func() {
 		double := func(value interface{}) interface{} {
-			i, ok := value.(int)
-			Expect(ok).To(BeTrue())
-			return interface{}(i * 2)
+			return interface{}(toInt(value) * 2)
 		}
 
-		iter := template.NewMap(NewCounter(), double)
-		Expect(optionValue(iter.Next())).To(Equal(0))
-		Expect(optionValue(iter.Next())).To(Equal(2))
-		Expect(optionValue(iter.Next())).To(Equal(4))
+		iter := template.NewMap(template.NewTake(NewCounter(), 3), double)
+		result := template.Collect(iter)
+		expected := []interface{}{0, 2, 4}
+		Expect(result).To(Equal(expected))
 	})
 })

@@ -1,8 +1,6 @@
 package template_test
 
 import (
-	"reflect"
-
 	"github.com/BooleanCat/go-functional/template"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -16,7 +14,7 @@ var _ = Describe("ChainIter", func() {
 
 		result := template.Collect(template.NewChain(first, second, third))
 		expected := []interface{}{4, 5, 2, 3, 0, 1}
-		Expect(reflect.DeepEqual(result, expected)).To(BeTrue())
+		Expect(result).To(Equal(expected))
 	})
 
 	When("there are no iterators to chain", func() {

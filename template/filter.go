@@ -12,7 +12,7 @@ func NewFilter(iter Iter, filter filterFunc) FilterIter {
 func (iter FilterIter) Next() Option {
 	for {
 		option := iter.iter.Next()
-		if !option.Present() || iter.filter(fromT(option.Value)) {
+		if !option.Present() || iter.filter(fromT(option.Value())) {
 			return option
 		}
 	}

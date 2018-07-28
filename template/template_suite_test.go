@@ -36,5 +36,5 @@ func toInt(value interface{}) int {
 
 func optionValue(option template.Option) int {
 	Expect(option.Present()).To(BeTrue())
-	return toInt(option.Value)
+	return toInt(option.Value())
 }

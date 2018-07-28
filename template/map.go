@@ -15,5 +15,5 @@ func (iter MapIter) Next() Option {
 		return next
 	}
 
-	return Some(T(iter.op(fromT(next.Value))))
+	return Some(T(iter.op(fromT(next.Value()))))
 }

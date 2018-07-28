@@ -11,7 +11,7 @@ func NewExclude(iter Iter, exclude filterFunc) ExcludeIter {
 
 func (iter ExcludeIter) Next() Option {
 	for {
-		if option := iter.iter.Next(); !option.Present() || !iter.exclude(fromT(option.Value)) {
+		if option := iter.iter.Next(); !option.Present() || !iter.exclude(fromT(option.Value())) {
 			return option
 		}
 	}

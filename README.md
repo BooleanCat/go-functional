@@ -41,11 +41,11 @@ a := fstring.Some("foo")  // holds the value `foo`
 b := fstring.None()  // holds no value
 a.Present()  # true
 b.Present()  # false
-a.Value  // The underlying value of the option.
+a.Value()  // The underlying value of the option.
 ```
 
 Options should always be checked for the presence of a value before using
-`Option.Value`.
+`Option.Value()`.
 
 `Iterators`s are defined as types that yield Options of a particular type by
 implementing:
@@ -256,11 +256,11 @@ func (f Foo) Next() Option {
     return None()
   }
 
-  if a.Value == nil {
+  if a.Value() == nil {
     panic("attempt to yield nil transformatation")
   }
 
-  v, ok := a.Value.(string)
+  v, ok := a.Value().(string)
   if !ok {
     panic("attempt to type assert non-string to string")
   }

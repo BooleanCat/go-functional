@@ -13,7 +13,7 @@ func collect(iter Iter) tSlice {
 			return slice
 		}
 
-		slice = append(slice, fromT(option.Value))
+		slice = append(slice, fromT(option.Value()))
 	}
 }
 
@@ -25,6 +25,6 @@ func fold(iter Iter, initial T, op foldFunc) T {
 			return result
 		}
 
-		result = T(op(fromT(result), fromT(next.Value)))
+		result = T(op(fromT(result), fromT(next.Value())))
 	}
 }

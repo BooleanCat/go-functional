@@ -11,9 +11,8 @@ var _ = Describe("iter", func() {
 	Describe("Collect", func() {
 		It("collects an iterator into a slice", func() {
 			slice := template.New(NewCounter()).Take(2).Collect()
-			Expect(slice).To(HaveLen(2))
-			Expect(toInt(slice[0])).To(Equal(0))
-			Expect(toInt(slice[1])).To(Equal(1))
+			expected := []interface{}{0, 1}
+			Expect(slice).To(Equal(expected))
 		})
 
 		When("collecting an empty iterator", func() {

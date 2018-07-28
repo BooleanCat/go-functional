@@ -1,16 +1,20 @@
 package template
 
 type Option struct {
-	Value   T
+	value   T
 	present bool
 }
 
 func Some(value T) Option {
-	return Option{Value: value, present: true}
+	return Option{value: value, present: true}
 }
 
 func None() Option {
 	return Option{}
+}
+
+func (o Option) Value() T {
+	return o.value
 }
 
 func (o Option) Present() bool {
