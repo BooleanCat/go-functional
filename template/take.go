@@ -5,7 +5,7 @@ type TakeIter struct {
 	n    int
 }
 
-func NewTake(iter Iter, n int) *TakeIter {
+func Take(iter Iter, n int) *TakeIter {
 	return &TakeIter{iter: iter, n: n}
 }
 

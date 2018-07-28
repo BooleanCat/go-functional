@@ -27,31 +27,31 @@ func (f *Lifted) Next() Option {
 }
 
 func (f *Functor) Filter(filter filterFunc) *Functor {
-	f.iter = NewFilter(f.iter, filter)
+	f.iter = Filter(f.iter, filter)
 	return f
 }
 
 func (f *Functor) Exclude(exclude filterFunc) *Functor {
-	f.iter = NewExclude(f.iter, exclude)
+	f.iter = Exclude(f.iter, exclude)
 	return f
 }
 
 func (f *Functor) Drop(n int) *Functor {
-	f.iter = NewDrop(f.iter, n)
+	f.iter = Drop(f.iter, n)
 	return f
 }
 
 func (f *Functor) Take(n int) *Functor {
-	f.iter = NewTake(f.iter, n)
+	f.iter = Take(f.iter, n)
 	return f
 }
 
 func (f *Functor) Map(op mapFunc) *Functor {
-	f.iter = NewMap(f.iter, op)
+	f.iter = Map(f.iter, op)
 	return f
 }
 
 func (f *Functor) Chain(iters ...Iter) *Functor {
-	f.iter = NewChain(append([]Iter{f.iter}, iters...)...)
+	f.iter = Chain(append([]Iter{f.iter}, iters...)...)
 	return f
 }

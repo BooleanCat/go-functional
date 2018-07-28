@@ -5,7 +5,7 @@ type DropIter struct {
 	n    int
 }
 
-func NewDrop(iter Iter, n int) *DropIter {
+func Drop(iter Iter, n int) *DropIter {
 	return &DropIter{iter: iter, n: n}
 }
 

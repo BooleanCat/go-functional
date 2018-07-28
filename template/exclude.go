@@ -5,7 +5,7 @@ type ExcludeIter struct {
 	exclude filterFunc
 }
 
-func NewExclude(iter Iter, exclude filterFunc) ExcludeIter {
+func Exclude(iter Iter, exclude filterFunc) ExcludeIter {
 	return ExcludeIter{iter: iter, exclude: exclude}
 }
 

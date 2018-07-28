@@ -216,7 +216,7 @@ var _ = Describe("go-functional", func() {
 			)
 
 			func main() {
-				result := fint.New(fint.NewRepeat(42)).Take(3).Collect()
+				result := fint.New(fint.Repeat(42)).Take(3).Collect()
 				expected := []int{42, 42, 42}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -242,8 +242,8 @@ var _ = Describe("go-functional", func() {
 			)
 
 			func main() {
-				a := fint.NewRepeat(7)
-				b := fint.NewRepeat(42)
+				a := fint.Repeat(7)
+				b := fint.Repeat(42)
 				result := fint.New(a).Take(2).Chain(b).Take(4).Collect()
 				expected := []int{7, 7, 42, 42}
 

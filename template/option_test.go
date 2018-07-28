@@ -1,17 +1,17 @@
 package template_test
 
 import (
-	"github.com/BooleanCat/go-functional/template"
+	t "github.com/BooleanCat/go-functional/template"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Option", func() {
 	When("instantiated with a value", func() {
-		var option template.Option
+		var option t.Option
 
 		BeforeEach(func() {
-			option = template.Some(5)
+			option = t.Some(5)
 		})
 
 		It("holds a value", func() {
@@ -25,7 +25,7 @@ var _ = Describe("Option", func() {
 
 	When("instantiated with no value", func() {
 		It("holds no value", func() {
-			option := template.None()
+			option := t.None()
 			Expect(option.Present()).To(BeFalse())
 		})
 	})

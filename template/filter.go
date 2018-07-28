@@ -5,7 +5,7 @@ type FilterIter struct {
 	filter filterFunc
 }
 
-func NewFilter(iter Iter, filter filterFunc) FilterIter {
+func Filter(iter Iter, filter filterFunc) FilterIter {
 	return FilterIter{iter: iter, filter: filter}
 }
 

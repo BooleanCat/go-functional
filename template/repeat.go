@@ -4,7 +4,7 @@ type RepeatIter struct {
 	value T
 }
 
-func NewRepeat(value T) RepeatIter {
+func Repeat(value T) RepeatIter {
 	return RepeatIter{value}
 }
 

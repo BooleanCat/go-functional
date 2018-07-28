@@ -5,7 +5,7 @@ type ChainIter struct {
 	i     int
 }
 
-func NewChain(iters ...Iter) *ChainIter {
+func Chain(iters ...Iter) *ChainIter {
 	return &ChainIter{iters: iters}
 }
 

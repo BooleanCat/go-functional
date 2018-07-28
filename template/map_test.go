@@ -1,7 +1,7 @@
 package template_test
 
 import (
-	"github.com/BooleanCat/go-functional/template"
+	t "github.com/BooleanCat/go-functional/template"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -12,8 +12,8 @@ var _ = Describe("MapIter", func() {
 			return interface{}(toInt(value) * 2)
 		}
 
-		iter := template.NewMap(template.NewTake(NewCounter(), 3), double)
-		result := template.Collect(iter)
+		iter := t.Map(t.Take(NewCounter(), 3), double)
+		result := t.Collect(iter)
 		expected := []interface{}{0, 2, 4}
 		Expect(result).To(Equal(expected))
 	})

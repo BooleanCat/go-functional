@@ -5,7 +5,7 @@ type MapIter struct {
 	op   mapFunc
 }
 
-func NewMap(iter Iter, op mapFunc) MapIter {
+func Map(iter Iter, op mapFunc) MapIter {
 	return MapIter{iter: iter, op: op}
 }
 

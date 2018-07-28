@@ -216,7 +216,7 @@ var _ = Describe("go-functional", func() {
 			)
 
 			func main() {
-				result := fstring.New(fstring.NewRepeat("foo")).Take(3).Collect()
+				result := fstring.New(fstring.Repeat("foo")).Take(3).Collect()
 				expected := []string{"foo", "foo", "foo"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -242,8 +242,8 @@ var _ = Describe("go-functional", func() {
 			)
 
 			func main() {
-				foos := fstring.NewRepeat("foo")
-				bars := fstring.NewRepeat("bar")
+				foos := fstring.Repeat("foo")
+				bars := fstring.Repeat("bar")
 				result := fstring.New(foos).Take(2).Chain(bars).Take(4).Collect()
 				expected := []string{"foo", "foo", "bar", "bar"}
 
