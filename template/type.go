@@ -17,10 +17,10 @@ func (f *Functor) Collect() []interface{} {
 }
 
 func Fold(iter Iter, initial interface{}, op foldFunc) interface{} {
-	return fold(iter, initial, op)
+	return fold(iter, T(initial), op)
 }
 
-func (f *Functor) Fold(initial T, op foldFunc) interface{} {
+func (f *Functor) Fold(initial interface{}, op foldFunc) interface{} {
 	return Fold(f.iter, initial, op)
 }
 

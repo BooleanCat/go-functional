@@ -266,20 +266,46 @@ var _ = Describe("go-functional", func() {
 			import (
 				"fmt"
 				"reflect"
+				"strings"
 				"somebin/fstring"
 			)
 
-			func prependFoo(s string) string {
-				return "foo" + s
-			}
-
 			func main() {
 				slice := []string{"bar", "baz"}
-				result := fstring.Lift(slice).Map(prependFoo).Collect()
-				expected := []string{"foobar", "foobaz"}
+				result := fstring.Lift(slice).Map(strings.Title).Collect()
+				expected := []string{"Bar", "Baz"}
 
 				if !reflect.DeepEqual(expected, result) {
 					panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
+	It("generates with Fold", func() {
+		cmd := goFunctionalCommand(someBinPath, "string")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"somebin/fstring"
+			)
+
+			func prepend(a, b string) string {
+				return b + a
+			}
+
+			func main() {
+				slice := []string{"foo", "bar", "baz"}
+				result := fstring.Lift(slice).Fold("", prepend)
+
+				if result != "bazbarfoo" {
+					panic(fmt.Sprintf("expected bazbarfoo to equal %d", result))
 				}
 			}
 		`))

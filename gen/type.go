@@ -25,6 +25,14 @@ func TypeFileContent(typeName string) *jen.File {
 		jen.Return(jen.Id("Collect").Call(jen.Id("f").Dot("iter"))),
 	)
 
+	f.Func().Id("Fold").Params(jen.Id("iter").Id("Iter"), jen.Id("initial").Id(typeName), jen.Id("op").Id("foldFunc")).Id(typeName).Block(
+		jen.Return(jen.Id("fromT").Call(jen.Id("fold").Call(jen.Id("iter"), jen.Id("T").Call(jen.Id("initial")), jen.Id("op")))),
+	)
+
+	f.Func().Params(jen.Id("f").Op("*").Id("Functor")).Id("Fold").Params(jen.Id("initial").Id(typeName), jen.Id("op").Id("foldFunc")).Id(typeName).Block(
+		jen.Return(jen.Id("Fold").Call(jen.Id("f").Dot("iter"), jen.Id("initial"), jen.Id("op"))),
+	)
+
 	return f
 }
 

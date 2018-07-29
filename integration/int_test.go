@@ -286,4 +286,33 @@ var _ = Describe("go-functional", func() {
 
 		Expect(cmd.Run()).To(Succeed())
 	})
+
+	It("generates with Fold", func() {
+		cmd := goFunctionalCommand(someBinPath, "int")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"somebin/fint"
+			)
+
+			func sum(a, b int) int {
+				return a + b
+			}
+
+			func main() {
+				slice := []int{1, 2, 3, 4}
+				result := fint.Lift(slice).Fold(0, sum)
+
+				if result != 10 {
+					panic(fmt.Sprintf("expected 10 to equal %d", result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
 })
