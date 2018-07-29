@@ -6,7 +6,7 @@ type ExcludeIter struct {
 }
 
 func Exclude(iter Iter, exclude filterFunc) ExcludeIter {
-	return ExcludeIter{iter: iter, exclude: exclude}
+	return ExcludeIter{iter, exclude}
 }
 
 func (iter ExcludeIter) Next() Option {

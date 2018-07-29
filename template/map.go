@@ -6,7 +6,7 @@ type MapIter struct {
 }
 
 func Map(iter Iter, op mapFunc) MapIter {
-	return MapIter{iter: iter, op: op}
+	return MapIter{iter, op}
 }
 
 func (iter MapIter) Next() Option {

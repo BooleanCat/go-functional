@@ -6,7 +6,7 @@ type TakeIter struct {
 }
 
 func Take(iter Iter, n int) *TakeIter {
-	return &TakeIter{iter: iter, n: n}
+	return &TakeIter{iter, n}
 }
 
 func (iter *TakeIter) Next() Option {

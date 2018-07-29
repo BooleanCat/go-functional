@@ -6,7 +6,7 @@ type DropIter struct {
 }
 
 func Drop(iter Iter, n int) *DropIter {
-	return &DropIter{iter: iter, n: n}
+	return &DropIter{iter, n}
 }
 
 func (iter *DropIter) Next() Option {

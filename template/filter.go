@@ -6,7 +6,7 @@ type FilterIter struct {
 }
 
 func Filter(iter Iter, filter filterFunc) FilterIter {
-	return FilterIter{iter: iter, filter: filter}
+	return FilterIter{iter, filter}
 }
 
 func (iter FilterIter) Next() Option {

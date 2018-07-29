@@ -5,7 +5,7 @@ type Functor struct {
 }
 
 func New(iter Iter) *Functor {
-	return &Functor{iter: iter}
+	return &Functor{iter}
 }
 
 type Lifted struct {
