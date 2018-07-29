@@ -10,13 +10,13 @@ func Generate(typeName, path string) error {
 		return err
 	}
 
-	destination := filepath.Join("f"+typeName, "type.go")
+	destination := filepath.Join(packageName(typeName), "type.go")
 	content := []byte(TypeFileContent(typeName).GoString())
 	return writeFile(destination, content)
 }
 
 func generateSourceFiles(typeName string) error {
-	sourceFiles, err := NewSourceFiles("f" + typeName)
+	sourceFiles, err := NewSourceFiles(packageName(typeName))
 	if err != nil {
 		return err
 	}
@@ -27,7 +27,7 @@ func generateSourceFiles(typeName string) error {
 			return err
 		}
 
-		destination := filepath.Join("f"+typeName, f)
+		destination := filepath.Join(packageName(typeName), f)
 		if err = writeFile(destination, content); err != nil {
 			return err
 		}

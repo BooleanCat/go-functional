@@ -3,7 +3,7 @@ package gen
 import "github.com/dave/jennifer/jen"
 
 func TypeFileContent(typeName string) *jen.File {
-	f := jen.NewFile("f" + typeName)
+	f := jen.NewFile(packageName(typeName))
 
 	f.Type().Defs(
 		jen.Id("T").Id(typeName),
@@ -26,4 +26,11 @@ func TypeFileContent(typeName string) *jen.File {
 	)
 
 	return f
+}
+
+func packageName(typeName string) string {
+	if typeName == "interface{}" {
+		return "finterface"
+	}
+	return "f" + typeName
 }
