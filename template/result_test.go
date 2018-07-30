@@ -8,7 +8,7 @@ import (
 
 var _ = Describe("Option", func() {
 	When("instantiated with a value", func() {
-		var option t.Option
+		var option t.Result
 
 		BeforeEach(func() {
 			option = t.Some(5)
@@ -19,7 +19,7 @@ var _ = Describe("Option", func() {
 		})
 
 		It("holds the correct value", func() {
-			Expect(optionValue(option)).To(Equal(5))
+			Expect(resultValue(option)).To(Equal(5))
 		})
 	})
 

@@ -17,7 +17,7 @@ func Lift(slice tSlice) *Functor {
 	return &Functor{iter: &Lifted{slice: slice}}
 }
 
-func (f *Lifted) Next() Option {
+func (f *Lifted) Next() Result {
 	if f.index >= len(f.slice) {
 		return None()
 	}

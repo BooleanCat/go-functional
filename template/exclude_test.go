@@ -15,7 +15,7 @@ var _ = Describe("ExcludeIter", func() {
 		}
 
 		iter := t.Exclude(NewCounter(), lessThanFive)
-		next := optionValue(iter.Next())
+		next := resultValue(iter.Next())
 		Expect(next).To(Equal(5))
 	})
 })

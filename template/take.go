@@ -9,7 +9,7 @@ func Take(iter Iter, n int) *TakeIter {
 	return &TakeIter{iter, n}
 }
 
-func (iter *TakeIter) Next() Option {
+func (iter *TakeIter) Next() Result {
 	if iter.n <= 0 {
 		return None()
 	}

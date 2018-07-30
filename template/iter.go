@@ -1,7 +1,7 @@
 package template
 
 type Iter interface {
-	Next() Option
+	Next() Result
 }
 
 func collect(iter Iter) tSlice {

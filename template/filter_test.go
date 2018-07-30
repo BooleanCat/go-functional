@@ -15,7 +15,7 @@ var _ = Describe("FilterIter", func() {
 		}
 
 		iter := t.Filter(NewCounter(), greaterThanThree)
-		next := optionValue(iter.Next())
+		next := resultValue(iter.Next())
 		Expect(next).To(Equal(4))
 	})
 })

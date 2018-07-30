@@ -9,7 +9,7 @@ func Map(iter Iter, op mapFunc) MapIter {
 	return MapIter{iter, op}
 }
 
-func (iter MapIter) Next() Option {
+func (iter MapIter) Next() Result {
 	next := iter.iter.Next()
 	if !next.Present() {
 		return next

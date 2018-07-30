@@ -21,7 +21,7 @@ func NewCounter() *Counter {
 	return &Counter{}
 }
 
-func (c *Counter) Next() template.Option {
+func (c *Counter) Next() template.Result {
 	next := template.Some(c.i)
 	c.i++
 	return next
@@ -34,7 +34,7 @@ func toInt(value interface{}) int {
 	return i
 }
 
-func optionValue(option template.Option) int {
-	Expect(option.Present()).To(BeTrue())
-	return toInt(option.Value())
+func resultValue(result template.Result) int {
+	Expect(result.Present()).To(BeTrue())
+	return toInt(result.Value())
 }

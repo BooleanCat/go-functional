@@ -9,14 +9,14 @@ import (
 var _ = Describe("DropIter", func() {
 	It("drops the first n items", func() {
 		iter := t.Drop(NewCounter(), 2)
-		next := optionValue(iter.Next())
+		next := resultValue(iter.Next())
 		Expect(next).To(Equal(2))
 	})
 
 	When("n is 0", func() {
 		It("drops nothing", func() {
 			iter := t.Drop(NewCounter(), 0)
-			next := optionValue(iter.Next())
+			next := resultValue(iter.Next())
 			Expect(next).To(Equal(0))
 		})
 	})

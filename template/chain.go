@@ -9,7 +9,7 @@ func Chain(iters ...Iter) *ChainIter {
 	return &ChainIter{iters: iters}
 }
 
-func (iter *ChainIter) Next() Option {
+func (iter *ChainIter) Next() Result {
 	for {
 		if len(iter.iters) <= iter.i {
 			return None()

@@ -19,7 +19,7 @@ type Counter struct {
   i fint.T
 }
 
-func (c *Counter) Next() fint.Option {
+func (c *Counter) Next() fint.Result {
   next := c.i
   c.i++
   return fint.Some(next)
@@ -32,8 +32,8 @@ func getPrimes() []int {
 
 ## Tell me more
 
-The basic building blocks of go-functional are `Iterator`s and `Option`s. An
-`Option` is simply a struct that *may* hold some value, or it *may* hold no
+The basic building blocks of go-functional are `Iterator`s and `Result`s. An
+`Result` is simply a struct that *may* hold some value, or it *may* hold no
 value. For example, for functional helpers generated for the `string` type:
 
 ```go
@@ -44,15 +44,15 @@ b.Present()  # false
 a.Value()  // The underlying value of the option.
 ```
 
-Options should always be checked for the presence of a value before using
-`Option.Value()`.
+Results should always be checked for the presence of a value before using
+`Result.Value()`.
 
-`Iterators`s are defined as types that yield Options of a particular type by
+`Iterators`s are defined as types that yield Results of a particular type by
 implementing:
 
 ```go
 type Iterator interface {
-  Next() Option
+  Next() Result
 }
 ```
 
@@ -63,7 +63,7 @@ type Alphabet struct {
   letter int
 }
 
-func (a *Alphabet) Next() fstring.Option {
+func (a *Alphabet) Next() fstring.Result {
   if a.letter > 25 {
     return fstring.None()
   }
@@ -84,7 +84,7 @@ type Counter struct {
   i fint.T
 }
 
-func (c *Counter) Next() fint.Option {
+func (c *Counter) Next() fint.Result {
   next := c.i
   c.i++
   return fint.Some(next)
@@ -250,7 +250,7 @@ My current thinking is that it would be up to the programmer to ensure type
 safety, and `From`'s `Next` would look something like:
 
 ```go
-func (f Foo) Next() Option {
+func (f Foo) Next() Result {
   a := f.Next()
   if !a.Present() {
     return None()

@@ -9,7 +9,7 @@ func Drop(iter Iter, n int) *DropIter {
 	return &DropIter{iter, n}
 }
 
-func (iter *DropIter) Next() Option {
+func (iter *DropIter) Next() Result {
 	for iter.n > 0 {
 		iter.n--
 		iter.iter.Next()

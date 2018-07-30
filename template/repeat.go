@@ -8,6 +8,6 @@ func Repeat(value T) RepeatIter {
 	return RepeatIter{value}
 }
 
-func (iter RepeatIter) Next() Option {
+func (iter RepeatIter) Next() Result {
 	return Some(iter.value)
 }
