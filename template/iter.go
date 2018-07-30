@@ -8,12 +8,12 @@ func collect(iter Iter) tSlice {
 	slice := tSlice{}
 
 	for {
-		option := iter.Next()
-		if !option.Present() {
+		next := iter.Next()
+		if next.Error() == ErrNoValue {
 			return slice
 		}
 
-		slice = append(slice, fromT(option.Value()))
+		slice = append(slice, fromT(next.Value()))
 	}
 }
 
@@ -21,7 +21,7 @@ func fold(iter Iter, initial T, op foldFunc) T {
 	result := initial
 	for {
 		next := iter.Next()
-		if !next.Present() {
+		if next.Error() == ErrNoValue {
 			return result
 		}
 

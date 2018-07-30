@@ -16,7 +16,7 @@ func (iter *ChainIter) Next() Result {
 		}
 
 		next := iter.iters[iter.i].Next()
-		if !next.Present() {
+		if next.Error() == ErrNoValue {
 			iter.i++
 			continue
 		}

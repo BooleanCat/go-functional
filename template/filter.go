@@ -11,9 +11,9 @@ func Filter(iter Iter, filter filterFunc) FilterIter {
 
 func (iter FilterIter) Next() Result {
 	for {
-		option := iter.iter.Next()
-		if !option.Present() || iter.filter(fromT(option.Value())) {
-			return option
+		result := iter.iter.Next()
+		if result.Error() == ErrNoValue || iter.filter(fromT(result.Value())) {
+			return result
 		}
 	}
 }

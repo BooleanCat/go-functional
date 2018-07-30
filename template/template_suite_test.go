@@ -35,6 +35,6 @@ func toInt(value interface{}) int {
 }
 
 func resultValue(result template.Result) int {
-	Expect(result.Present()).To(BeTrue())
+	Expect(result.Error()).To(BeNil())
 	return toInt(result.Value())
 }
