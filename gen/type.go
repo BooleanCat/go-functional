@@ -9,6 +9,7 @@ func TypeFileContent(typeName string) *jen.File {
 		jen.Id("T").Id(typeName),
 		jen.Id("tSlice").Index().Id(typeName),
 		jen.Id("mapFunc").Func().Params(jen.Id(typeName)).Id(typeName),
+		jen.Id("mapErrFunc").Func().Params(jen.Id(typeName)).Params(jen.Id(typeName), jen.Error()),
 		jen.Id("foldFunc").Func().Params(jen.Id(typeName), jen.Id(typeName)).Id(typeName),
 		jen.Id("filterFunc").Func().Params(jen.Id(typeName)).Bool(),
 	)
@@ -39,6 +40,12 @@ func TypeFileContent(typeName string) *jen.File {
 
 	f.Func().Params(jen.Id("f").Op("*").Id("Functor")).Id("Fold").Params(jen.Id("initial").Id(typeName), jen.Id("op").Id("foldFunc")).Id(typeName).Block(
 		jen.Return(jen.Id("Fold").Call(jen.Id("f").Dot("iter"), jen.Id("initial"), jen.Id("op"))),
+	)
+
+	f.Func().Id("asMapErrFunc").Params(jen.Id("f").Id("mapFunc")).Id("mapErrFunc").Block(
+		jen.Return(jen.Func().Params(jen.Id("v").Id(typeName)).Params(jen.Id(typeName), jen.Error()).Block(
+			jen.Return(jen.Id("f").Call(jen.Id("v")), jen.Nil()),
+		)),
 	)
 
 	return f

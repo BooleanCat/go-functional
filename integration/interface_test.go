@@ -302,6 +302,44 @@ var _ = Describe("go-functional", func() {
 		Expect(cmd.Run()).To(Succeed())
 	})
 
+	It("generates with MapErr", func() {
+		cmd := goFunctionalCommand(someBinPath, "interface{}")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"reflect"
+				"somebin/finterface"
+			)
+
+			func prependFoo(v interface{}) (interface{}, error) {
+				s, ok := v.(string)
+				if !ok {
+					panic(fmt.Sprintf("expected %v to be a string", v))
+				}
+				return "foo" + s, nil
+			}
+
+			func main() {
+				slice := []interface{}{"bar", "baz"}
+				result, err := finterface.Lift(slice).MapErr(prependFoo).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
+				expected := []interface{}{"foobar", "foobaz"}
+
+				if !reflect.DeepEqual(expected, result) {
+					panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
 	It("generates with Fold", func() {
 		cmd := goFunctionalCommand(someBinPath, "interface{}")
 		Expect(cmd.Run()).To(Succeed())

@@ -51,6 +51,11 @@ func (f *Functor) Map(op mapFunc) *Functor {
 	return f
 }
 
+func (f *Functor) MapErr(op mapErrFunc) *Functor {
+	f.iter = MapErr(f.iter, op)
+	return f
+}
+
 func (f *Functor) Chain(iters ...Iter) *Functor {
 	f.iter = Chain(append([]Iter{f.iter}, iters...)...)
 	return f

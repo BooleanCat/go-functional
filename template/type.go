@@ -4,6 +4,7 @@ type (
 	T          interface{}
 	tSlice     []interface{}
 	mapFunc    func(interface{}) interface{}
+	mapErrFunc func(interface{}) (interface{}, error)
 	foldFunc   func(interface{}, interface{}) interface{}
 	filterFunc func(interface{}) bool
 )
@@ -34,4 +35,10 @@ func (f *Functor) Fold(initial interface{}, op foldFunc) interface{} {
 
 func fromT(value T) interface{} {
 	return interface{}(value)
+}
+
+func asMapErrFunc(f mapFunc) mapErrFunc {
+	return func(v interface{}) (interface{}, error) {
+		return f(v), nil
+	}
 }

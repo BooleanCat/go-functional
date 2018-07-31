@@ -290,6 +290,40 @@ var _ = Describe("go-functional", func() {
 		Expect(cmd.Run()).To(Succeed())
 	})
 
+	It("generates with MapErr", func() {
+		cmd := goFunctionalCommand(someBinPath, "int")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"reflect"
+				"somebin/fint"
+			)
+
+			func increment(i int) (int, error) {
+				return i + 1, nil
+			}
+
+			func main() {
+				slice := []int{7, 8}
+				result, err := fint.Lift(slice).MapErr(increment).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
+				expected := []int{8, 9}
+
+				if !reflect.DeepEqual(expected, result) {
+					panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
 	It("generates with Fold", func() {
 		cmd := goFunctionalCommand(someBinPath, "int")
 		Expect(cmd.Run()).To(Succeed())

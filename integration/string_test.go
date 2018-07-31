@@ -287,6 +287,41 @@ var _ = Describe("go-functional", func() {
 		Expect(cmd.Run()).To(Succeed())
 	})
 
+	It("generates with MapErr", func() {
+		cmd := goFunctionalCommand(someBinPath, "string")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"reflect"
+				"strings"
+				"somebin/fstring"
+			)
+
+			func title(s string) (string, error) {
+				return strings.Title(s), nil
+			}
+
+			func main() {
+				slice := []string{"bar", "baz"}
+				result, err := fstring.Lift(slice).MapErr(title).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
+				expected := []string{"Bar", "Baz"}
+
+				if !reflect.DeepEqual(expected, result) {
+					panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
 	It("generates with Fold", func() {
 		cmd := goFunctionalCommand(someBinPath, "string")
 		Expect(cmd.Run()).To(Succeed())
