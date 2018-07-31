@@ -10,14 +10,31 @@ import (
 var _ = Describe("iter", func() {
 	Describe("Collect", func() {
 		It("collects an iterator into a slice", func() {
-			slice := t.New(NewCounter()).Take(2).Collect()
+			slice, err := t.New(NewCounter()).Take(2).Collect()
+			Expect(err).NotTo(HaveOccurred())
 			expected := []interface{}{0, 1}
 			Expect(slice).To(Equal(expected))
 		})
 
 		When("collecting an empty iterator", func() {
 			It("collects to an empty slice", func() {
-				slice := t.New(NewCounter()).Take(0).Collect()
+				slice, err := t.New(NewCounter()).Take(0).Collect()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(slice).To(BeEmpty())
+			})
+		})
+	})
+
+	Describe("Collapse", func() {
+		It("collects an iterator into a slice", func() {
+			slice := t.New(NewCounter()).Take(2).Collapse()
+			expected := []interface{}{0, 1}
+			Expect(slice).To(Equal(expected))
+		})
+
+		When("collecting an empty iterator", func() {
+			It("collects to an empty slice", func() {
+				slice := t.New(NewCounter()).Take(0).Collapse()
 				Expect(slice).To(BeEmpty())
 			})
 		})

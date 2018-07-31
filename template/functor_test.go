@@ -9,16 +9,18 @@ import (
 var _ = Describe("Lift", func() {
 	It("initialises a functor from a slice", func() {
 		slice := []interface{}{1, 2}
-		collected := t.Lift(slice).Collect()
+		slice, err := t.Lift(slice).Collect()
+		Expect(err).NotTo(HaveOccurred())
 		expected := []interface{}{1, 2}
-		Expect(collected).To(Equal(expected))
+		Expect(slice).To(Equal(expected))
 	})
 
 	When("lifting an empty slice", func() {
 		It("returns an empty iterator", func() {
 			var slice []interface{}
-			collected := t.Lift(slice).Collect()
-			Expect(collected).To(BeEmpty())
+			slice, err := t.Lift(slice).Collect()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(slice).To(BeEmpty())
 		})
 	})
 })

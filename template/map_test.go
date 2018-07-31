@@ -13,7 +13,7 @@ var _ = Describe("MapIter", func() {
 		}
 
 		iter := t.Map(t.Take(NewCounter(), 3), double)
-		result := t.Collect(iter)
+		result := t.Collapse(iter)
 		expected := []interface{}{0, 2, 4}
 		Expect(result).To(Equal(expected))
 	})

@@ -74,7 +74,10 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []interface{}{"bar", "foo"}
-				result := finterface.Lift(slice).Collect()
+				result, err := finterface.Lift(slice).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
 				expected := []interface{}{"bar", "foo"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -101,7 +104,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []interface{}{"bar", "foo", "baz"}
-				result := finterface.Lift(slice).Drop(2).Collect()
+				result := finterface.Lift(slice).Drop(2).Collapse()
 				expected := []interface{}{"baz"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -128,7 +131,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []interface{}{"bar", "foo", "baz"}
-				result := finterface.Lift(slice).Take(2).Collect()
+				result := finterface.Lift(slice).Take(2).Collapse()
 				expected := []interface{}{"bar", "foo"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -163,7 +166,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []interface{}{"bar", "foos", "baz"}
-				result := finterface.Lift(slice).Filter(hasLen3).Collect()
+				result := finterface.Lift(slice).Filter(hasLen3).Collapse()
 				expected := []interface{}{"bar", "baz"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -198,7 +201,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []interface{}{"", "foos", "baz"}
-				result := finterface.Lift(slice).Exclude(isEmpty).Collect()
+				result := finterface.Lift(slice).Exclude(isEmpty).Collapse()
 				expected := []interface{}{"foos", "baz"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -224,7 +227,7 @@ var _ = Describe("go-functional", func() {
 			)
 
 			func main() {
-				result := finterface.New(finterface.Repeat("foo")).Take(3).Collect()
+				result := finterface.New(finterface.Repeat("foo")).Take(3).Collapse()
 				expected := []interface{}{"foo", "foo", "foo"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -252,7 +255,7 @@ var _ = Describe("go-functional", func() {
 			func main() {
 				foos := finterface.Repeat("foo")
 				bars := finterface.Repeat("bar")
-				result := finterface.New(foos).Take(2).Chain(bars).Take(4).Collect()
+				result := finterface.New(foos).Take(2).Chain(bars).Take(4).Collapse()
 				expected := []interface{}{"foo", "foo", "bar", "bar"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -287,7 +290,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []interface{}{"bar", "baz"}
-				result := finterface.Lift(slice).Map(prependFoo).Collect()
+				result := finterface.Lift(slice).Map(prependFoo).Collapse()
 				expected := []interface{}{"foobar", "foobaz"}
 
 				if !reflect.DeepEqual(expected, result) {

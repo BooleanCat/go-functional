@@ -74,7 +74,10 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []string{"bar", "foo"}
-				result := fstring.Lift(slice).Collect()
+				result, err := fstring.Lift(slice).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
 				expected := []string{"bar", "foo"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -101,7 +104,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []string{"bar", "foo", "baz"}
-				result := fstring.Lift(slice).Drop(2).Collect()
+				result := fstring.Lift(slice).Drop(2).Collapse()
 				expected := []string{"baz"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -128,7 +131,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []string{"bar", "foo", "baz"}
-				result := fstring.Lift(slice).Take(2).Collect()
+				result := fstring.Lift(slice).Take(2).Collapse()
 				expected := []string{"bar", "foo"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -159,7 +162,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []string{"bar", "foos", "baz"}
-				result := fstring.Lift(slice).Filter(hasLen3).Collect()
+				result := fstring.Lift(slice).Filter(hasLen3).Collapse()
 				expected := []string{"bar", "baz"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -190,7 +193,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []string{"", "foos", "baz"}
-				result := fstring.Lift(slice).Exclude(isEmpty).Collect()
+				result := fstring.Lift(slice).Exclude(isEmpty).Collapse()
 				expected := []string{"foos", "baz"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -216,7 +219,7 @@ var _ = Describe("go-functional", func() {
 			)
 
 			func main() {
-				result := fstring.New(fstring.Repeat("foo")).Take(3).Collect()
+				result := fstring.New(fstring.Repeat("foo")).Take(3).Collapse()
 				expected := []string{"foo", "foo", "foo"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -244,7 +247,7 @@ var _ = Describe("go-functional", func() {
 			func main() {
 				foos := fstring.Repeat("foo")
 				bars := fstring.Repeat("bar")
-				result := fstring.New(foos).Take(2).Chain(bars).Take(4).Collect()
+				result := fstring.New(foos).Take(2).Chain(bars).Take(4).Collapse()
 				expected := []string{"foo", "foo", "bar", "bar"}
 
 				if !reflect.DeepEqual(expected, result) {
@@ -272,7 +275,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []string{"bar", "baz"}
-				result := fstring.Lift(slice).Map(strings.Title).Collect()
+				result := fstring.Lift(slice).Map(strings.Title).Collapse()
 				expected := []string{"Bar", "Baz"}
 
 				if !reflect.DeepEqual(expected, result) {

@@ -12,14 +12,14 @@ var _ = Describe("ChainIter", func() {
 		second := t.Take(t.Drop(NewCounter(), 2), 2)
 		first := t.Take(t.Drop(NewCounter(), 4), 2)
 
-		result := t.Collect(t.Chain(first, second, third))
+		result := t.Collapse(t.Chain(first, second, third))
 		expected := []interface{}{4, 5, 2, 3, 0, 1}
 		Expect(result).To(Equal(expected))
 	})
 
 	When("there are no iterators to chain", func() {
 		It("is an empty iterator", func() {
-			result := t.Collect(t.Chain())
+			result := t.Collapse(t.Chain())
 			Expect(result).To(BeEmpty())
 		})
 	})

@@ -8,14 +8,14 @@ import (
 
 var _ = Describe("TakeIter", func() {
 	It("drops all but the first n items", func() {
-		slice := t.Collect(t.Take(NewCounter(), 1))
+		slice := t.Collapse(t.Take(NewCounter(), 1))
 		expected := []interface{}{0}
 		Expect(slice).To(Equal(expected))
 	})
 
 	When("n is 0", func() {
 		It("drops all items", func() {
-			slice := t.Collect(t.Take(NewCounter(), 0))
+			slice := t.Collapse(t.Take(NewCounter(), 0))
 			Expect(slice).To(BeEmpty())
 		})
 	})
@@ -23,7 +23,7 @@ var _ = Describe("TakeIter", func() {
 	When("n is greater than the remaining items in the Iterator", func() {
 		It("drops no items", func() {
 			iter := t.Take(t.Take(NewCounter(), 1), 100)
-			slice := t.Collect(iter)
+			slice := t.Collapse(iter)
 			expected := []interface{}{0}
 			Expect(slice).To(Equal(expected))
 		})

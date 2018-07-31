@@ -17,12 +17,20 @@ func TypeFileContent(typeName string) *jen.File {
 		jen.Return(jen.Id(typeName).Call(jen.Id("value"))),
 	)
 
-	f.Func().Id("Collect").Params(jen.Id("iter").Id("Iter")).Index().Id(typeName).Block(
+	f.Func().Id("Collect").Params(jen.Id("iter").Id("Iter")).Params(jen.Index().Id(typeName), jen.Error()).Block(
 		jen.Return(jen.Id("collect").Call(jen.Id("iter"))),
 	)
 
-	f.Func().Params(jen.Id("f").Op("*").Id("Functor")).Id("Collect").Params().Index().Id(typeName).Block(
+	f.Func().Params(jen.Id("f").Op("*").Id("Functor")).Id("Collect").Params().Params(jen.Index().Id(typeName), jen.Error()).Block(
 		jen.Return(jen.Id("Collect").Call(jen.Id("f").Dot("iter"))),
+	)
+
+	f.Func().Id("Collapse").Params(jen.Id("iter").Id("Iter")).Index().Id(typeName).Block(
+		jen.Return(jen.Id("collapse").Call(jen.Id("iter"))),
+	)
+
+	f.Func().Params(jen.Id("f").Op("*").Id("Functor")).Id("Collapse").Params().Index().Id(typeName).Block(
+		jen.Return(jen.Id("collapse").Call(jen.Id("f").Dot("iter"))),
 	)
 
 	f.Func().Id("Fold").Params(jen.Id("iter").Id("Iter"), jen.Id("initial").Id(typeName), jen.Id("op").Id("foldFunc")).Id(typeName).Block(

@@ -8,12 +8,20 @@ type (
 	filterFunc func(interface{}) bool
 )
 
-func Collect(iter Iter) []interface{} {
+func Collect(iter Iter) ([]interface{}, error) {
 	return collect(iter)
 }
 
-func (f *Functor) Collect() []interface{} {
+func (f *Functor) Collect() ([]interface{}, error) {
 	return Collect(f.iter)
+}
+
+func Collapse(iter Iter) []interface{} {
+	return collapse(iter)
+}
+
+func (f *Functor) Collapse() []interface{} {
+	return Collapse(f.iter)
 }
 
 func Fold(iter Iter, initial interface{}, op foldFunc) interface{} {
