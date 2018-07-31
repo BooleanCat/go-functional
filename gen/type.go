@@ -12,6 +12,7 @@ func TypeFileContent(typeName string) *jen.File {
 		jen.Id("mapErrFunc").Func().Params(jen.Id(typeName)).Params(jen.Id(typeName), jen.Error()),
 		jen.Id("foldFunc").Func().Params(jen.Id(typeName), jen.Id(typeName)).Id(typeName),
 		jen.Id("filterFunc").Func().Params(jen.Id(typeName)).Bool(),
+		jen.Id("filterErrFunc").Func().Params(jen.Id(typeName)).Params(jen.Bool(), jen.Error()),
 	)
 
 	f.Func().Id("fromT").Params(jen.Id("value").Id("T")).Id(typeName).Block(
@@ -46,6 +47,12 @@ func TypeFileContent(typeName string) *jen.File {
 		jen.Return(jen.Func().Params(jen.Id("v").Id(typeName)).Params(jen.Id(typeName), jen.Error()).Block(
 			jen.Return(jen.Id("f").Call(jen.Id("v")), jen.Nil()),
 		)),
+	)
+
+	f.Func().Id("asFilterErrFunc").Params(jen.Id("f").Id("filterFunc")).Id("filterErrFunc").Block(
+		jen.Return(jen.Func().Params(jen.Id("v").Id(typeName)).Params(jen.Bool(), jen.Error())).Block(
+			jen.Return(jen.Id("f").Call(jen.Id("v")), jen.Nil()),
+		),
 	)
 
 	return f

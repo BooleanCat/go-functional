@@ -1,12 +1,13 @@
 package template
 
 type (
-	T          interface{}
-	tSlice     []interface{}
-	mapFunc    func(interface{}) interface{}
-	mapErrFunc func(interface{}) (interface{}, error)
-	foldFunc   func(interface{}, interface{}) interface{}
-	filterFunc func(interface{}) bool
+	T             interface{}
+	tSlice        []interface{}
+	mapFunc       func(interface{}) interface{}
+	mapErrFunc    func(interface{}) (interface{}, error)
+	foldFunc      func(interface{}, interface{}) interface{}
+	filterFunc    func(interface{}) bool
+	filterErrFunc func(interface{}) (bool, error)
 )
 
 func Collect(iter Iter) ([]interface{}, error) {
@@ -39,6 +40,12 @@ func fromT(value T) interface{} {
 
 func asMapErrFunc(f mapFunc) mapErrFunc {
 	return func(v interface{}) (interface{}, error) {
+		return f(v), nil
+	}
+}
+
+func asFilterErrFunc(f filterFunc) filterErrFunc {
+	return func(v interface{}) (bool, error) {
 		return f(v), nil
 	}
 }

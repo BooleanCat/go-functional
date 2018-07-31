@@ -31,6 +31,11 @@ func (f *Functor) Filter(filter filterFunc) *Functor {
 	return f
 }
 
+func (f *Functor) FilterErr(filter filterErrFunc) *Functor {
+	f.iter = FilterErr(f.iter, filter)
+	return f
+}
+
 func (f *Functor) Exclude(exclude filterFunc) *Functor {
 	f.iter = Exclude(f.iter, exclude)
 	return f

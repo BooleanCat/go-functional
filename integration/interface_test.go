@@ -178,6 +178,44 @@ var _ = Describe("go-functional", func() {
 		Expect(cmd.Run()).To(Succeed())
 	})
 
+	It("generates with FilterErr", func() {
+		cmd := goFunctionalCommand(someBinPath, "interface{}")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"reflect"
+				"somebin/finterface"
+			)
+
+			func hasLen3(v interface{}) (bool, error) {
+				s, ok := v.(string)
+				if !ok {
+					panic(fmt.Sprintf("expected %v to be a string", v))
+				}
+				return len(s) == 3, nil
+			}
+
+			func main() {
+				slice := []interface{}{"bar", "foos", "baz"}
+				result, err := finterface.Lift(slice).FilterErr(hasLen3).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
+				expected := []interface{}{"bar", "baz"}
+
+				if !reflect.DeepEqual(expected, result) {
+					panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
 	It("generates with Exclude", func() {
 		cmd := goFunctionalCommand(someBinPath, "interface{}")
 		Expect(cmd.Run()).To(Succeed())
