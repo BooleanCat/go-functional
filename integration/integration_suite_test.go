@@ -57,10 +57,6 @@ func mkdirAt(dir ...string) {
 	ExpectWithOffset(1, os.MkdirAll(filepath.Join(dir...), 0755)).To(Succeed())
 }
 
-func writeFile(path, content string) {
-	ExpectWithOffset(1, ioutil.WriteFile(path, []byte(content), 0755)).To(Succeed())
-}
-
 func makeFunctionalSample(workDir, name, src string) *exec.Cmd {
 	mainGo := filepath.Join(workDir, "src", name, "main.go")
 	Expect(ioutil.WriteFile(mainGo, []byte(src), 0755)).To(Succeed())
