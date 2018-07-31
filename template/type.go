@@ -6,6 +6,7 @@ type (
 	mapFunc       func(interface{}) interface{}
 	mapErrFunc    func(interface{}) (interface{}, error)
 	foldFunc      func(interface{}, interface{}) interface{}
+	foldErrFunc   func(interface{}, interface{}) (interface{}, error)
 	filterFunc    func(interface{}) bool
 	filterErrFunc func(interface{}) (bool, error)
 )
@@ -26,11 +27,11 @@ func (f *Functor) Collapse() []interface{} {
 	return Collapse(f.iter)
 }
 
-func Fold(iter Iter, initial interface{}, op foldFunc) interface{} {
+func Fold(iter Iter, initial interface{}, op foldFunc) (interface{}, error) {
 	return fold(iter, T(initial), op)
 }
 
-func (f *Functor) Fold(initial interface{}, op foldFunc) interface{} {
+func (f *Functor) Fold(initial interface{}, op foldFunc) (interface{}, error) {
 	return Fold(f.iter, initial, op)
 }
 
@@ -47,5 +48,11 @@ func asMapErrFunc(f mapFunc) mapErrFunc {
 func asFilterErrFunc(f filterFunc) filterErrFunc {
 	return func(v interface{}) (bool, error) {
 		return f(v), nil
+	}
+}
+
+func asFoldErrFunc(f foldFunc) foldErrFunc {
+	return func(v, w interface{}) (interface{}, error) {
+		return f(v, w), nil
 	}
 }

@@ -43,14 +43,16 @@ var _ = Describe("iter", func() {
 	Describe("Fold", func() {
 		It("applies the fold operation sequentially to iterator items", func() {
 			sum := func(a, b interface{}) interface{} { return toInt(a) + toInt(b) }
-			result := t.New(NewCounter()).Take(6).Fold(0, sum)
+			result, err := t.New(NewCounter()).Take(6).Fold(0, sum)
+			Expect(err).NotTo(HaveOccurred())
 			Expect(toInt(result)).To(Equal(15))
 		})
 
 		When("folding an empty iterator", func() {
 			It("returns the initial value", func() {
 				alwaysTen := func(_, _ interface{}) interface{} { return 15 }
-				result := t.New(NewCounter()).Take(0).Fold(7, alwaysTen)
+				result, err := t.New(NewCounter()).Take(0).Fold(7, alwaysTen)
+				Expect(err).NotTo(HaveOccurred())
 				Expect(toInt(result)).To(Equal(7))
 			})
 		})

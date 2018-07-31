@@ -410,7 +410,10 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []int{1, 2, 3, 4}
-				result := fint.Lift(slice).Fold(0, sum)
+				result, err := fint.Lift(slice).Fold(0, sum)
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
 
 				if result != 10 {
 					panic(fmt.Sprintf("expected 10 to equal %d", result))

@@ -444,7 +444,10 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []interface{}{1, 2, 3, 4}
-				result := finterface.Lift(slice).Fold(0, sum)
+				result, err := finterface.Lift(slice).Fold(0, sum)
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
 				expected := interface{}(10)
 
 				if result != expected {

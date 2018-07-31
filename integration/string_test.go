@@ -408,7 +408,10 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []string{"foo", "bar", "baz"}
-				result := fstring.Lift(slice).Fold("", prepend)
+				result, err := fstring.Lift(slice).Fold("", prepend)
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
 
 				if result != "bazbarfoo" {
 					panic(fmt.Sprintf("expected bazbarfoo to equal %d", result))

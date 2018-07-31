@@ -30,12 +30,12 @@ func collapse(iter Iter) tSlice {
 	return slice
 }
 
-func fold(iter Iter, initial T, op foldFunc) T {
+func fold(iter Iter, initial T, op foldFunc) (T, error) {
 	result := initial
 	for {
 		next := iter.Next()
 		if next.Error() == ErrNoValue {
-			return result
+			return result, nil
 		}
 
 		result = T(op(fromT(result), fromT(next.Value())))
