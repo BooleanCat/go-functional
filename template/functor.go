@@ -41,6 +41,11 @@ func (f *Functor) Exclude(exclude filterFunc) *Functor {
 	return f
 }
 
+func (f *Functor) ExcludeErr(exclude filterErrFunc) *Functor {
+	f.iter = ExcludeErr(f.iter, exclude)
+	return f
+}
+
 func (f *Functor) Drop(n int) *Functor {
 	f.iter = Drop(f.iter, n)
 	return f

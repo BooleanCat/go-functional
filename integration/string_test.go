@@ -239,6 +239,40 @@ var _ = Describe("go-functional", func() {
 		Expect(cmd.Run()).To(Succeed())
 	})
 
+	It("generates with ExcludeErr", func() {
+		cmd := goFunctionalCommand(someBinPath, "string")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"reflect"
+				"somebin/fstring"
+			)
+
+			func isEmpty(s string) (bool, error) {
+				return s == "", nil
+			}
+
+			func main() {
+				slice := []string{"", "foos", "baz"}
+				result, err := fstring.Lift(slice).ExcludeErr(isEmpty).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
+				expected := []string{"foos", "baz"}
+
+				if !reflect.DeepEqual(expected, result) {
+					panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
 	It("generates with Repeat", func() {
 		cmd := goFunctionalCommand(someBinPath, "string")
 		Expect(cmd.Run()).To(Succeed())

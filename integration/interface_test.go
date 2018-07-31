@@ -251,6 +251,44 @@ var _ = Describe("go-functional", func() {
 		Expect(cmd.Run()).To(Succeed())
 	})
 
+	It("generates with ExcludeErr", func() {
+		cmd := goFunctionalCommand(someBinPath, "interface{}")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"reflect"
+				"somebin/finterface"
+			)
+
+			func isEmpty(v interface{}) (bool, error) {
+				s, ok := v.(string)
+				if !ok {
+					panic(fmt.Sprintf("expected %v to be a string", v))
+				}
+				return s == "", nil
+			}
+
+			func main() {
+				slice := []interface{}{"", "foos", "baz"}
+				result, err := finterface.Lift(slice).ExcludeErr(isEmpty).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
+				expected := []interface{}{"foos", "baz"}
+
+				if !reflect.DeepEqual(expected, result) {
+					panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
 	It("generates with Repeat", func() {
 		cmd := goFunctionalCommand(someBinPath, "interface{}")
 		Expect(cmd.Run()).To(Succeed())

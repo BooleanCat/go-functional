@@ -239,6 +239,40 @@ var _ = Describe("go-functional", func() {
 		Expect(cmd.Run()).To(Succeed())
 	})
 
+	It("generates with ExcludeErr", func() {
+		cmd := goFunctionalCommand(someBinPath, "int")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"reflect"
+				"somebin/fint"
+			)
+
+			func isOdd(i int) (bool, error) {
+				return i % 2 == 1, nil
+			}
+
+			func main() {
+				slice := []int{1, 2, 3}
+				result, err := fint.Lift(slice).ExcludeErr(isOdd).Collect()
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
+				expected := []int{2}
+
+				if !reflect.DeepEqual(expected, result) {
+					panic(fmt.Sprintf("expected %v to equal %v", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
 	It("generates with Repeat", func() {
 		cmd := goFunctionalCommand(someBinPath, "int")
 		Expect(cmd.Run()).To(Succeed())
