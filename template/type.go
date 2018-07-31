@@ -27,12 +27,21 @@ func (f *Functor) Collapse() []interface{} {
 	return Collapse(f.iter)
 }
 
-func Fold(iter Iter, initial interface{}, op foldFunc) (interface{}, error) {
-	return fold(iter, T(initial), op)
+func Fold(iter Iter, initial interface{}, op foldErrFunc) (interface{}, error) {
+	result, err := fold(iter, T(initial), op)
+	return fromT(result), err
 }
 
-func (f *Functor) Fold(initial interface{}, op foldFunc) (interface{}, error) {
+func (f *Functor) Fold(initial interface{}, op foldErrFunc) (interface{}, error) {
 	return Fold(f.iter, initial, op)
+}
+
+func Roll(iter Iter, initial interface{}, op foldFunc) interface{} {
+	return fromT(roll(iter, initial, op))
+}
+
+func (f Functor) Roll(initial interface{}, op foldFunc) interface{} {
+	return Roll(f.iter, initial, op)
 }
 
 func fromT(value T) interface{} {

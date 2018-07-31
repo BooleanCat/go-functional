@@ -30,14 +30,31 @@ func collapse(iter Iter) tSlice {
 	return slice
 }
 
-func fold(iter Iter, initial T, op foldFunc) (T, error) {
+func fold(iter Iter, initial T, op foldErrFunc) (T, error) {
 	result := initial
 	for {
 		next := iter.Next()
 		if next.Error() == ErrNoValue {
 			return result, nil
 		}
+		if next.Error() != nil {
+			var empty T
+			return empty, next.Error()
+		}
 
-		result = T(op(fromT(result), fromT(next.Value())))
+		applied, err := op(fromT(result), fromT(next.Value()))
+		if err != nil {
+			var empty T
+			return empty, err
+		}
+		result = T(applied)
 	}
+}
+
+func roll(iter Iter, initial T, op foldFunc) T {
+	result, err := fold(iter, initial, asFoldErrFunc(op))
+	if err != nil {
+		panic(fmt.Sprintf("rolled an iterator and an error was encountered: %v", err))
+	}
+	return result
 }

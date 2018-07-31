@@ -402,8 +402,8 @@ var _ = Describe("go-functional", func() {
 				"somebin/fstring"
 			)
 
-			func prepend(a, b string) string {
-				return b + a
+			func prepend(a, b string) (string, error) {
+				return b + a, nil
 			}
 
 			func main() {
@@ -412,6 +412,35 @@ var _ = Describe("go-functional", func() {
 				if err != nil {
 					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
 				}
+
+				if result != "bazbarfoo" {
+					panic(fmt.Sprintf("expected bazbarfoo to equal %d", result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
+	It("generates with Roll", func() {
+		cmd := goFunctionalCommand(someBinPath, "string")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"somebin/fstring"
+			)
+
+			func prepend(a, b string) string {
+				return b + a
+			}
+
+			func main() {
+				slice := []string{"foo", "bar", "baz"}
+				result := fstring.Lift(slice).Roll("", prepend)
 
 				if result != "bazbarfoo" {
 					panic(fmt.Sprintf("expected bazbarfoo to equal %d", result))

@@ -428,6 +428,49 @@ var _ = Describe("go-functional", func() {
 				"somebin/finterface"
 			)
 
+			func sum(a, b interface{}) (interface{}, error) {
+				x, ok := a.(int)
+				if !ok {
+					panic(fmt.Sprintf("expected %v to be an int", a))
+				}
+
+				y, ok := b.(int)
+				if !ok {
+					panic(fmt.Sprintf("expected %v to be an int", b))
+				}
+
+				return x + y, nil
+			}
+
+			func main() {
+				slice := []interface{}{1, 2, 3, 4}
+				result, err := finterface.Lift(slice).Fold(0, sum)
+				if err != nil {
+					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
+				}
+				expected := interface{}(10)
+
+				if result != expected {
+					panic(fmt.Sprintf("expected %v to equal %d", expected, result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
+	It("generates with Roll", func() {
+		cmd := goFunctionalCommand(someBinPath, "interface{}")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"somebin/finterface"
+			)
+
 			func sum(a, b interface{}) interface{} {
 				x, ok := a.(int)
 				if !ok {
@@ -444,10 +487,7 @@ var _ = Describe("go-functional", func() {
 
 			func main() {
 				slice := []interface{}{1, 2, 3, 4}
-				result, err := finterface.Lift(slice).Fold(0, sum)
-				if err != nil {
-					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
-				}
+				result := finterface.Lift(slice).Roll(0, sum)
 				expected := interface{}(10)
 
 				if result != expected {

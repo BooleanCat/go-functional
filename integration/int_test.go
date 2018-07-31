@@ -404,8 +404,8 @@ var _ = Describe("go-functional", func() {
 				"somebin/fint"
 			)
 
-			func sum(a, b int) int {
-				return a + b
+			func sum(a, b int) (int, error) {
+				return a + b, nil
 			}
 
 			func main() {
@@ -414,6 +414,35 @@ var _ = Describe("go-functional", func() {
 				if err != nil {
 					panic(fmt.Sprintf("expected err not to have occurred: %v", err))
 				}
+
+				if result != 10 {
+					panic(fmt.Sprintf("expected 10 to equal %d", result))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
+
+	It("generates with Roll", func() {
+		cmd := goFunctionalCommand(someBinPath, "int")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"somebin/fint"
+			)
+
+			func sum(a, b int) int {
+				return a + b
+			}
+
+			func main() {
+				slice := []int{1, 2, 3, 4}
+				result := fint.Lift(slice).Roll(0, sum)
 
 				if result != 10 {
 					panic(fmt.Sprintf("expected 10 to equal %d", result))
