@@ -27,4 +27,17 @@ var _ = Describe("DropIter", func() {
 			Expect(iter.Next().Error()).To(Equal(t.ErrNoValue))
 		})
 	})
+
+	When("the underlying iterator's next fails", func() {
+		It("passes the error along", func() {
+			_, err := t.Collect(t.Drop(NewFailIter(), 3))
+			Expect(err).To(MatchError("Oh, no."))
+		})
+
+		It("calls the underlying iterator's next method only once", func() {
+			iter := NewFailIter()
+			t.Collect(t.Drop(iter, 3))
+			Expect(iter.NextCallCount()).To(Equal(1))
+		})
+	})
 })

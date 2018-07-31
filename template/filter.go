@@ -12,7 +12,7 @@ func Filter(iter Iter, filter filterFunc) FilterIter {
 func (iter FilterIter) Next() Result {
 	for {
 		result := iter.iter.Next()
-		if result.Error() == ErrNoValue || iter.filter(fromT(result.Value())) {
+		if result.Error() != nil || iter.filter(fromT(result.Value())) {
 			return result
 		}
 	}

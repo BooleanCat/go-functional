@@ -22,10 +22,16 @@ var _ = Describe("TakeIter", func() {
 
 	When("n is greater than the remaining items in the Iterator", func() {
 		It("drops no items", func() {
-			iter := t.Take(t.Take(NewCounter(), 1), 100)
-			slice := t.Collapse(iter)
+			slice := t.Collapse(t.Take(t.Take(NewCounter(), 1), 100))
 			expected := []interface{}{0}
 			Expect(slice).To(Equal(expected))
+		})
+	})
+
+	When("the underlying iterator's next fails", func() {
+		It("passes the error along", func() {
+			_, err := t.Collect(t.Take(NewFailIter(), 5))
+			Expect(err).To(MatchError("Oh, no."))
 		})
 	})
 })

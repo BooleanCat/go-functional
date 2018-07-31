@@ -1,6 +1,8 @@
 package template_test
 
 import (
+	"errors"
+
 	t "github.com/BooleanCat/go-functional/template"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -27,6 +29,13 @@ var _ = Describe("Result", func() {
 		It("holds no value", func() {
 			result := t.None()
 			Expect(result.Error()).To(Equal(t.ErrNoValue))
+		})
+	})
+
+	When("instantiated with an error", func() {
+		It("holds the error", func() {
+			result := t.Failed(errors.New("Oh, no."))
+			Expect(result.Error()).To(MatchError("Oh, no."))
 		})
 	})
 })

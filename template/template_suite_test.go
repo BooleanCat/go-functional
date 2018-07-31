@@ -1,9 +1,10 @@
 package template_test
 
 import (
+	"errors"
 	"testing"
 
-	"github.com/BooleanCat/go-functional/template"
+	t "github.com/BooleanCat/go-functional/template"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -21,10 +22,27 @@ func NewCounter() *Counter {
 	return &Counter{}
 }
 
-func (c *Counter) Next() template.Result {
-	next := template.Some(c.i)
+func (c *Counter) Next() t.Result {
+	next := t.Some(c.i)
 	c.i++
 	return next
+}
+
+type FailIter struct {
+	nextCallCount int
+}
+
+func NewFailIter() *FailIter {
+	return new(FailIter)
+}
+
+func (iter *FailIter) Next() t.Result {
+	iter.nextCallCount++
+	return t.Failed(errors.New("Oh, no."))
+}
+
+func (iter *FailIter) NextCallCount() int {
+	return iter.nextCallCount
 }
 
 func toInt(value interface{}) int {
@@ -34,7 +52,7 @@ func toInt(value interface{}) int {
 	return i
 }
 
-func resultValue(result template.Result) int {
+func resultValue(result t.Result) int {
 	Expect(result.Error()).To(BeNil())
 	return toInt(result.Value())
 }

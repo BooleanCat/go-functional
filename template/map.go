@@ -11,7 +11,7 @@ func Map(iter Iter, op mapFunc) MapIter {
 
 func (iter MapIter) Next() Result {
 	next := iter.iter.Next()
-	if next.Error() == ErrNoValue {
+	if next.Error() != nil {
 		return next
 	}
 

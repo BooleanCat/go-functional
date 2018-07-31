@@ -23,4 +23,11 @@ var _ = Describe("ChainIter", func() {
 			Expect(result).To(BeEmpty())
 		})
 	})
+
+	When("the underlying iterator's next fails", func() {
+		It("passes the error along", func() {
+			_, err := t.Collect(t.Chain(NewFailIter()))
+			Expect(err).To(MatchError("Oh, no."))
+		})
+	})
 })

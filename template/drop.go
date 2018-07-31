@@ -12,7 +12,9 @@ func Drop(iter Iter, n int) *DropIter {
 func (iter *DropIter) Next() Result {
 	for iter.n > 0 {
 		iter.n--
-		iter.iter.Next()
+		if next := iter.iter.Next(); next.Error() != nil {
+			return next
+		}
 	}
 
 	return iter.iter.Next()
