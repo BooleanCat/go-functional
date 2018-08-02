@@ -25,7 +25,7 @@ func TypeFileContent(typeName string) *jen.File {
 	)
 
 	f.Func().Params(jen.Id("f").Op("*").Id("Functor")).Id("Collect").Params().Params(jen.Index().Id(typeName), jen.Error()).Block(
-		jen.Return(jen.Id("Collect").Call(jen.Id("f").Dot("iter"))),
+		jen.Return(jen.Id("collect").Call(jen.Id("f").Dot("iter"))),
 	)
 
 	f.Func().Id("Collapse").Params(jen.Id("iter").Id("Iter")).Index().Id(typeName).Block(

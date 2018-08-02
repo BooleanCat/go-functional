@@ -16,7 +16,7 @@ func Collect(iter Iter) ([]interface{}, error) {
 }
 
 func (f *Functor) Collect() ([]interface{}, error) {
-	return Collect(f.iter)
+	return collect(f.iter)
 }
 
 func Collapse(iter Iter) []interface{} {
@@ -24,7 +24,7 @@ func Collapse(iter Iter) []interface{} {
 }
 
 func (f *Functor) Collapse() []interface{} {
-	return Collapse(f.iter)
+	return collapse(f.iter)
 }
 
 func Fold(iter Iter, initial interface{}, op foldErrFunc) (interface{}, error) {
