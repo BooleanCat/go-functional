@@ -14,6 +14,7 @@ func TypeFileContent(typeName string) *jen.File {
 		jen.Id("foldErrFunc").Func().Params(jen.Id(typeName), jen.Id(typeName)).Params(jen.Id(typeName), jen.Error()),
 		jen.Id("filterFunc").Func().Params(jen.Id(typeName)).Bool(),
 		jen.Id("filterErrFunc").Func().Params(jen.Id(typeName)).Params(jen.Bool(), jen.Error()),
+		jen.Id("transformFunc").Func().Params(jen.Interface()).Params(jen.Id(typeName), jen.Error()),
 	)
 
 	f.Func().Id("fromT").Params(jen.Id("value").Id("T")).Id(typeName).Block(
@@ -51,6 +52,14 @@ func TypeFileContent(typeName string) *jen.File {
 
 	f.Func().Params(jen.Id("f").Op("*").Id("Functor")).Id("Roll").Params(jen.Id("initial").Id(typeName), jen.Id("op").Id("foldFunc")).Id(typeName).Block(
 		jen.Return(jen.Id("Roll").Call(jen.Id("f").Dot("iter"), jen.Id("initial"), jen.Id("op"))),
+	)
+
+	f.Func().Id("Transmute").Params(jen.Id("v").Interface()).Id(typeName).Block(
+		jen.List(jen.Id("result"), jen.Id("ok")).Op(":=").Id("v").Assert(jen.Id(typeName)),
+		jen.If(jen.Op("!").Id("ok")).Block(
+			jen.Panic(jen.Qual("fmt", "Sprintf").Call(jen.Lit("could not transmute: %v"), jen.Id("v"))),
+		),
+		jen.Return(jen.Id("result")),
 	)
 
 	f.Func().Id("asMapErrFunc").Params(jen.Id("f").Id("mapFunc")).Id("mapErrFunc").Block(

@@ -498,4 +498,34 @@ var _ = Describe("go-functional", func() {
 
 		Expect(cmd.Run()).To(Succeed())
 	})
+
+	It("generates with Transmute", func() {
+		cmd := goFunctionalCommand(someBinPath, "interface{}")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"somebin/finterface"
+			)
+
+			func main() {
+				v := interface{}(interface{}("foo"))
+				result := finterface.Transmute(v)
+
+				s, ok := result.(string)
+				if !ok {
+					panic(fmt.Sprintf("expected %v to be a string", result))
+				}
+
+				if s != "foo" {
+					panic(fmt.Sprintf("expected %s to equal foo", s))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
 })

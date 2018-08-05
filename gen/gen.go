@@ -48,6 +48,7 @@ func templateFiles() []string {
 		"repeat.go",
 		"result.go",
 		"take.go",
+		"transform.go",
 	}
 }
 

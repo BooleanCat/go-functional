@@ -56,3 +56,11 @@ func resultValue(result t.Result) int {
 	Expect(result.Error()).To(BeNil())
 	return toInt(result.Value())
 }
+
+func genericNext(iter t.GenericIter) interface{} {
+	value, err := iter.Next()
+	Expect(err).NotTo(HaveOccurred())
+	result, ok := value.(interface{})
+	Expect(ok).To(BeTrue())
+	return result
+}

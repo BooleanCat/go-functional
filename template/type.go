@@ -1,5 +1,7 @@
 package template
 
+import "fmt"
+
 type (
 	T             interface{}
 	tSlice        []interface{}
@@ -9,6 +11,7 @@ type (
 	foldErrFunc   func(interface{}, interface{}) (interface{}, error)
 	filterFunc    func(interface{}) bool
 	filterErrFunc func(interface{}) (bool, error)
+	transformFunc func(interface{}) (interface{}, error)
 )
 
 func Collect(iter Iter) ([]interface{}, error) {
@@ -42,6 +45,14 @@ func Roll(iter Iter, initial interface{}, op foldFunc) interface{} {
 
 func (f Functor) Roll(initial interface{}, op foldFunc) interface{} {
 	return Roll(f.iter, initial, op)
+}
+
+func Transmute(v interface{}) interface{} {
+	result, ok := v.(interface{})
+	if !ok {
+		panic(fmt.Sprintf("could not transmute: %v", v))
+	}
+	return result
 }
 
 func fromT(value T) interface{} {

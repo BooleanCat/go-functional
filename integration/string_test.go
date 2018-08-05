@@ -450,4 +450,28 @@ var _ = Describe("go-functional", func() {
 
 		Expect(cmd.Run()).To(Succeed())
 	})
+
+	It("generates with Transmute", func() {
+		cmd := goFunctionalCommand(someBinPath, "string")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"somebin/fstring"
+			)
+
+			func main() {
+				v := interface{}("foo")
+				s := fstring.Transmute(v)
+				if s != "foo" {
+					panic(fmt.Sprintf("expected %s to equal foo", s))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
 })
