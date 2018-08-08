@@ -70,3 +70,7 @@ func (f *Functor) Chain(iters ...Iter) *Functor {
 	f.iter = Chain(append([]Iter{f.iter}, iters...)...)
 	return f
 }
+
+func (f *Functor) Blur() TransformIter {
+	return Blur(f.iter)
+}

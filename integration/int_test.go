@@ -476,4 +476,50 @@ var _ = Describe("go-functional", func() {
 
 		Expect(cmd.Run()).To(Succeed())
 	})
+
+	It("generates with Transform", func() {
+		cmd := goFunctionalCommand(someBinPath, "int")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = goFunctionalCommand(someBinPath, "string")
+		Expect(cmd.Run()).To(Succeed())
+
+		cmd = makeFunctionalSample(workDir, "somebin", clean(`
+			package main
+
+			import (
+				"fmt"
+				"reflect"
+				"strconv"
+				"somebin/fstring"
+				"somebin/fint"
+			)
+
+			type Counter struct {
+				i fint.T
+			}
+
+			func (iter *Counter) Next() fint.Result {
+				next := iter.i
+				iter.i++
+				return fint.Some(next)
+			}
+
+			func asString(v interface{}) (string, error) {
+				return strconv.Itoa(fint.Transmute(v)), nil
+			}
+
+			func main() {
+				iter := fint.New(new(Counter)).Blur()
+				numbers := fstring.New(fstring.Transform(iter, asString)).Take(4).Collapse()
+
+				expected := []string{"0", "1", "2", "3"}
+				if !reflect.DeepEqual(expected, numbers) {
+					panic(fmt.Sprintf("expected %v to equal %v", expected, numbers))
+				}
+			}
+		`))
+
+		Expect(cmd.Run()).To(Succeed())
+	})
 })

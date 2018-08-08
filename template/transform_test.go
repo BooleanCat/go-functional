@@ -16,18 +16,18 @@ var _ = Describe("Transform", func() {
 			Expect(toInt(genericNext(iter))).To(Equal(4))
 		})
 
-		When("the underlyig iter is exhausted", func() {
-			It("propogates the error", func() {
+		When("the underlying iter is exhausted", func() {
+			It("returns true", func() {
 				iter := t.Blur(t.Take(NewCounter(), 0))
-				_, err := iter.Next()
-				Expect(err).To(Equal(t.ErrNoValue))
+				_, done, _ := iter.Next()
+				Expect(done).To(BeTrue())
 			})
 		})
 
 		When("the underlying iter fails", func() {
 			It("propogates the error", func() {
 				iter := t.Blur(new(FailIter))
-				_, err := iter.Next()
+				_, _, err := iter.Next()
 				Expect(err).To(MatchError("Oh, no."))
 			})
 		})
@@ -67,14 +67,14 @@ var _ = Describe("Transform", func() {
 
 type fooGenericIter struct{}
 
-func (iter fooGenericIter) Next() (interface{}, error) {
-	return "foo", nil
+func (iter fooGenericIter) Next() (interface{}, bool, error) {
+	return "foo", false, nil
 }
 
 type failGenericIter struct{}
 
-func (iter failGenericIter) Next() (interface{}, error) {
-	return "", errors.New("Oh, no.")
+func (iter failGenericIter) Next() (interface{}, bool, error) {
+	return "", false, errors.New("Oh, no.")
 }
 
 func addBar(v interface{}) (interface{}, error) {

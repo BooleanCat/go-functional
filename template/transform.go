@@ -1,7 +1,7 @@
 package template
 
 type GenericIter interface {
-	Next() (interface{}, error)
+	Next() (interface{}, bool, error)
 }
 
 type TransformIter struct {
@@ -12,9 +12,12 @@ func Blur(iter Iter) TransformIter {
 	return TransformIter{iter}
 }
 
-func (iter TransformIter) Next() (interface{}, error) {
+func (iter TransformIter) Next() (interface{}, bool, error) {
 	result := iter.iter.Next()
-	return fromT(result.Value()), result.Error()
+	if result.Error() == ErrNoValue {
+		return nil, true, nil
+	}
+	return fromT(result.Value()), false, result.Error()
 }
 
 type ConcreteIter struct {
@@ -27,7 +30,10 @@ func Transform(iter GenericIter, f transformFunc) ConcreteIter {
 }
 
 func (iter ConcreteIter) Next() Result {
-	result, err := iter.iter.Next()
+	result, done, err := iter.iter.Next()
+	if done {
+		return None()
+	}
 	if err != nil {
 		return Failed(err)
 	}

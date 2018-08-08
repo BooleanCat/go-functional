@@ -19,7 +19,7 @@ type Counter struct {
 }
 
 func NewCounter() *Counter {
-	return &Counter{}
+	return new(Counter)
 }
 
 func (c *Counter) Next() t.Result {
@@ -58,7 +58,8 @@ func resultValue(result t.Result) int {
 }
 
 func genericNext(iter t.GenericIter) interface{} {
-	value, err := iter.Next()
+	value, done, err := iter.Next()
+	Expect(done).To(BeFalse())
 	Expect(err).NotTo(HaveOccurred())
 	result, ok := value.(interface{})
 	Expect(ok).To(BeTrue())
