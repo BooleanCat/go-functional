@@ -5,7 +5,7 @@ golang types.
 
 ## Show me
 
-Let's imagine you want to find the first 100 prime numbers. You could generate
+Let's imagine you want to find the first 100 prime numbers. You can generate
 functional helpers for the `int` type like so:
 
 ```
@@ -32,20 +32,29 @@ func getPrimes() []int {
 
 ## Tell me more
 
-The basic building blocks of go-functional are `Iterator`s and `Result`s. An
-`Result` is simply a struct that *may* hold some value, or it *may* hold no
-value. For example, for functional helpers generated for the `string` type:
+The basic building blocks of go-functional are `Iterator`s and `Result`s. A
+`Result` is a type that *may* hold some value, or it *may* hold no value.
+For example, for functional helpers generated for the `string` type:
 
 ```go
 a := fstring.Some("foo")  // holds the value `foo`
 b := fstring.None()  // holds no value
-a.Present()  # true
-b.Present()  # false
-a.Value()  // The underlying value of the option.
+c := fstring.Failed(err)  // holds an error
+a.Error()  // nil
+a.Value()  // "foo"
+b.Error()  // ErrNoValue
+c.Error()  // err
 ```
 
-Results should always be checked for the presence of a value before using
-`Result.Value()`.
+Results with a nil `result.Error()` hold a value that can be retrieved by
+calling `result.Value()`.
+
+Results who's `result.Error()` is equal to `ErrNoValue` hold no value.
+
+Results who's `result.Error()` is anything indicate an error.
+
+Results should be checked for errors and the presence of a value with
+`result.Error()`.
 
 `Iterators`s are defined as types that yield Results of a particular type by
 implementing:
@@ -91,20 +100,17 @@ func (c *Counter) Next() fint.Result {
 }
 ```
 
-Note that attempting to consume all values in an infinite iterater is undefined,
-it is up to the programmer to ensure they don't do that.
-
 ## The Functor
 
-The `Functor` type is a way to chain operations over an iterator easily, and
-lazily. Functors are initialised from iterators, and may be collected into
+The `Functor` type is a way to chain operations over an iterator more
+conveniently. Functors are initialised from iterators, and may be collapsed into
 slices, an example is the prime number finder above. Slices may be "lifted" to
 `Functors`; let's choose only even numbers from a slice of integers:
 
 ```go
 isEven := func(value int) bool { return value%2 == 0 }
 numbers := []int{1, 2, 3, 4, 5, 6, 7}
-numbers = fint.Lift(numbers).Filter(isEven).Collect()
+numbers = fint.Lift(numbers).Filter(isEven).Collapse()
 ```
 
 ## Laziness?
@@ -131,7 +137,7 @@ Drop the first `n` values from the Functor.
 
 ```go
 numbers := []int{1, 2, 3, 4, 5}
-numbers = fint.Lift(numbers).Drop(2).Collect()
+numbers = fint.Lift(numbers).Drop(2).Collapse()
 numbers == []int{3, 4, 5}
 ```
 
@@ -141,7 +147,7 @@ Take the first `n` values from the Functor:
 
 ```go
 numbers := []int{1, 2, 3, 4, 5}
-numbers = fint.Lift(numbers).Take(3).Collect()
+numbers = fint.Lift(numbers).Take(3).Collapse()
 numbers == []int{1, 2, 3}
 ```
 
@@ -151,7 +157,7 @@ Keep only values that satisfying `filter(value) == true`:
 
 ```go
 numbers := []int{1, 2, 3, 4, 5}
-numbers = fint.Lift(numbers).Filter(func(value int) bool { return value < 3 }).Collect()
+numbers = fint.Lift(numbers).Filter(func(value int) bool { return value < 3 }).Collapse()
 numbers == []int{1, 2}
 ```
 
@@ -161,7 +167,7 @@ Drop all values that satisfy `exclude(value) == true`:
 
 ```go
 numbers := []int{1, 2, 3, 4, 5}
-numbers = fint.Lift(numbers).Exclude(func(value int) bool { return value < 3 }).Collect()
+numbers = fint.Lift(numbers).Exclude(func(value int) bool { return value < 3 }).Collapse()
 numbers == []int{3, 4, 5}
 ```
 
@@ -172,22 +178,72 @@ Apply an operation to each value yielded by the Functor's iterator:
 ```go
 double := func(value int) int { return value * 2 }
 numbers := []int{1, 2, 3, 4, 5}
-numbers = fint.Lift(numbers).Map(double).Collect()
+numbers = fint.Lift(numbers).Map(double).Collapse()
 numbers == []int{2, 4, 6, 8, 10}
 ```
 
-### Fold
+### Roll
 
 Apply an operation to each value yielded by Functor's iterator and the previous
-Fold result. For example, adding the first 100 integers:
+Roll result. For example, adding the first 100 integers:
 
 ```go
 sum := func(a, b int) int { return a + b }
-numbers := fint.New(new(Counter)).Take(100).Fold(0, sum)
+numbers := fint.New(new(Counter)).Take(100).Roll(0, sum)
 ```
 
 The first argument to Fold is the value to use as the first "previous fold
 result".
+
+## Error handling
+
+It is common in Go for functions to return errors. Let's image we have a Map
+operation who's signature is `func(i int) (int, error)`, Functors provide a way
+to handle such cases:
+
+```go
+numbers, err := fint.New(iter).MapErr(op).Collect()
+```
+
+Notice that we used `Collect` rather than `Collapse` to turn the functor into
+a slice - collecting an iterator has the possibility of returning an error, and
+we the programmers chose to collect rather than collapse because we admit the
+possibility of errors occurring. Collapsing a functor which encounters an error
+during evaluation of its members will result in a runtime panic. It is up to
+the programmer to choose the appropriate method.
+
+Other familiar functor operations provide error flavours.
+
+It is also possible to Roll an iterator into a result with error admission, you
+would instead invoke:
+
+```go
+number, err := fint.New(iter).MapErr(op).Fold(0, sum)
+```
+
+## Type Transformation
+
+Let's imagine you have a counter iterator, yielding integers incrementally. Now
+you want them as strings rather than integers, is it possible to to do so using
+a family of functions: Transform, Transmute and Blur.
+
+We would first "blur" our int iterator in to a "GenericIter":
+
+```go
+iter := fint.New(NewCounter()).Blur()
+```
+
+Then, we transform the iterator into a string iterator, providing a function to
+instruct transform how that should happen:
+
+```go
+toString := func(v interface{}) (string, error) {
+  i := fint.Transmute(v)  // a helper for v.(int) that panics if the type assertion fails
+  return strconv.Itoa(i), nil
+}
+
+numbers := fstring.New(fstring.Transform(iter, toString)).Take(5).Collapse()
+```
 
 ## Upcoming features
 
@@ -216,58 +272,6 @@ Show how to install test dependencies, run tests and PR.
 ### Write talk about this tool
 
 Instructional, show real life examples. Best practises (write those too!).
-
-### Error Functors
-
-Looking at the usage of map, it's entirely feasible and in fact likely that
-instead of an operation like `func(int) int`, you'll have
-`func(int) (int, error)`. I want to allow for another kind of Functor that
-handles allows for error flavours of functions. The `Collect` or `Fold`
-invocation will then propogate the first error encountered. Should any calls
-to operations return an error, all future operations on that functor are no ops.
-For example (naming and usage subject to change):
-
-```go
-failingDouble := func(value int) (int, error) { return nil, errors.New("Oops.") }
-a := fint.Lift([]int{1, 2, 3, 4, 5}).WithErrors()
-_, err := a.Map(failingDouble).Collect()
-err != nil
-```
-
-### Type Transformation
-
-Let's say we wanted the first 3 integers as strings, we could re-use the
-counter to define this with Type Transformation
-
-```go
-transformer := func(value int) interface{} { return interface(strconv.Atoi(value)) }
-a := fint.New(new(Counter)).Take(3).Transform()
-b := fstring.From(a).Collect()
-b == []string{"1", "2", "3"}
-```
-
-My current thinking is that it would be up to the programmer to ensure type
-safety, and `From`'s `Next` would look something like:
-
-```go
-func (f Foo) Next() Result {
-  a := f.Next()
-  if !a.Present() {
-    return None()
-  }
-
-  if a.Value() == nil {
-    panic("attempt to yield nil transformatation")
-  }
-
-  v, ok := a.Value().(string)
-  if !ok {
-    panic("attempt to type assert non-string to string")
-  }
-
-  return Some(v)
-}
-```
 
 ### Consider offering pre-generated builtin helpers
 
