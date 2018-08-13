@@ -12,7 +12,7 @@ functional helpers for the `int` type like so:
 $ go-functional int
 ```
 
-You could then use the generated `fint` package to find those primes:
+You then use the generated `fint` package to find primes:
 
 ```go
 type Counter struct {
@@ -26,7 +26,7 @@ func (c *Counter) Next() fint.Result {
 }
 
 func getPrimes() []int {
-  return fint.New(new(Counter)).Filter(isPrime).Take(100).Collect()
+  return fint.New(new(Counter)).Filter(isPrime).Take(100).Collapse()
 }
 ```
 
@@ -126,7 +126,7 @@ func expensiveOp(value int) int {
 
 ...
 
-_ = fint.New(new(Counter)).Map(expensiveOp).Take(2).Collect()
+_ = fint.New(new(Counter)).Map(expensiveOp).Take(2).Collapse()
 ```
 
 ## Functor operations
