@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strings"
 
 	"github.com/BooleanCat/go-functional/gen"
 )
@@ -32,6 +33,9 @@ func exitOn(err error) {
 func packageName(typeName string) string {
 	if typeName == "interface{}" {
 		return "finterface"
+	}
+	if strings.HasPrefix(typeName, "*") {
+		return "fp" + typeName[1:len(typeName)]
 	}
 	return "f" + typeName
 }

@@ -1,6 +1,10 @@
 package gen
 
-import "github.com/dave/jennifer/jen"
+import (
+	"strings"
+
+	"github.com/dave/jennifer/jen"
+)
 
 func TypeFileContent(typeName string) *jen.File {
 	f := jen.NewFile(packageName(typeName))
@@ -17,9 +21,7 @@ func TypeFileContent(typeName string) *jen.File {
 		jen.Id("transformFunc").Func().Params(jen.Interface()).Params(jen.Id(typeName), jen.Error()),
 	)
 
-	f.Func().Id("fromT").Params(jen.Id("value").Id("T")).Id(typeName).Block(
-		jen.Return(jen.Id(typeName).Call(jen.Id("value"))),
-	)
+	f.Add(jenFuncfromT(typeName))
 
 	f.Func().Id("Collect").Params(jen.Id("iter").Id("Iter")).Params(jen.Index().Id(typeName), jen.Error()).Block(
 		jen.Return(jen.Id("collect").Call(jen.Id("iter"))),
@@ -83,9 +85,22 @@ func TypeFileContent(typeName string) *jen.File {
 	return f
 }
 
+func jenFuncfromT(typeName string) *jen.Statement {
+	body := jen.Return(jen.Id(typeName).Call(jen.Id("t")))
+
+	if strings.HasPrefix(typeName, "*") {
+		body = jen.Return(jen.Id("t"))
+	}
+
+	return jen.Func().Id("fromT").Params(jen.Id("t").Id("T")).Id(typeName).Block(body)
+}
+
 func packageName(typeName string) string {
 	if typeName == "interface{}" {
 		return "finterface"
+	}
+	if strings.HasPrefix(typeName, "*") {
+		return "fp" + typeName[1:len(typeName)]
 	}
 	return "f" + typeName
 }
