@@ -45,6 +45,7 @@ func templateFiles() []string {
 		"functor.go",
 		"iter.go",
 		"map.go",
+		"option.go",
 		"repeat.go",
 		"result.go",
 		"take.go",

@@ -13,16 +13,16 @@ func FilterErr(iter Iter, filter filterErrFunc) FilterIter {
 	return FilterIter{iter, filter}
 }
 
-func (iter FilterIter) Next() Result {
+func (iter FilterIter) Next() OptionalResult {
 	for {
 		next := iter.iter.Next()
-		if next.Error() != nil {
+		if next.Error() != nil || !next.Value().Present() {
 			return next
 		}
 
-		result, err := iter.filter(fromT(next.Value()))
+		result, err := iter.filter(fromT(next.Value().Value()))
 		if err != nil {
-			return Failed(err)
+			return Failure(err)
 		}
 
 		if result {

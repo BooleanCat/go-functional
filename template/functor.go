@@ -17,13 +17,13 @@ func Lift(slice tSlice) *Functor {
 	return &Functor{iter: &Lifted{slice: slice}}
 }
 
-func (f *Lifted) Next() Result {
+func (f *Lifted) Next() OptionalResult {
 	if f.index >= len(f.slice) {
-		return None()
+		return Success(None())
 	}
 
 	f.index++
-	return Some(T(f.slice[f.index-1]))
+	return Success(Some(T(f.slice[f.index-1])))
 }
 
 func (f *Functor) Filter(filter filterFunc) *Functor {

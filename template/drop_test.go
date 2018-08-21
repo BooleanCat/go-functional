@@ -24,7 +24,9 @@ var _ = Describe("DropIter", func() {
 	When("n is greater than the remaining items in the Iterator", func() {
 		It("drops everything", func() {
 			iter := t.Drop(t.Take(NewCounter(), 5), 100)
-			Expect(iter.Next().Error()).To(Equal(t.ErrNoValue))
+			next := iter.Next()
+			Expect(next.Error()).NotTo(HaveOccurred())
+			Expect(next.Value().Present()).To(BeFalse())
 		})
 	})
 

@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("RepeatIter", func() {
+var _ = Describe("Repeat", func() {
 	It("always yields the same element", func() {
 		iter := t.Repeat("pikachu")
 		expected := []interface{}{"pikachu", "pikachu", "pikachu"}

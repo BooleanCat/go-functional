@@ -3,7 +3,7 @@ package template
 import "fmt"
 
 type Iter interface {
-	Next() Result
+	Next() OptionalResult
 }
 
 func collect(iter Iter) (tSlice, error) {
@@ -11,14 +11,14 @@ func collect(iter Iter) (tSlice, error) {
 
 	for {
 		next := iter.Next()
-		if next.Error() == ErrNoValue {
-			return slice, nil
-		}
 		if next.Error() != nil {
 			return tSlice{}, next.Error()
 		}
+		if !next.Value().Present() {
+			return slice, nil
+		}
 
-		slice = append(slice, fromT(next.Value()))
+		slice = append(slice, fromT(next.Value().Value()))
 	}
 }
 
@@ -34,15 +34,15 @@ func fold(iter Iter, initial T, op foldErrFunc) (T, error) {
 	result := initial
 	for {
 		next := iter.Next()
-		if next.Error() == ErrNoValue {
-			return result, nil
-		}
 		if next.Error() != nil {
 			var empty T
 			return empty, next.Error()
 		}
+		if !next.Value().Present() {
+			return result, nil
+		}
 
-		applied, err := op(fromT(result), fromT(next.Value()))
+		applied, err := op(fromT(result), fromT(next.Value().Value()))
 		if err != nil {
 			var empty T
 			return empty, err

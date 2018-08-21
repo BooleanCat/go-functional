@@ -9,14 +9,17 @@ func Chain(iters ...Iter) *ChainIter {
 	return &ChainIter{iters: iters}
 }
 
-func (iter *ChainIter) Next() Result {
+func (iter *ChainIter) Next() OptionalResult {
 	for {
 		if len(iter.iters) <= iter.i {
-			return None()
+			return Success(None())
 		}
 
 		next := iter.iters[iter.i].Next()
-		if next.Error() == ErrNoValue {
+		if next.Error() != nil {
+			return next
+		}
+		if !next.Value().Present() {
 			iter.i++
 			continue
 		}

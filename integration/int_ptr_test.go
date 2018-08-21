@@ -572,11 +572,11 @@ var _ = Describe("go-functional", func() {
 				return &Counter{i: newInt(0)}
 			}
 
-			func (iter *Counter) Next() fpint.Result {
+			func (iter *Counter) Next() fpint.OptionalResult {
 				next := *iter.i
 				i := next + 1
 				iter.i = &i
-				return fpint.Some(&next)
+				return fpint.Success(fpint.Some(&next))
 			}
 
 			func asString(v interface{}) (*string, error) {

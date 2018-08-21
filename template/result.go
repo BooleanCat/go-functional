@@ -1,30 +1,32 @@
 package template
 
-import "errors"
+import "fmt"
 
-var ErrNoValue = errors.New("no value")
-
-type Result struct {
-	value T
+type OptionalResult struct {
+	value Option
 	err   error
 }
 
-func Some(value T) Result {
-	return Result{value: value, err: nil}
+func Success(o Option) OptionalResult {
+	return OptionalResult{value: o, err: nil}
 }
 
-func None() Result {
-	return Result{err: ErrNoValue}
+func Failure(err error) OptionalResult {
+	return OptionalResult{err: err}
 }
 
-func Failed(err error) Result {
-	return Result{err: err}
-}
-
-func (r Result) Value() T {
+func (r OptionalResult) Value() Option {
 	return r.value
 }
 
-func (r Result) Error() error {
+func (r OptionalResult) Unwrap() Option {
+	if r.err != nil {
+		panic(fmt.Sprintf("unwrap on failed result: %v", r.err))
+	}
+
+	return r.value
+}
+
+func (r OptionalResult) Error() error {
 	return r.err
 }

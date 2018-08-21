@@ -13,15 +13,15 @@ func MapErr(iter Iter, op mapErrFunc) MapIter {
 	return MapIter{iter, op}
 }
 
-func (iter MapIter) Next() Result {
+func (iter MapIter) Next() OptionalResult {
 	next := iter.iter.Next()
-	if next.Error() != nil {
+	if next.Error() != nil || !next.Value().Present() {
 		return next
 	}
 
-	result, err := iter.op(fromT(next.Value()))
+	result, err := iter.op(fromT(next.Value().Value()))
 	if err != nil {
-		return Failed(err)
+		return Failure(err)
 	}
-	return Some(T(result))
+	return Success(Some(T(result)))
 }

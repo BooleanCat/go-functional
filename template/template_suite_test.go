@@ -22,10 +22,10 @@ func NewCounter() *Counter {
 	return new(Counter)
 }
 
-func (c *Counter) Next() t.Result {
+func (c *Counter) Next() t.OptionalResult {
 	next := t.Some(c.i)
 	c.i++
-	return next
+	return t.Success(next)
 }
 
 type FailIter struct {
@@ -36,9 +36,9 @@ func NewFailIter() *FailIter {
 	return new(FailIter)
 }
 
-func (iter *FailIter) Next() t.Result {
+func (iter *FailIter) Next() t.OptionalResult {
 	iter.nextCallCount++
-	return t.Failed(errors.New("Oh, no."))
+	return t.Failure(errors.New("Oh, no."))
 }
 
 func (iter *FailIter) NextCallCount() int {
@@ -52,9 +52,10 @@ func toInt(value interface{}) int {
 	return i
 }
 
-func resultValue(result t.Result) int {
+func resultValue(result t.OptionalResult) int {
 	Expect(result.Error()).To(BeNil())
-	return toInt(result.Value())
+	Expect(result.Value().Present()).To(BeTrue())
+	return toInt(result.Value().Value())
 }
 
 func genericNext(iter t.GenericIter) interface{} {

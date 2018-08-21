@@ -14,10 +14,10 @@ func Blur(iter Iter) TransformIter {
 
 func (iter TransformIter) Next() (interface{}, bool, error) {
 	result := iter.iter.Next()
-	if result.Error() == ErrNoValue {
-		return nil, true, nil
+	if result.Error() != nil || result.Value().Present() {
+		return fromT(result.Value().Value()), false, result.Error()
 	}
-	return fromT(result.Value()), false, result.Error()
+	return nil, true, nil
 }
 
 type ConcreteIter struct {
@@ -29,19 +29,19 @@ func Transform(iter GenericIter, f transformFunc) ConcreteIter {
 	return ConcreteIter{iter, f}
 }
 
-func (iter ConcreteIter) Next() Result {
+func (iter ConcreteIter) Next() OptionalResult {
 	result, done, err := iter.iter.Next()
 	if done {
-		return None()
+		return Success(None())
 	}
 	if err != nil {
-		return Failed(err)
+		return Failure(err)
 	}
 
 	value, err := iter.f(result)
 	if err != nil {
-		return Failed(err)
+		return Failure(err)
 	}
 
-	return Some(T(value))
+	return Success(Some(T(value)))
 }

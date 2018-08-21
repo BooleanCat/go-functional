@@ -13,16 +13,16 @@ func ExcludeErr(iter Iter, exclude filterErrFunc) ExcludeIter {
 	return ExcludeIter{iter, exclude}
 }
 
-func (iter ExcludeIter) Next() Result {
+func (iter ExcludeIter) Next() OptionalResult {
 	for {
 		next := iter.iter.Next()
-		if next.Error() != nil {
+		if next.Error() != nil || !next.Value().Present() {
 			return next
 		}
 
-		result, err := iter.exclude(fromT(next.Value()))
+		result, err := iter.exclude(fromT(next.Value().Value()))
 		if err != nil {
-			return Failed(err)
+			return Failure(err)
 		}
 
 		if !result {

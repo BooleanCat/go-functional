@@ -499,10 +499,10 @@ var _ = Describe("go-functional", func() {
 				i fint.T
 			}
 
-			func (iter *Counter) Next() fint.Result {
+			func (iter *Counter) Next() fint.OptionalResult {
 				next := iter.i
 				iter.i++
-				return fint.Some(next)
+				return fint.Success(fint.Some(next))
 			}
 
 			func asString(v interface{}) (string, error) {

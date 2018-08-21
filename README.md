@@ -5,24 +5,24 @@ golang types.
 
 ## Show me
 
-Let's imagine you want to find the first 100 prime numbers. You can generate
-functional helpers for the `int` type like so:
+Let's imagine you want to find the first 100 prime numbers. Functional helpers
+for the `int` type can be generated like so:
 
 ```
 $ go-functional int
 ```
 
-You then use the generated `fint` package to find primes:
+The generated `fint` package can be leveraged to find primes:
 
 ```go
 type Counter struct {
   i fint.T
 }
 
-func (c *Counter) Next() fint.Result {
-  next := c.i
+func (c *Counter) Next() fint.OptionalResult {
+  next := fint.Some(c.i)
   c.i++
-  return fint.Some(next)
+  return fint.Success(next)
 }
 
 func getPrimes() []int {
@@ -32,71 +32,60 @@ func getPrimes() []int {
 
 ## Tell me more
 
-The basic building blocks of go-functional are `Iterator`s and `Result`s. A
-`Result` is a type that *may* hold some value, or it *may* hold no value.
-For example, for functional helpers generated for the `string` type:
+The basic building blocks of go-functional are iterators. Iterators are defined
+as such:
 
 ```go
-a := fstring.Some("foo")  // holds the value `foo`
-b := fstring.None()  // holds no value
-c := fstring.Failed(err)  // holds an error
-a.Error()  // nil
-a.Value()  // "foo"
-b.Error()  // ErrNoValue
-c.Error()  // err
-```
-
-Results with a nil `result.Error()` hold a value that can be retrieved by
-calling `result.Value()`.
-
-Results who's `result.Error()` is equal to `ErrNoValue` hold no value.
-
-Results who's `result.Error()` is anything indicate an error.
-
-Results should be checked for errors and the presence of a value with
-`result.Error()`.
-
-`Iterators`s are defined as types that yield Results of a particular type by
-implementing:
-
-```go
-type Iterator interface {
-  Next() Result
+type Iter interface {
+  Next() OptionalResult
 }
 ```
 
-An example could be an iterator that yields each letter of the alphabet:
+That is, they are implementations that define a method `Next` that yields
+a value, wrapped in an `OptionalResult`, each time it is invoked.
+
+An `OptionalResult` is a type that may hold an `Option` or an error. The
+presence of an error can be checked with `result.Error()`. If `result.Error()`
+is nil, then `result.Value()` holds a meaningful optional value.
+
+An `Option` is a type that *may* hold some value. The presence of a value can
+be checked with `option.Present()`. If `option.Present()` is true, then
+`option.Value()` holds a meaningful value.
+
+Here is an example of an iterator that yields each letter of the alphabet:
 
 ```go
 type Alphabet struct {
   letter int
 }
 
-func (a *Alphabet) Next() fstring.Result {
+func (a *Alphabet) Next() fstring.OptionalResult {
   if a.letter > 25 {
-    return fstring.None()
+    return fstring.Success(fstring.None())
   }
 
-  next := a.letter + 0x61
+  next := fstring.Some(fstring.T(a.letter + 0x61))
   a.letter++
-  return fstring.Some(fstring.T(next))
+  return fstring.Success(next)
 }
 ```
 
-An iterator is single use. Iterators *may* be exhausted after some yields. In
-the example above, calling `Next()` will return each letter in turn, and finally
-will only ever return `fstring.None()`. Iterators may be infinite, an example
-would be an infinite counter:
+Iterators *may* be exhausted after some yields. In the example above, calling
+`Next()` will return each letter in turn, and finally will only ever return
+`fstring.Success(fstring.None())` (a successful empty value). An iterator is
+considered exhausted when `Next()` yields an empty value.
+
+Iterators may be infinite, an example would be an infinite counter:
 
 ```go
 type Counter struct {
   i fint.T
 }
 
-func (c *Counter) Next() fint.Result {
-  next := c.i
+func (c *Counter) Next() fint.OptionalResult {
+  next := fint.Some(c.i)
   c.i++
-  return fint.Some(next)
+  return fint.Success(next)
 }
 ```
 
@@ -256,10 +245,6 @@ directory. I want to allow `go-functional -o /some/other/path int` creating
 ### Support for non-builtin types
 
 This should be allowed: `go-functional os.File`.
-
-### Support for pointers to types
-
-This should also be allowed: `go-functional *os.File`.
 
 ### Implement help
 
