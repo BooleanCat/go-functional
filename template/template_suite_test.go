@@ -9,9 +9,9 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestGen(t *testing.T) {
+func TestTemplate(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Gen Suite")
+	RunSpecs(t, "Template Suite")
 }
 
 type Counter struct {

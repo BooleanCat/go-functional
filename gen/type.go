@@ -9,19 +9,8 @@ import (
 func TypeFileContent(typeName string) *jen.File {
 	f := jen.NewFile(packageName(typeName))
 
-	f.Type().Defs(
-		jen.Id("T").Id(typeName),
-		jen.Id("tSlice").Index().Id(typeName),
-		jen.Id("mapFunc").Func().Params(jen.Id(typeName)).Id(typeName),
-		jen.Id("mapErrFunc").Func().Params(jen.Id(typeName)).Params(jen.Id(typeName), jen.Error()),
-		jen.Id("foldFunc").Func().Params(jen.Id(typeName), jen.Id(typeName)).Id(typeName),
-		jen.Id("foldErrFunc").Func().Params(jen.Id(typeName), jen.Id(typeName)).Params(jen.Id(typeName), jen.Error()),
-		jen.Id("filterFunc").Func().Params(jen.Id(typeName)).Bool(),
-		jen.Id("filterErrFunc").Func().Params(jen.Id(typeName)).Params(jen.Bool(), jen.Error()),
-		jen.Id("transformFunc").Func().Params(jen.Interface()).Params(jen.Id(typeName), jen.Error()),
-	)
-
-	f.Add(jenFuncfromT(typeName))
+	f.Add(Defs(typeName))
+	f.Add(FromT(typeName))
 
 	f.Func().Id("Collect").Params(jen.Id("iter").Id("Iter")).Params(jen.Index().Id(typeName), jen.Error()).Block(
 		jen.Return(jen.Id("collect").Call(jen.Id("iter"))),
@@ -85,7 +74,21 @@ func TypeFileContent(typeName string) *jen.File {
 	return f
 }
 
-func jenFuncfromT(typeName string) *jen.Statement {
+func Defs(typeName string) *jen.Statement {
+	return jen.Type().Defs(
+		jen.Id("T").Id(typeName),
+		jen.Id("tSlice").Index().Id(typeName),
+		jen.Id("mapFunc").Func().Params(jen.Id(typeName)).Id(typeName),
+		jen.Id("mapErrFunc").Func().Params(jen.Id(typeName)).Params(jen.Id(typeName), jen.Error()),
+		jen.Id("foldFunc").Func().Params(jen.Id(typeName), jen.Id(typeName)).Id(typeName),
+		jen.Id("foldErrFunc").Func().Params(jen.Id(typeName), jen.Id(typeName)).Params(jen.Id(typeName), jen.Error()),
+		jen.Id("filterFunc").Func().Params(jen.Id(typeName)).Bool(),
+		jen.Id("filterErrFunc").Func().Params(jen.Id(typeName)).Params(jen.Bool(), jen.Error()),
+		jen.Id("transformFunc").Func().Params(jen.Interface()).Params(jen.Id(typeName), jen.Error()),
+	)
+}
+
+func FromT(typeName string) *jen.Statement {
 	body := jen.Return(jen.Id(typeName).Call(jen.Id("t")))
 
 	if strings.HasPrefix(typeName, "*") {
