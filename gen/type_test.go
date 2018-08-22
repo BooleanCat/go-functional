@@ -1,66 +1,84 @@
 package gen_test
 
 import (
-	"bytes"
-	"go/parser"
-	"go/printer"
-	"go/token"
-
 	"github.com/BooleanCat/go-functional/gen"
-	"github.com/dave/jennifer/jen"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("type.go", func() {
-	It("generates Defs", func() {
-		defs := generate(gen.Defs("int"))
-		expected := normaliseSource(`
-			package foo
+	var (
+		source   string
+		typeName string
+	)
 
-			type (
-				T             int
-				tSlice        []int
-				mapFunc       func(int) int
-				mapErrFunc    func(int) (int, error)
-				foldFunc      func(int, int) int
-				foldErrFunc   func(int, int) (int, error)
-				filterFunc    func(int) bool
-				filterErrFunc func(int) (bool, error)
-				transformFunc func(interface{}) (int, error)
-			)
-		`)
-
-		Expect(defs).To(Equal(expected))
+	BeforeEach(func() {
+		typeName = "int"
 	})
 
-	It("generates fromT", func() {
-		defs := generate(gen.FromT("int"))
-		expected := normaliseSource(`
-			package foo
+	JustBeforeEach(func() {
+		source = normaliseSource(gen.NewTypeFileGen(typeName).File().GoString())
+	})
 
-			func fromT(t T) int {
-				return int(t)
-			}
-		`)
+	Describe("type declarations", func() {
+		It("generates", func() {
+			Expect(source).To(ContainSubstring(clean(`
+				type (
+					T             int
+					tSlice        []int
+					mapFunc       func(int) int
+					mapErrFunc    func(int) (int, error)
+					foldFunc      func(int, int) int
+					foldErrFunc   func(int, int) (int, error)
+					filterFunc    func(int) bool
+					filterErrFunc func(int) (bool, error)
+					transformFunc func(interface{}) (int, error)
+				)
+			`)))
+		})
+	})
 
-		Expect(defs).To(Equal(expected))
+	Describe("fromT", func() {
+		It("generates", func() {
+			Expect(source).To(ContainSubstring(clean(`
+				func fromT(t T) int {
+					return int(t)
+				}
+			`)))
+		})
+
+		When("provided a pointer", func() {
+			BeforeEach(func() {
+				typeName = "*int"
+			})
+
+			It("generates", func() {
+				Expect(source).To(ContainSubstring(clean(`
+					func fromT(t T) *int {
+						return t
+					}
+				`)))
+			})
+		})
+	})
+
+	Describe("Collect", func() {
+		It("generates", func() {
+			Expect(source).To(ContainSubstring(clean(`
+				func Collect(iter Iter) ([]int, error) {
+					return collect(iter)
+				}
+			`)))
+		})
+	})
+
+	Describe("Functor.Collect", func() {
+		It("generates", func() {
+			Expect(source).To(ContainSubstring(clean(`
+				func (f *Functor) Collect() ([]int, error) {
+					return collect(f.iter)
+				}
+			`)))
+		})
 	})
 })
-
-func generate(code jen.Code) string {
-	file := jen.NewFile("foo")
-	file.Add(code)
-	return normaliseSource(file.GoString())
-}
-
-func normaliseSource(source string) string {
-	fset := token.NewFileSet()
-	config := printer.Config{Mode: printer.TabIndent | printer.UseSpaces, Tabwidth: 4}
-	buffer := new(bytes.Buffer)
-
-	file, err := parser.ParseFile(fset, "donotcare.go", source, 0)
-	Expect(err).NotTo(HaveOccurred())
-	Expect(config.Fprint(buffer, fset, file)).To(Succeed())
-	return buffer.String()
-}

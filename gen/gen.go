@@ -11,7 +11,7 @@ func Generate(typeName, path string) error {
 	}
 
 	destination := filepath.Join(packageName(typeName), "type.go")
-	content := []byte(TypeFileContent(typeName).GoString())
+	content := []byte(NewTypeFileGen(typeName).File().GoString())
 	return writeFile(destination, content)
 }
 
