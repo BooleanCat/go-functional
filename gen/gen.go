@@ -3,6 +3,7 @@ package gen
 import (
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 )
 
 func Generate(typeName, path string) error {
@@ -55,4 +56,16 @@ func templateFiles() []string {
 
 func writeFile(destination string, content []byte) error {
 	return ioutil.WriteFile(destination, content, 0755)
+}
+
+func packageName(typeName string) string {
+	if typeName == "interface{}" {
+		return "finterface"
+	}
+
+	if strings.HasPrefix(typeName, "*") {
+		return "fp" + typeName[1:]
+	}
+
+	return "f" + typeName
 }

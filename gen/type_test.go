@@ -8,16 +8,22 @@ import (
 
 var _ = Describe("type.go", func() {
 	var (
-		source   string
-		typeName string
+		source     string
+		typeName   string
+		importPath string
 	)
 
 	BeforeEach(func() {
 		typeName = "int"
+		importPath = ""
 	})
 
 	JustBeforeEach(func() {
-		source = normaliseSource(gen.NewTypeFileGen(typeName).File().GoString())
+		typeFileGen := gen.NewTypeFileGen(typeName)
+		if importPath != "" {
+			typeFileGen = typeFileGen.ImportedFrom(importPath)
+		}
+		source = normaliseSource(typeFileGen.File().GoString())
 	})
 
 	Describe("type declarations", func() {
@@ -190,6 +196,44 @@ var _ = Describe("type.go", func() {
 					}
 				}
 			`)))
+		})
+	})
+
+	When("an import path is provided", func() {
+		BeforeEach(func() {
+			typeName = "Cmd"
+			importPath = "os/exec"
+		})
+
+		It("qualifies the type", func() {
+			Expect(source).To(ContainSubstring(clean(`
+				type (
+					T             exec.Cmd
+					tSlice        []exec.Cmd
+			`)))
+		})
+
+		It("imports the type", func() {
+			Expect(source).To(ContainSubstring(clean(`
+				import (
+					"fmt"
+					"os/exec"
+				)
+			`)))
+		})
+
+		When("a pointer is provided", func() {
+			BeforeEach(func() {
+				typeName = "*Cmd"
+			})
+
+			It("qualifies the type", func() {
+				Expect(source).To(ContainSubstring(clean(`
+					type (
+						T             *exec.Cmd
+						tSlice        []*exec.Cmd
+			`)))
+			})
 		})
 	})
 })
