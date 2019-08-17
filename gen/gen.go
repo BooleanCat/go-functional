@@ -55,7 +55,7 @@ func templateFiles() []string {
 }
 
 func writeFile(destination string, content []byte) error {
-	return ioutil.WriteFile(destination, content, 0755)
+	return ioutil.WriteFile(destination, content, 0666)
 }
 
 func packageName(typeName string) string {
