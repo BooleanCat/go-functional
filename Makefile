@@ -5,7 +5,7 @@ ginkgo := ginkgo --race --randomizeAllSpecs -r
 test: test-unit test-integration
 
 test-unit:
-	$(ginkgo) --regexScansFilePath --skip integration/
+	$(ginkgo) gen/ template/
 
 test-integration: install generate-fixtures
 	$(ginkgo) integration/
