@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/lithammer/dedent"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/renstrom/dedent"
 )
 
 func TestGen(t *testing.T) {

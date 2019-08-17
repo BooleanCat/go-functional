@@ -14,10 +14,12 @@ func main() {
 	}
 	exitOn(err)
 
-	err = os.Mkdir(packageName(args.Positional.TypeName), 0755)
+	p := packageName(args.Positional.TypeName)
+
+	err = os.Mkdir(p, 0755)
 	exitOn(err)
 
-	err = gen.Generate(args.Positional.TypeName, "f"+args.Positional.TypeName)
+	err = gen.Generate(args.Positional.TypeName, p)
 	exitOn(err)
 }
 
@@ -34,8 +36,10 @@ func packageName(typeName string) string {
 	if typeName == "interface{}" {
 		return "finterface"
 	}
+
 	if strings.HasPrefix(typeName, "*") {
 		return "fp" + typeName[1:len(typeName)]
 	}
+
 	return "f" + typeName
 }

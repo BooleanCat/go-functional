@@ -176,8 +176,10 @@ func (g TypeFileGen) packageName() string {
 	if g.typeName == "interface{}" {
 		return "finterface"
 	}
+
 	if g.pointer {
 		return "fp" + g.typeName
 	}
+
 	return "f" + g.typeName
 }

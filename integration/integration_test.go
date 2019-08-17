@@ -2,7 +2,7 @@ package integration_test
 
 import (
 	"os"
-	"path/filepath"
+	"os/exec"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -10,14 +10,16 @@ import (
 
 var _ = Describe("go-functional", func() {
 	var (
-		workDir     string
-		someBinPath string
+		cmd     *exec.Cmd
+		workDir string
 	)
 
 	BeforeEach(func() {
 		workDir = tempDir()
-		mkdirAt(workDir, "src", "somebin")
-		someBinPath = filepath.Join(workDir, "src", "somebin")
+		cmd = exec.Command("go-functional", "int")
+		cmd.Stdout = GinkgoWriter
+		cmd.Stderr = GinkgoWriter
+		cmd.Dir = workDir
 	})
 
 	AfterEach(func() {
@@ -25,37 +27,26 @@ var _ = Describe("go-functional", func() {
 	})
 
 	It("succeeds", func() {
-		cmd := goFunctionalCommand(someBinPath, "string")
 		Expect(cmd.Run()).To(Succeed())
 	})
 
 	When("the type name is omitted", func() {
+		BeforeEach(func() {
+			cmd.Args = cmd.Args[:1]
+		})
+
 		It("fails", func() {
-			cmd := goFunctionalCommand(someBinPath)
 			Expect(cmd.Run()).NotTo(Succeed())
 		})
 	})
 
-	It("creates a new package in the working directory", func() {
-		cmd := goFunctionalCommand(someBinPath, "string")
-		Expect(cmd.Run()).To(Succeed())
-
-		cmd = makeFunctionalSample(workDir, "somebin", clean(`
-			package main
-
-			import "somebin/fstring"
-
-			func main() {
-				_ = fstring.Some("foo")
-			}
-		`))
-
-		Expect(cmd.Run()).To(Succeed())
-	})
-
 	When("the -h flag is provided", func() {
+		BeforeEach(func() {
+			cmd.Args = append(cmd.Args[:1], "-h")
+		})
+
 		It("succeeds", func() {
-			Expect(goFunctionalCommand(workDir, "-h").Run()).To(Succeed())
+			Expect(cmd.Run()).To(Succeed())
 		})
 	})
 })

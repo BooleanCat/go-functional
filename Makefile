@@ -1,13 +1,24 @@
-.PHONY: test test-unit test-integration install
+.PHONY: test test-unit test-integration install generate-fixtures
 
-test:
-	./scripts/test.sh
+ginkgo := ginkgo --race --randomizeAllSpecs -r
+
+test: test-unit test-integration
 
 test-unit:
-	./scripts/test.sh --regexScansFilePath --skip integration/
+	$(ginkgo) --regexScansFilePath --skip integration/
 
-test-integration:
-	./scripts/test.sh integration/
+test-integration: install generate-fixtures
+	$(ginkgo) integration/
 
 install:
 	go install github.com/BooleanCat/go-functional
+
+generate-fixtures: install clean-fixtures
+	cd fixtures && go-functional int
+	cd fixtures && go-functional string
+	cd fixtures && go-functional '*int'
+	cd fixtures && go-functional '*string'
+	cd fixtures && go-functional interface{}
+
+clean-fixtures:
+	rm -r fixtures/* || true
