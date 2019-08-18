@@ -46,7 +46,7 @@ func (g TypeFileGen) File() *jen.File {
 		g.asFilterErrFunc(),
 		g.asFoldErrFunc(),
 	} {
-		f.Add(statement)
+		f.Add(statement.Line())
 	}
 
 	return f
