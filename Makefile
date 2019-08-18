@@ -1,8 +1,14 @@
-.PHONY: test test-unit test-integration install generate-fixtures
+.PHONY: test vet test-unit test-integration install generate-fixtures
 
 ginkgo := ginkgo --race --randomizeAllSpecs -r
 
-test: test-unit test-integration
+test: vet test-unit test-integration
+
+vet:
+	go vet ./gen/...
+	go vet ./template/...
+	go vet ./pkgname/...
+	go vet ./
 
 test-unit:
 	$(ginkgo) gen/ template/
