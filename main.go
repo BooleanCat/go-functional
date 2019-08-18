@@ -2,9 +2,9 @@ package main
 
 import (
 	"os"
-	"strings"
 
 	"github.com/BooleanCat/go-functional/gen"
+	"github.com/BooleanCat/go-functional/pkgname"
 )
 
 func main() {
@@ -14,7 +14,7 @@ func main() {
 	}
 	exitOn(err)
 
-	p := packageName(args.Positional.TypeName)
+	p := pkgname.Name(args.Positional.TypeName)
 
 	err = os.Mkdir(p, 0755)
 	exitOn(err)
@@ -30,16 +30,4 @@ func exitOn(err error) {
 
 	os.Stderr.WriteString(err.Error())
 	os.Exit(1)
-}
-
-func packageName(typeName string) string {
-	if typeName == "interface{}" {
-		return "finterface"
-	}
-
-	if strings.HasPrefix(typeName, "*") {
-		return "fp" + typeName[1:len(typeName)]
-	}
-
-	return "f" + typeName
 }

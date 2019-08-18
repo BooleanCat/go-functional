@@ -3,7 +3,8 @@ package gen
 import (
 	"io/ioutil"
 	"path/filepath"
-	"strings"
+
+	"github.com/BooleanCat/go-functional/pkgname"
 )
 
 func Generate(typeName, path string) error {
@@ -11,13 +12,13 @@ func Generate(typeName, path string) error {
 		return err
 	}
 
-	destination := filepath.Join(packageName(typeName), "type.go")
+	destination := filepath.Join(pkgname.Name(typeName), "type.go")
 	content := []byte(NewTypeFileGen(typeName).File().GoString())
 	return writeFile(destination, content)
 }
 
 func generateSourceFiles(typeName string) error {
-	sourceFiles, err := NewSourceFiles(packageName(typeName))
+	sourceFiles, err := NewSourceFiles(pkgname.Name(typeName))
 	if err != nil {
 		return err
 	}
@@ -28,7 +29,7 @@ func generateSourceFiles(typeName string) error {
 			return err
 		}
 
-		destination := filepath.Join(packageName(typeName), f)
+		destination := filepath.Join(pkgname.Name(typeName), f)
 		if err = writeFile(destination, content); err != nil {
 			return err
 		}
@@ -56,16 +57,4 @@ func templateFiles() []string {
 
 func writeFile(destination string, content []byte) error {
 	return ioutil.WriteFile(destination, content, 0666)
-}
-
-func packageName(typeName string) string {
-	if typeName == "interface{}" {
-		return "finterface"
-	}
-
-	if strings.HasPrefix(typeName, "*") {
-		return "fp" + typeName[1:]
-	}
-
-	return "f" + typeName
 }
