@@ -11,7 +11,7 @@ vet:
 	go vet ./
 
 test-unit:
-	$(ginkgo) gen/ template/
+	$(ginkgo) gen/ template/ pkgname/
 
 test-integration: install generate-fixtures
 	$(ginkgo) integration/
