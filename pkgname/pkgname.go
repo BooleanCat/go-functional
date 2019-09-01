@@ -3,6 +3,8 @@ package pkgname
 import "strings"
 
 func Name(typeName string) string {
+	typeName = strings.ToLower(typeName)
+
 	if typeName == "interface{}" {
 		return "finterface"
 	}

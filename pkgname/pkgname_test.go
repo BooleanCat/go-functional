@@ -19,4 +19,8 @@ var _ = Describe("pkgname", func() {
 	It("generates a name for a pointer", func() {
 		Expect(pkgname.Name("*int")).To(Equal("fpint"))
 	})
+
+	It("generates a name for a types with mixed case as lower", func() {
+		Expect(pkgname.Name("FileInfo")).To(Equal("ffileinfo"))
+	})
 })
