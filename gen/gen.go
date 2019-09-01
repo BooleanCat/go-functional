@@ -7,13 +7,19 @@ import (
 	"github.com/BooleanCat/go-functional/pkgname"
 )
 
-func Generate(typeName, path string) error {
+func Generate(typeName, path, importPath string) error {
 	if err := generateSourceFiles(typeName); err != nil {
 		return err
 	}
 
 	destination := filepath.Join(pkgname.Name(typeName), "type.go")
-	content := []byte(NewTypeFileGen(typeName).File().GoString())
+
+	gen := NewTypeFileGen(typeName)
+	if importPath != "" {
+		gen = gen.ImportedFrom(importPath)
+	}
+
+	content := []byte(gen.File().GoString())
 	return writeFile(destination, content)
 }
 

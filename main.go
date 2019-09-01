@@ -19,7 +19,7 @@ func main() {
 	err = os.Mkdir(p, 0755)
 	exitOn(err)
 
-	err = gen.Generate(args.Positional.TypeName, p)
+	err = gen.Generate(args.Positional.TypeName, p, args.ImportPath)
 	exitOn(err)
 }
 

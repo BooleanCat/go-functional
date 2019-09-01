@@ -7,7 +7,9 @@ type PositionalArgs struct {
 }
 
 type Args struct {
-	Positional PositionalArgs `positional-args:"yes" required:"yes"`
+	ImportPath  string         `short:"i" long:"import-path"`
+	PackageName string         `short:"p" long:"package-name"`
+	Positional  PositionalArgs `positional-args:"yes" required:"yes"`
 }
 
 func parseArgs() (Args, error) {

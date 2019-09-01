@@ -26,6 +26,26 @@ var _ = Describe("type.go", func() {
 		source = normaliseSource(typeFileGen.File().GoString())
 	})
 
+	Describe("package name", func() {
+		It("generates", func() {
+			Expect(source).To(ContainSubstring(clean(`
+				package fint
+			`)))
+		})
+
+		When("provided a mixed case type name", func() {
+			BeforeEach(func() {
+				typeName = "Cmd"
+			})
+
+			It("generates in lowercase", func() {
+				Expect(source).To(ContainSubstring(clean(`
+					package fcmd
+				`)))
+			})
+		})
+	})
+
 	Describe("type declarations", func() {
 		It("generates", func() {
 			Expect(source).To(ContainSubstring(clean(`

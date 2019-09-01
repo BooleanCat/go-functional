@@ -173,13 +173,15 @@ func (g TypeFileGen) typeQualifier() *jen.Statement {
 }
 
 func (g TypeFileGen) packageName() string {
-	if g.typeName == "interface{}" {
+	typeName := strings.ToLower(g.typeName)
+
+	if typeName == "interface{}" {
 		return "finterface"
 	}
 
 	if g.pointer {
-		return "fp" + g.typeName
+		return "fp" + typeName
 	}
 
-	return "f" + g.typeName
+	return "f" + typeName
 }
