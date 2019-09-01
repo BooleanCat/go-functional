@@ -3,10 +3,20 @@ package pkgname_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	"github.com/BooleanCat/go-functional/pkgname"
 )
 
 var _ = Describe("pkgname", func() {
-	It("does nothing", func() {
-		Expect(true).To(BeTrue())
+	It("generates a name for a simple type", func() {
+		Expect(pkgname.Name("int")).To(Equal("fint"))
+	})
+
+	It("generates a name for interface{}", func() {
+		Expect(pkgname.Name("interface{}")).To(Equal("finterface"))
+	})
+
+	It("generates a name for a pointer", func() {
+		Expect(pkgname.Name("*int")).To(Equal("fpint"))
 	})
 })
