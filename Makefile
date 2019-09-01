@@ -26,6 +26,7 @@ generate-fixtures: install clean-fixtures
 	cd fixtures && go-functional '*string'
 	cd fixtures && go-functional interface{}
 	cd fixtures && go-functional --import-path os FileMode
+	cd fixtures && go-functional --import-path os *File
 
 clean-fixtures:
 	rm -r fixtures/* || true
