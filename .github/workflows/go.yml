@@ -14,10 +14,10 @@ jobs:
       uses: actions/checkout@v1
     - name: Install ginkgo
       run: go get -u github.com/onsi/ginkgo/ginkgo
-      path: /home/runner/go
+      working-directory: /home/runner
       env:
         GOPATH: /home/runner/work/go
     - name: Test
-      run: make test
+      run: PATH="/home/runner/work/go/bin:${PATH}" make test
       env:
-        PATH: "/home/runner/work/go/bin:${PATH}"
+        GOPATH: /home/runner/work/go
