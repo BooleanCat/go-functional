@@ -12,5 +12,7 @@ jobs:
       id: go
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
-    - name: Build
-      run: go build -v .
+    - name: Install ginkgo
+      run: go get -u github.com/onsi/ginkgo/ginkgo
+    - name: Test
+      run: make test
