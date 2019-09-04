@@ -18,6 +18,4 @@ jobs:
       env:
         GOPATH: /home/runner/work/go
     - name: Test
-      run: make test
-      env:
-        PATH: "/home/runner/work/go/bin:${PATH}"
+      run: PATH="/home/runner/work/go/bin:${PATH}" make test
