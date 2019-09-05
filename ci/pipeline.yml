@@ -1,0 +1,27 @@
+---
+resources:
+- name: go-functional
+  type: git
+  source:
+    uri: https://github.com/BooleanCat/go-functional.git
+    branch: concourse
+
+jobs:
+- name: unit-test
+  public: true
+  plan:
+  - get: go-functional
+    trigger: true
+  - task: vet
+    file: go-functional/ci/tasks/vet.yml
+  - task: test
+    file: go-functional/ci/tasks/unit-test.yml
+- name: integration-test
+  public: true
+  plan:
+  - get: go-functional
+    trigger: true
+    passed: [unit-test]
+  - task: test
+    file: go-functional/ci/tasks/integration-test.yml
+

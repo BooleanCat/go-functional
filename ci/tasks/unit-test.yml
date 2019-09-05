@@ -1,0 +1,17 @@
+---
+image_resource:
+  type: registry-image
+  source:
+    repository: booleancat/golang-ginkgo
+
+platform: linux
+
+inputs:
+- name: go-functional
+
+run:
+  path: ci/tasks/make.bash
+  dir: go-functional
+
+params:
+  TARGET: test-unit
