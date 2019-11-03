@@ -10,7 +10,7 @@ vet:
 	go vet ./...
 
 test-unit: vet lint
-	$(ginkgo) gen/ template/ pkgname/
+	$(ginkgo) --skipPackage integration
 
 test-integration: generate-fixtures
 	$(ginkgo) integration/
