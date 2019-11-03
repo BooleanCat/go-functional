@@ -1,7 +1,6 @@
 package integration_test
 
 import (
-	"os"
 	"os/exec"
 
 	. "github.com/onsi/ginkgo"
@@ -9,30 +8,17 @@ import (
 )
 
 var _ = Describe("go-functional", func() {
-	var (
-		cmd     *exec.Cmd
-		workDir string
-	)
+	var cmd *exec.Cmd
 
 	BeforeEach(func() {
-		workDir = tempDir()
-		cmd = exec.Command("go-functional", "int")
+		cmd = exec.Command("go", "run", "github.com/BooleanCat/go-functional", "int")
 		cmd.Stdout = GinkgoWriter
 		cmd.Stderr = GinkgoWriter
-		cmd.Dir = workDir
-	})
-
-	AfterEach(func() {
-		Expect(os.RemoveAll(workDir)).To(Succeed())
-	})
-
-	It("succeeds", func() {
-		Expect(cmd.Run()).To(Succeed())
 	})
 
 	When("the type name is omitted", func() {
 		BeforeEach(func() {
-			cmd.Args = cmd.Args[:1]
+			cmd.Args = cmd.Args[:len(cmd.Args)-1]
 		})
 
 		It("fails", func() {
@@ -42,7 +28,7 @@ var _ = Describe("go-functional", func() {
 
 	When("the -h flag is provided", func() {
 		BeforeEach(func() {
-			cmd.Args = append(cmd.Args[:1], "-h")
+			cmd.Args = append(cmd.Args[:len(cmd.Args)-1], "-h")
 		})
 
 		It("succeeds", func() {
