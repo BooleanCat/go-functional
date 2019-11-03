@@ -7,10 +7,7 @@ go-functional := go run github.com/BooleanCat/go-functional
 test: test-unit test-integration
 
 vet:
-	go vet ./gen/...
-	go vet ./template/...
-	go vet ./pkgname/...
-	go vet ./
+	go vet ./gen/... ./template/... ./pkgname/... ./
 
 test-unit: vet lint
 	$(ginkgo) --skipPackage integration
@@ -19,7 +16,7 @@ test-integration: generate-fixtures
 	$(ginkgo) integration/
 
 lint:
-	$(lint) run
+	$(lint) run ./gen/... ./template/... ./pkgname/... ./
 
 generate-fixtures: clean-fixtures
 	cd fixtures && $(go-functional) int
