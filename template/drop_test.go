@@ -38,7 +38,7 @@ var _ = Describe("DropIter", func() {
 
 		It("calls the underlying iterator's next method only once", func() {
 			iter := NewFailIter()
-			t.Collect(t.Drop(iter, 3))
+			_, _ = t.Collect(t.Drop(iter, 3))
 			Expect(iter.NextCallCount()).To(Equal(1))
 		})
 	})

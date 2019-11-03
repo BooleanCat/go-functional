@@ -57,7 +57,7 @@ var _ = Describe("go-functional", func() {
 
 	It("generates with Drop", func() {
 		result := fpfile.Lift(files).Drop(2).Collapse()
-		Expect(result).To(Equal(files[2:len(files)]))
+		Expect(result).To(Equal(files[2:]))
 	})
 
 	It("generates with Take", func() {
@@ -73,7 +73,7 @@ var _ = Describe("go-functional", func() {
 		}
 
 		result := fpfile.Lift(files).Filter(isDir).Collapse()
-		Expect(result).To(Equal(files[2:len(files)]))
+		Expect(result).To(Equal(files[2:]))
 	})
 
 	It("generates with FilterErr", func() {
@@ -88,7 +88,7 @@ var _ = Describe("go-functional", func() {
 
 		result, err := fpfile.Lift(files).FilterErr(isDir).Collect()
 		Expect(err).NotTo(HaveOccurred())
-		Expect(result).To(Equal(files[2:len(files)]))
+		Expect(result).To(Equal(files[2:]))
 	})
 
 	It("generates with Exclude", func() {

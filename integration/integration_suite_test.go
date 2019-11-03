@@ -9,8 +9,6 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var goFunctionalBin string
-
 func TestIntegration(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Integration Suite")
