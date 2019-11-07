@@ -15,11 +15,11 @@ jobs:
     - name: Cache go modules
       uses: actions/cache@v1
       with:
-        path: ~/go/pkg/mod
+        path: /home/runner/work/go/pkg
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
     - name: Test
-      run: PATH="/home/runner/work/go/bin:${PATH}" make test
+      run: make test
       env:
         GOPATH: /home/runner/work/go
