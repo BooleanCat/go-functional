@@ -1,4 +1,4 @@
-package integration_test
+package acceptance_test
 
 import (
 	"io/ioutil"
@@ -9,9 +9,9 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestIntegration(t *testing.T) {
+func TestAcceptance(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Integration Suite")
+	RunSpecs(t, "Acceptance Suite")
 }
 
 func tempDir() string {

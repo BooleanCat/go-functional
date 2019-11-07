@@ -1,4 +1,4 @@
-package integration_test
+package acceptance_test
 
 import (
 	"os"
