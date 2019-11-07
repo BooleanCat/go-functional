@@ -1,5 +1,7 @@
 # go-functional
 
+![](https://github.com/BooleanCat/go-functional/workflows/test/badge.svg)
+
 go-functional is a code generation tool that outputs functional helpers for
 golang types.
 
