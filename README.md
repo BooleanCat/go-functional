@@ -244,10 +244,6 @@ Currenty, `go-functional int` will create a package `fint` in the current
 directory. I want to allow `go-functional -o /some/other/path int` creating
 `/some/other/path/fint`.
 
-### Support for non-builtin types
-
-This should be allowed: `go-functional os.File`.
-
 ### Implement help
 
 `go-functional [-h|--help]` should print usage. As should incorrect invocations.
