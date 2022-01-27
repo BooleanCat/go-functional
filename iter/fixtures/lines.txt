@@ -1,0 +1,4 @@
+This is
+a file
+with
+a trailing newline
