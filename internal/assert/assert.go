@@ -21,20 +21,19 @@ func False(t *testing.T, b bool) {
 }
 
 func Nil(t *testing.T, v interface{}) {
-	if v != nil {
-		t.Errorf("expected `%v` to be `nil`", v)
-	}
+	Equal(t, v, nil)
 }
 
 func NotNil(t *testing.T, v interface{}) {
 	if v == nil {
-		t.Error("expected `nil` not to be `nil`")
+		t.Error("expected `nil` not to equal `nil`")
 	}
 }
 
 func SliceEqual[T comparable](t *testing.T, a, b []T) {
 	if len(a) != len(b) {
 		t.Errorf("expected `%v` to equal `%v` but lengths differ", a, b)
+		return
 	}
 
 	for i, v := range a {
