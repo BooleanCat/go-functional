@@ -22,3 +22,12 @@ func TestLessThan(t *testing.T) {
 	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4, 5, 1}), filters.LessThan(2))
 	assert.SliceEqual(t, iter.Collect[int](items), []int{1, 1})
 }
+
+func TestAnd(t *testing.T) {
+	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4, 5, 6, 7}), filters.And(
+		filters.GreaterThan(2),
+		filters.LessThan(7),
+	))
+
+	assert.SliceEqual(t, iter.Collect[int](items), []int{3, 4, 5, 6})
+}
