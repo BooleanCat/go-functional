@@ -1,4 +1,4 @@
-# Functional Programming in Go
+# Functional Programming in Go [![Actions Status](https://github.com/BooleanCat/go-functional/workflows/test/badge.svg)](https://github.com/BooleanCat/go-functional/actions)
 
 A general purpose library offering functional tooling for Golang.
 
