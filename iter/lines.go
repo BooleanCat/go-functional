@@ -2,6 +2,7 @@ package iter
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 
@@ -44,7 +45,7 @@ func (iter *LinesIter) Next() option.Option[result.Result[[]byte]] {
 		return option.Some(result.Err[[]byte](fmt.Errorf(`read line: %w`, err)))
 	}
 
-	return option.Some(result.Ok(content[:len(content)-1]))
+	return option.Some(result.Ok(bytes.TrimRight(content, "\r\n")))
 }
 
 var _ Iterator[result.Result[[]byte]] = new(LinesIter)
