@@ -27,8 +27,10 @@ func Collect[T any](iter Iterator[T]) []T {
 }
 
 // Fold consumes an Iterator and returns the final result of applying the accumulator function to each element.
-// It does not protect against infinite Iterators.
-func Fold[T any, R any](iter Iterator[T], initial R, biop func(R, T) R) R {
+// The accumulator function accepts two arguments - an accumulator and an element and returns a new  accumulator.
+// The initial value is the accumulator for the first call.
+// Fold does not protect against infinite Iterators.
+func Fold[T any, U any](iter Iterator[T], initial U, biop func(U, T) U) U {
 	for {
 		if value, ok := iter.Next().Value(); ok {
 			initial = biop(initial, value)
