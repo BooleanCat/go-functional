@@ -6,7 +6,7 @@ _*Note: this library required Go 1.18, which is currently in beta.*_
 
 ```go
 // Find the first 5 prime numbers
-primes := iter.Take[int[(iter.Filter[int](iter.Count(), isPrime), 5)
+primes := iter.Take[int](iter.Filter[int](iter.Count(), isPrime), 5)
 assert.SliceEqual(t, iter.Collect[int](primes), []int{2, 3, 5, 7, 11})
 ```
 
