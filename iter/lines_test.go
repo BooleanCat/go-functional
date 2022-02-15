@@ -3,13 +3,23 @@ package iter_test
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/ops"
+	"github.com/BooleanCat/go-functional/result"
 )
+
+func ExampleLinesString() {
+	lines := iter.LinesString(bytes.NewBufferString("hello\nthere"))
+	unwrapped := iter.Map[result.Result[string]](lines, ops.UnwrapResult[string])
+	fmt.Println(iter.Collect[string](unwrapped))
+	// Output: [hello there]
+}
 
 func TestLines(t *testing.T) {
 	file, err := os.Open("fixtures/lines.txt")

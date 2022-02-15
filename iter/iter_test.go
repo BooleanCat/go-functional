@@ -34,6 +34,6 @@ func TestFold(t *testing.T) {
 	concat := func(path string, part int) string {
 		return path + strconv.Itoa(part) + "/"
 	}
-	result := iter.Fold[int, string](iter.Take[int](iter.Count(), 3), "/", concat)
+	result := iter.Fold[int](iter.Take[int](iter.Count(), 3), "/", concat)
 	assert.Equal(t, result, "/0/1/2/")
 }
