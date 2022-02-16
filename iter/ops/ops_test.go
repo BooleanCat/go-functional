@@ -21,10 +21,16 @@ func ExampleUnwrapOption() {
 
 	integers := iter.Map[option.Option[int]](options, ops.UnwrapOption[int])
 
-	fmt.Print(iter.Collect[int](integers))
-
+	fmt.Println(iter.Collect[int](integers))
 	//Output: [4 6 -1]
 }
+func ExampleAdd() {
+	total := iter.Fold[int](iter.Lift([]int{1, 2, 3}), 0, ops.Add[int])
+
+	fmt.Println(total)
+	// Output: 6
+}
+
 func TestUnwrapOption(t *testing.T) {
 	options := iter.Lift([]option.Option[int]{
 		option.Some(4),
@@ -81,4 +87,8 @@ func TestUnwrapResultPanic(t *testing.T) {
 	)
 
 	t.Error("did not panic")
+}
+
+func TestAdd(t *testing.T) {
+	assert.Equal(t, ops.Add(5, 6), 11)
 }
