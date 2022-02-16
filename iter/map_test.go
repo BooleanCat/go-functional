@@ -10,13 +10,12 @@ import (
 
 func ExampleMap() {
 	double := func(a int) int { return a * 2 }
-	items := iter.Collect[int](iter.Take[int](
-		iter.Map[int](iter.Count(), double),
-		4,
-	))
+	items := iter.Collect[int](iter.Map[int](iter.Lift([]int{0, 1, 2, 3}), double))
+
 	fmt.Println(items)
 	// Output: [0 2 4 6]
 }
+
 func TestMap(t *testing.T) {
 	double := func(a int) int { return a * 2 }
 	items := iter.Collect[int](iter.Take[int](
