@@ -28,7 +28,8 @@ func ExampleUnwrapOption() {
 
 	integers := iter.Map[option.Option[int]](options, ops.UnwrapOption[int])
 
-	fmt.Println(iter.Collect[int](integers))
+	fmt.Print(iter.Collect[int](integers))
+
 	//Output: [4 6 -1]
 }
 func TestUnwrapOption(t *testing.T) {
