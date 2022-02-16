@@ -12,6 +12,19 @@ import (
 	"github.com/BooleanCat/go-functional/result"
 )
 
+func ExampleUnwrapOption() {
+	options := iter.Lift([]option.Option[int]{
+		option.Some(4),
+		option.Some(6),
+		option.Some(-1),
+	})
+
+	integers := iter.Map[option.Option[int]](options, ops.UnwrapOption[int])
+
+	fmt.Print(iter.Collect[int](integers))
+
+	//Output: [4 6 -1]
+}
 func TestUnwrapOption(t *testing.T) {
 	options := iter.Lift([]option.Option[int]{
 		option.Some(4),
