@@ -1,6 +1,8 @@
 package ops
 
 import (
+	"constraints"
+
 	"github.com/BooleanCat/go-functional/option"
 	"github.com/BooleanCat/go-functional/result"
 )
@@ -15,4 +17,9 @@ func UnwrapOption[T any](o option.Option[T]) T {
 // all results in an iterator.
 func UnwrapResult[T any](r result.Result[T]) T {
 	return r.Unwrap()
+}
+
+// Add performs the `+` operation for the two inputs, returning the result.
+func Add[T constraints.Integer | constraints.Float | ~string](a, b T) T {
+	return a + b
 }

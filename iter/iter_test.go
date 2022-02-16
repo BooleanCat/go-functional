@@ -7,13 +7,14 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/ops"
 )
 
 func ExampleFold() {
-	sum := iter.Fold[int](iter.Take[int](iter.Count(), 4), 0, func(sum, i int) int { return sum + i })
+	sum := iter.Fold[int](iter.Take[int](iter.Count(), 4), 0, ops.Add[int])
+
 	fmt.Println(sum)
-	// Output:
-	// 6
+	// Output: 6
 }
 
 func TestCollect(t *testing.T) {
