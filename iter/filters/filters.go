@@ -1,6 +1,6 @@
 package filters
 
-import "constraints"
+import "github.com/BooleanCat/go-functional/constraints"
 
 // IsZero is a filter intended for use with iter.Filter that returns true when
 // the provided value is equal to its zero value.

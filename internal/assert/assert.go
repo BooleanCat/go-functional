@@ -29,7 +29,9 @@ func False(t *testing.T, b bool) {
 func Nil(t *testing.T, v interface{}) {
 	t.Helper()
 
-	Equal(t, v, nil)
+	if v != nil {
+		t.Errorf("expected `%v` to equal `nil`", v)
+	}
 }
 
 func NotNil(t *testing.T, v interface{}) {
