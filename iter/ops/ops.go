@@ -1,8 +1,7 @@
 package ops
 
 import (
-	"constraints"
-
+	"github.com/BooleanCat/go-functional/constraints"
 	"github.com/BooleanCat/go-functional/option"
 	"github.com/BooleanCat/go-functional/result"
 )
