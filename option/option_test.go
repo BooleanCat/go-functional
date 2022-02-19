@@ -8,6 +8,70 @@ import (
 	"github.com/BooleanCat/go-functional/option"
 )
 
+func ExampleOption_Unwrap() {
+	fmt.Println(option.Some(4).Unwrap())
+	// Output: 4
+}
+
+func ExampleOption_UnwrapOr() {
+	fmt.Println(option.Some(4).UnwrapOr(3))
+	fmt.Println(option.None[int]().UnwrapOr(3))
+	// Output:
+	// 4
+	// 3
+}
+
+func ExampleOption_UnwrapOrElse() {
+	fmt.Println(option.Some(4).UnwrapOrElse(func() int {
+		return 3
+	}))
+
+	fmt.Println(option.None[int]().UnwrapOrElse(func() int {
+		return 3
+	}))
+
+	// Output:
+	// 4
+	// 3
+}
+
+func ExampleOption_UnwrapOrZero() {
+	fmt.Println(option.Some(4).UnwrapOrZero())
+	fmt.Println(option.None[int]().UnwrapOrZero())
+
+	// Output
+	// 4
+	// 0
+}
+
+func ExampleOption_IsSome() {
+	fmt.Println(option.Some(4).IsSome())
+	fmt.Println(option.None[int]().IsSome())
+
+	// Output:
+	// true
+	// false
+}
+
+func ExampleOption_IsNone() {
+	fmt.Println(option.Some(4).IsNone())
+	fmt.Println(option.None[int]().IsNone())
+
+	// Output:
+	// false
+	// true
+}
+
+func ExampleOption_Value() {
+	value, ok := option.Some(4).Value()
+	fmt.Println(value)
+	fmt.Println(ok)
+
+	// Output:
+	// 4
+	// true
+}
+
 func TestSomeStringer(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("%s", option.Some("foo")), "Some(foo)")
 	assert.Equal(t, fmt.Sprintf("%s", option.Some(42)), "Some(42)")
