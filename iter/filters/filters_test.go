@@ -12,13 +12,13 @@ import (
 func ExampleIsZero() {
 	items := iter.Exclude[int](iter.Lift([]int{1, 2, 3, 0, 4}), filters.IsZero[int])
 	fmt.Println(iter.Collect[int](items))
-	//Output: [1 2 3 4]
+	// Output: [1 2 3 4]
 }
 
 func ExampleGreaterThan() {
 	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4, 5, 1}), filters.GreaterThan(2))
 	fmt.Println(iter.Collect[int](items))
-	//Output: [3 4 5]
+	// Output: [3 4 5]
 }
 
 func ExampleAnd() {
@@ -27,13 +27,13 @@ func ExampleAnd() {
 		filters.LessThan(7),
 	))
 	fmt.Println(iter.Collect[int](items))
-	//Output: [3 4 5 6]
+	// Output: [3 4 5 6]
 }
 
 func ExampleLessThan() {
 	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4, 5, 1}), filters.LessThan(2))
 	fmt.Println(iter.Collect[int](items))
-	//Output: [1 1]
+	// Output: [1 1]
 }
 
 func TestIsZero(t *testing.T) {
