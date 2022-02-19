@@ -26,10 +26,23 @@ func ExampleUnwrapOption() {
 		option.Some(-1),
 	})
 
-	integers := iter.Map[option.Option[int]](options, ops.UnwrapOption[int])
+	numbers := iter.Map[option.Option[int]](options, ops.UnwrapOption[int])
 
-	fmt.Println(iter.Collect[int](integers))
+	fmt.Println(iter.Collect[int](numbers))
 	// Output: [4 6 -1]
+}
+
+func ExampleUnwrapResult() {
+	results := iter.Lift([]result.Result[int]{
+		result.Ok(1),
+		result.Ok(3),
+		result.Ok(-6),
+	})
+
+	numbers := iter.Map[result.Result[int]](results, ops.UnwrapResult[int])
+
+	fmt.Println(iter.Collect[int](numbers))
+	// Output: [1 3 -6]
 }
 
 func TestUnwrapOption(t *testing.T) {

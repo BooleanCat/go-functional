@@ -17,8 +17,17 @@ import (
 func ExampleLinesString() {
 	lines := iter.LinesString(bytes.NewBufferString("hello\nthere"))
 	unwrapped := iter.Map[result.Result[string]](lines, ops.UnwrapResult[string])
+
 	fmt.Println(iter.Collect[string](unwrapped))
 	// Output: [hello there]
+}
+
+func ExampleLines() {
+	lines := iter.Lines(bytes.NewBufferString("hello\nthere"))
+	unwrapped := iter.Map[result.Result[[]byte]](lines, ops.UnwrapResult[[]byte])
+
+	fmt.Println(iter.Collect[[]byte](unwrapped))
+	// Output: [[104 101 108 108 111] [116 104 101 114 101]]
 }
 
 func TestLines(t *testing.T) {

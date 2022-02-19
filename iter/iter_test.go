@@ -10,6 +10,13 @@ import (
 	"github.com/BooleanCat/go-functional/iter/ops"
 )
 
+func ExampleCollect() {
+	numbers := iter.Collect[int](iter.Take[int](iter.Count(), 3))
+
+	fmt.Println(numbers)
+	// Output: [0 1 2]
+}
+
 func ExampleFold() {
 	sum := iter.Fold[int](iter.Take[int](iter.Count(), 4), 0, ops.Add[int])
 
