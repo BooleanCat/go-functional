@@ -23,6 +23,11 @@ _Provide the version number (such as `v0.3.0`)._
 
 _Provide a code snippet or steps to reproduce the issue._
 
+**Do you intend to fix this issue yourself?**
+
+_Yes or no. This is so that the maintainers know to leave you time to make a
+contribution rather than just fixing it themselves._
+
 **Additional context**
 
 _Add any other context about the problem here._
