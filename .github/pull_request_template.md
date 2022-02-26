@@ -1,12 +1,3 @@
----
-name: Pull request
-about: Submit a code change to go-functional
-title: ''
-labels: ''
-assignees: ''
-
----
-
 **Please provide a brief description of the change.**
 
 A sentence or two is fine, the rest should be clear from the code change and related issue.
