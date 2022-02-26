@@ -3,6 +3,17 @@ on:
   push: { branches: [main] }
   pull_request: {}
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - &checkout
+        uses: actions/checkout@v2
+      - &setup-go
+        uses: actions/setup-go@v2
+        with:
+          stable: "false"
+          go-version: "1.18.0-rc1"
+      - run: make check
   test:
     strategy:
       matrix:
@@ -12,9 +23,6 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          stable: "false"
-          go-version: "1.18.0-rc1"
-      - run: go test -v ./...
+      - *checkout
+      - *setup-go
+      - run: make test

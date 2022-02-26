@@ -10,9 +10,9 @@ issue if your query doesn't naturally fit into an existing template.
 
 ## TL;DR contribution checklist
 
-- [ ] I have run tests (`go test -v ./...`)
+- [ ] My code is formatted (`make check`)
+- [ ] I have run tests (`make test`)
 - [ ] _(Coming soon) My code has no lint errors (`golangci-lint run`)_
-- [ ] My code is formatted using `go fmt ./...`
 - [ ] All commits in my PR conform to the commit hygiene section
 - [ ] I have added relevant tests
 - [ ] I have not added any dependencies
@@ -37,7 +37,7 @@ end-users (such as `golangci-lint`).
 
 ## Running tests
 
-Run tests with `go test -v ./...` from the project root directory.
+Run tests with `make test` from the project root directory.
 
 Tests are written using Go's `testing` package and helpers are available in
 `internal/assert`.
