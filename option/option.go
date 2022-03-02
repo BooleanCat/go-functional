@@ -19,6 +19,17 @@ func None[T any]() Option[T] {
 	return Option[T]{}
 }
 
+// FromPredicate returns a smart constructor based on the given predicate.
+func FromPredicate[T any](predicate func(value T) bool) func(value T) Option[T] {
+	return func(value T) Option[T] {
+		if predicate(value) {
+			return Some(value)
+		} else {
+			return None[T]()
+		}
+	}
+}
+
 func (o Option[T]) String() string {
 	if o.present {
 		return fmt.Sprintf("Some(%v)", o.value)

@@ -63,6 +63,20 @@ func ExampleOption_IsNone() {
 }
 
 func ExampleOption_Value() {
+	isEven := func(a int) bool { return a%2 == 0 }
+	constructor := option.FromPredicate(isEven)
+	none := constructor(1)
+	some := constructor(2)
+
+	fmt.Println(none)
+	fmt.Println(some)
+
+	// Output:
+	// None
+	// Some(2)
+}
+
+func ExampleFromPredicate() {
 	value, ok := option.Some(4).Value()
 	fmt.Println(value)
 	fmt.Println(ok)
