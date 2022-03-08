@@ -12,13 +12,6 @@ import (
 	"github.com/BooleanCat/go-functional/result"
 )
 
-func ExampleAdd() {
-	total := iter.Fold[int](iter.Lift([]int{1, 2, 3}), 0, ops.Add[int])
-
-	fmt.Println(total)
-	// Output: 6
-}
-
 func ExampleUnwrapOption() {
 	options := iter.Lift([]option.Option[int]{
 		option.Some(4),
@@ -101,8 +94,4 @@ func TestUnwrapResultPanic(t *testing.T) {
 	)
 
 	t.Error("did not panic")
-}
-
-func TestAdd(t *testing.T) {
-	assert.Equal(t, ops.Add(5, 6), 11)
 }
