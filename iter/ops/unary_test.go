@@ -38,6 +38,13 @@ func ExampleUnwrapResult() {
 	// Output: [1 3 -6]
 }
 
+func ExamplePassthrough() {
+	numbers := iter.Map[int](iter.Lift([]int{1, 2, 3}), ops.Passthrough[int])
+
+	fmt.Println(iter.Collect[int](numbers))
+	// Output: [1 2 3]
+}
+
 func TestUnwrapOption(t *testing.T) {
 	options := iter.Lift([]option.Option[int]{
 		option.Some(4),

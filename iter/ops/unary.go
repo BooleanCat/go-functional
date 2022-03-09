@@ -17,6 +17,8 @@ func UnwrapResult[T any](r result.Result[T]) T {
 	return r.Unwrap()
 }
 
+// Passthrough may be used an an operation for iter.Map. It returns the
+// provided value without modification.
 func Passthrough[T any](t T) T {
 	return t
 }
