@@ -16,3 +16,7 @@ func UnwrapOption[T any](o option.Option[T]) T {
 func UnwrapResult[T any](r result.Result[T]) T {
 	return r.Unwrap()
 }
+
+func Passthrough[T any](t T) T {
+	return t
+}

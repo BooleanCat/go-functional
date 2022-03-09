@@ -5,7 +5,9 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
+	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/ops"
 )
 
 func ExampleMap() {
@@ -29,4 +31,13 @@ func TestMapEmpty(t *testing.T) {
 	double := func(a int) int { return a * 2 }
 	items := iter.Collect[int](iter.Map[int](iter.Exhausted[int](), double))
 	assert.Empty(t, items)
+}
+
+func TestMapExhausted(t *testing.T) {
+	fake := new(fakes.FakeIterator[int])
+	iter := iter.Map[int](fake, ops.Passthrough[int])
+
+	assert.True(t, iter.Next().IsNone())
+	assert.True(t, iter.Next().IsNone())
+	assert.Equal(t, fake.NextCallCount(), 1)
 }
