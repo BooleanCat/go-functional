@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
+	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
 )
 
@@ -31,4 +32,15 @@ func TestChainSingle(t *testing.T) {
 
 func TestChainEmpty(t *testing.T) {
 	assert.True(t, iter.Chain[int]().Next().IsNone())
+}
+
+func TestChainExhausted(t *testing.T) {
+	firstFake := new(fakes.FakeIterator[int])
+	secondFake := new(fakes.FakeIterator[int])
+	iter := iter.Chain[int](firstFake, secondFake)
+
+	assert.True(t, iter.Next().IsNone())
+	assert.True(t, iter.Next().IsNone())
+	assert.Equal(t, firstFake.NextCallCount(), 1)
+	assert.Equal(t, secondFake.NextCallCount(), 1)
 }
