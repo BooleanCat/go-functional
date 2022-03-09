@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
+	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
 )
 
@@ -29,4 +30,13 @@ func TestTakeIter(t *testing.T) {
 func TestTakeIterEmpty(t *testing.T) {
 	iter := iter.Take[int](iter.Count(), 0)
 	assert.True(t, iter.Next().IsNone())
+}
+
+func TestTakeExhausted(t *testing.T) {
+	fake := new(fakes.FakeIterator[int])
+	iter := iter.Take[int](fake, 10)
+
+	assert.True(t, iter.Next().IsNone())
+	assert.True(t, iter.Next().IsNone())
+	assert.Equal(t, fake.NextCallCount(), 1)
 }

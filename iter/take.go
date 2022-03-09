@@ -20,9 +20,14 @@ func (iter *TakeIter[T]) Next() option.Option[T] {
 		return option.None[T]()
 	}
 
-	iter.limit -= 1
+	next := iter.iter.Next()
+	if next.IsNone() {
+		iter.limit = 0
+	} else {
+		iter.limit -= 1
+	}
 
-	return iter.iter.Next()
+	return next
 }
 
 var _ Iterator[struct{}] = new(TakeIter[struct{}])
