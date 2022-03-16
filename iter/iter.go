@@ -48,13 +48,13 @@ func ToChannel[T any](iter Iterator[T]) chan T {
 
 	go func() {
 		for {
-			next := iter.Next()
-			if next.IsNone() {
+			value, ok := iter.Next().Value()
+			if !ok {
 				close(ch)
-				return
+				break
 			}
 
-			ch <- next.Unwrap()
+			ch <- value
 		}
 	}()
 
