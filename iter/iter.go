@@ -39,3 +39,24 @@ func Fold[T any, U any](iter Iterator[T], initial U, biop func(U, T) U) U {
 		}
 	}
 }
+
+// ToChannel consumes an iterator and returns a channel that will receive all
+// values from the provided iterator. The channel is closed once the iterator
+// is exhausted.
+func ToChannel[T any](iter Iterator[T]) chan T {
+	ch := make(chan T)
+
+	go func() {
+		for {
+			next := iter.Next()
+			if next.IsNone() {
+				close(ch)
+				return
+			}
+
+			ch <- next.Unwrap()
+		}
+	}()
+
+	return ch
+}

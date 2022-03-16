@@ -24,6 +24,17 @@ func ExampleFold() {
 	// Output: 6
 }
 
+func ExampleToChannel() {
+	for number := range iter.ToChannel[int](iter.Lift([]int{1, 2, 3})) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
 func TestCollect(t *testing.T) {
 	items := iter.Collect[int](iter.Take[int](iter.Count(), 5))
 	assert.SliceEqual(t, items, []int{0, 1, 2, 3, 4})
@@ -44,4 +55,18 @@ func TestFold(t *testing.T) {
 	}
 	result := iter.Fold[int](iter.Take[int](iter.Count(), 3), "/", concat)
 	assert.Equal(t, result, "/0/1/2/")
+}
+
+func TestToChannel(t *testing.T) {
+	expected := 0
+	for number := range iter.ToChannel[int](iter.Lift([]int{1, 2, 3, 4})) {
+		expected += 1
+		assert.Equal(t, number, expected)
+	}
+}
+
+func TestToChannelEmpty(t *testing.T) {
+	for range iter.ToChannel[int](iter.Exhausted[int]()) {
+		t.Fail()
+	}
 }
