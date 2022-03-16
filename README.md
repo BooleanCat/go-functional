@@ -2,7 +2,7 @@
 
 A general purpose library offering functional helpers for Golang.
 
-_*Note: this library requires Go 1.18, which is currently a release candidate. Installation instructions can be found on the [download page](https://go.dev/dl/#go1.18rc1) for the release candidate.*_
+_*Note: this library requires Go 1.18+.*_
 
 ```go
 // Find the first 5 prime numbers
