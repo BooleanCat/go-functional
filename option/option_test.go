@@ -72,6 +72,31 @@ func ExampleOption_Value() {
 	// true
 }
 
+func ExampleMap() {
+	posOnly := func(x int) option.Option[int] {
+		if x < 0 {
+			return option.None[int]()
+		}
+
+		return option.Some(x)
+	}
+
+	doubleNum := func(x int) int {
+		return x * 2
+	}
+
+	optDouble := option.Map(doubleNum)
+
+	n := posOnly(-5)
+	p := posOnly(25)
+
+	resultN := optDouble(n)
+	resultP := optDouble(p)
+
+	fmt.Println(resultN) // option.None
+	fmt.Println(resultP) // option.Some(50)
+}
+
 func TestSomeStringer(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("%s", option.Some("foo")), "Some(foo)")
 	assert.Equal(t, fmt.Sprintf("%s", option.Some(42)), "Some(42)")
@@ -137,5 +162,32 @@ func TestSomeValue(t *testing.T) {
 func TestNoneValue(t *testing.T) {
 	value, ok := option.None[int]().Value()
 	assert.Equal(t, value, 0)
+	assert.False(t, ok)
+}
+
+func TestMapSome(t *testing.T) {
+	fn := func(x int) bool {
+		return x > 50
+	}
+
+	optFn := option.Map(fn)
+
+	resultWithSome := optFn(option.Some(40))
+
+	unwrappedSome, ok := resultWithSome.Value()
+	assert.True(t, ok)
+	assert.False(t, unwrappedSome)
+}
+
+func TestMapNone(t *testing.T) {
+	fn := func(x int) bool {
+		t.Error("fn was called!")
+		return x > 50
+	}
+
+	optFn := option.Map(fn)
+	resultWithNone := optFn(option.None[int]())
+
+	_, ok := resultWithNone.Value()
 	assert.False(t, ok)
 }
