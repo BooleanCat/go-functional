@@ -7,6 +7,7 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
 	"github.com/BooleanCat/go-functional/iter/filters"
+	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleFilter() {
@@ -19,6 +20,24 @@ func ExampleFilter() {
 	// Some(0)
 	// Some(0)
 	// None
+}
+
+func ExampleFilterMap() {
+	selectAndTripleOdds := func(x int) option.Option[int] {
+		if x%2 == 0 {
+			return option.None[int]()
+		}
+		return option.Some(x * 3)
+	}
+
+	triples := iter.FilterMap[int](
+		iter.Take[int](iter.Count(), 6),
+		selectAndTripleOdds,
+	)
+
+	fmt.Println(iter.Collect(triples))
+
+	// Output: [3 9 15]
 }
 
 func ExampleExclude() {
@@ -51,4 +70,39 @@ func TestExclude(t *testing.T) {
 	evens := iter.Exclude[int](iter.Count(), isEven)
 	assert.Equal(t, evens.Next().Unwrap(), 1)
 	assert.Equal(t, evens.Next().Unwrap(), 3)
+}
+
+func TestFilterMap(t *testing.T) {
+	selectEvenAndDouble := func(x int) option.Option[int] {
+		if x%2 > 0 {
+			return option.None[int]()
+		}
+
+		return option.Some(x * 2)
+	}
+
+	fltMap := iter.FilterMap[int](
+		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
+		selectEvenAndDouble,
+	)
+	result := iter.Collect(fltMap)
+
+	assert.SliceEqual(t, result, []int{4, 8, 12})
+}
+
+func TestFilterMapEmpty(t *testing.T) {
+	selectEvenAndDouble := func(x int) option.Option[int] {
+		if x%2 > 0 {
+			return option.None[int]()
+		}
+
+		return option.Some(x * 2)
+	}
+
+	fltMapEmpty := iter.FilterMap[int](
+		iter.Exhausted[int](),
+		selectEvenAndDouble,
+	)
+
+	assert.Empty(t, iter.Collect(fltMapEmpty))
 }
