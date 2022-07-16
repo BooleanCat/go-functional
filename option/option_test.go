@@ -73,28 +73,16 @@ func ExampleOption_Value() {
 }
 
 func ExampleMap() {
-	posOnly := func(x int) option.Option[int] {
-		if x < 0 {
-			return option.None[int]()
-		}
-
-		return option.Some(x)
-	}
-
-	doubleNum := func(x int) int {
+	double := option.Map(func(x int) int {
 		return x * 2
-	}
+	})
 
-	optDouble := option.Map(doubleNum)
+	fmt.Println(double(option.None[int]()))
+	fmt.Println(double(option.Some(25)))
 
-	n := posOnly(-5)
-	p := posOnly(25)
-
-	resultN := optDouble(n)
-	resultP := optDouble(p)
-
-	fmt.Println(resultN) // option.None
-	fmt.Println(resultP) // option.Some(50)
+	// Output:
+	// None
+	// Some(50)
 }
 
 func TestSomeStringer(t *testing.T) {
