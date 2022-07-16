@@ -30,12 +30,14 @@ func ExampleFilterMap() {
 		return option.Some(x * 3)
 	}
 
-	fltMap := iter.FilterMap[int](
-		iter.Lift([]int{1, 2, 3, 4, 5}),
+	triples := iter.FilterMap[int](
+		iter.Take[int](iter.Count(), 6),
 		selectAndTripleOdds,
 	)
 
-	fmt.Println(iter.Collect(fltMap)) // [3, 9, 15] it filtered for odd elements [1, 3, 5] and multiplied them by 3.
+	fmt.Println(iter.Collect(triples))
+
+	// Output: [3 9 15]
 }
 
 func ExampleExclude() {
