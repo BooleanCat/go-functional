@@ -17,12 +17,12 @@ func ExampleFromChannel() {
 		close(ch)
 	}()
 
-	fmt.Println(iter.Collect[int](iter.FromChannel[int](ch)))
+	fmt.Println(iter.Collect[int](iter.FromChannel(ch)))
 
 	// Output: [1 2]
 }
 
-func TestFromchannel(t *testing.T) {
+func TestFromChannel(t *testing.T) {
 	ch := make(chan int)
 
 	go func() {
@@ -32,14 +32,14 @@ func TestFromchannel(t *testing.T) {
 		close(ch)
 	}()
 
-	assert.Equal(t, iter.FromChannel[int](ch).Next().Unwrap(), 1)
-	assert.Equal(t, iter.FromChannel[int](ch).Next().Unwrap(), 2)
-	assert.Equal(t, iter.FromChannel[int](ch).Next().Unwrap(), 3)
-	assert.True(t, iter.FromChannel[int](ch).Next().IsNone())
+	assert.Equal(t, iter.FromChannel(ch).Next().Unwrap(), 1)
+	assert.Equal(t, iter.FromChannel(ch).Next().Unwrap(), 2)
+	assert.Equal(t, iter.FromChannel(ch).Next().Unwrap(), 3)
+	assert.True(t, iter.FromChannel(ch).Next().IsNone())
 }
 
 func TestFromChannelEmpty(t *testing.T) {
 	ch := make(chan int)
 	close(ch)
-	assert.True(t, iter.FromChannel[int](ch).Next().IsNone())
+	assert.True(t, iter.FromChannel(ch).Next().IsNone())
 }
