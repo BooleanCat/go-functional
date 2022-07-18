@@ -35,12 +35,12 @@ func TestChainEmpty(t *testing.T) {
 }
 
 func TestChainExhausted(t *testing.T) {
-	firstFake := new(fakes.FakeIterator[int])
-	secondFake := new(fakes.FakeIterator[int])
-	iter := iter.Chain[int](firstFake, secondFake)
+	delegate1 := new(fakes.Iterator[int])
+	delegate2 := new(fakes.Iterator[int])
+	iter := iter.Chain[int](delegate1, delegate2)
 
 	assert.True(t, iter.Next().IsNone())
 	assert.True(t, iter.Next().IsNone())
-	assert.Equal(t, firstFake.NextCallCount(), 1)
-	assert.Equal(t, secondFake.NextCallCount(), 1)
+	assert.Equal(t, delegate1.NextCallCount(), 1)
+	assert.Equal(t, delegate2.NextCallCount(), 1)
 }

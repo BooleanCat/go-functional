@@ -8,7 +8,7 @@ import (
 	"github.com/BooleanCat/go-functional/option"
 )
 
-type FakeIterator[T any] struct {
+type Iterator[T any] struct {
 	NextStub        func() option.Option[T]
 	nextMutex       sync.RWMutex
 	nextArgsForCall []struct {
@@ -23,7 +23,7 @@ type FakeIterator[T any] struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeIterator[T]) Next() option.Option[T] {
+func (fake *Iterator[T]) Next() option.Option[T] {
 	fake.nextMutex.Lock()
 	ret, specificReturn := fake.nextReturnsOnCall[len(fake.nextArgsForCall)]
 	fake.nextArgsForCall = append(fake.nextArgsForCall, struct {
@@ -41,19 +41,19 @@ func (fake *FakeIterator[T]) Next() option.Option[T] {
 	return fakeReturns.result1
 }
 
-func (fake *FakeIterator[T]) NextCallCount() int {
+func (fake *Iterator[T]) NextCallCount() int {
 	fake.nextMutex.RLock()
 	defer fake.nextMutex.RUnlock()
 	return len(fake.nextArgsForCall)
 }
 
-func (fake *FakeIterator[T]) NextCalls(stub func() option.Option[T]) {
+func (fake *Iterator[T]) NextCalls(stub func() option.Option[T]) {
 	fake.nextMutex.Lock()
 	defer fake.nextMutex.Unlock()
 	fake.NextStub = stub
 }
 
-func (fake *FakeIterator[T]) NextReturns(result1 option.Option[T]) {
+func (fake *Iterator[T]) NextReturns(result1 option.Option[T]) {
 	fake.nextMutex.Lock()
 	defer fake.nextMutex.Unlock()
 	fake.NextStub = nil
@@ -62,7 +62,7 @@ func (fake *FakeIterator[T]) NextReturns(result1 option.Option[T]) {
 	}{result1}
 }
 
-func (fake *FakeIterator[T]) NextReturnsOnCall(i int, result1 option.Option[T]) {
+func (fake *Iterator[T]) NextReturnsOnCall(i int, result1 option.Option[T]) {
 	fake.nextMutex.Lock()
 	defer fake.nextMutex.Unlock()
 	fake.NextStub = nil
@@ -76,7 +76,7 @@ func (fake *FakeIterator[T]) NextReturnsOnCall(i int, result1 option.Option[T]) 
 	}{result1}
 }
 
-func (fake *FakeIterator[T]) Invocations() map[string][][]interface{} {
+func (fake *Iterator[T]) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
 	fake.nextMutex.RLock()
@@ -88,7 +88,7 @@ func (fake *FakeIterator[T]) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
-func (fake *FakeIterator[T]) recordInvocation(key string, args []interface{}) {
+func (fake *Iterator[T]) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
 	if fake.invocations == nil {
@@ -100,4 +100,4 @@ func (fake *FakeIterator[T]) recordInvocation(key string, args []interface{}) {
 	fake.invocations[key] = append(fake.invocations[key], args)
 }
 
-var _ iter.Iterator[struct{}] = new(FakeIterator[struct{}])
+var _ iter.Iterator[struct{}] = new(Iterator[struct{}])

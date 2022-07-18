@@ -33,10 +33,10 @@ func TestTakeIterEmpty(t *testing.T) {
 }
 
 func TestTakeExhausted(t *testing.T) {
-	fake := new(fakes.FakeIterator[int])
-	iter := iter.Take[int](fake, 10)
+	delegate := new(fakes.Iterator[int])
+	iter := iter.Take[int](delegate, 10)
 
 	assert.True(t, iter.Next().IsNone())
 	assert.True(t, iter.Next().IsNone())
-	assert.Equal(t, fake.NextCallCount(), 1)
+	assert.Equal(t, delegate.NextCallCount(), 1)
 }

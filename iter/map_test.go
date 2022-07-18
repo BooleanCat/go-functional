@@ -34,10 +34,10 @@ func TestMapEmpty(t *testing.T) {
 }
 
 func TestMapExhausted(t *testing.T) {
-	fake := new(fakes.FakeIterator[int])
-	iter := iter.Map[int](fake, ops.Passthrough[int])
+	delegate := new(fakes.Iterator[int])
+	iter := iter.Map[int](delegate, ops.Passthrough[int])
 
 	assert.True(t, iter.Next().IsNone())
 	assert.True(t, iter.Next().IsNone())
-	assert.Equal(t, fake.NextCallCount(), 1)
+	assert.Equal(t, delegate.NextCallCount(), 1)
 }
