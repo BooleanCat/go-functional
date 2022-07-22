@@ -14,9 +14,11 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        go-version: ["1.18", "1.19.0-rc.2"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
-        with: { go-version: "1.18" }
+        with:
+          go-version: ${{ matrix.go-version }}
       - run: make test
