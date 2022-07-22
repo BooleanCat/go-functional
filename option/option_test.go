@@ -86,12 +86,12 @@ func ExampleMap() {
 }
 
 func TestSomeStringer(t *testing.T) {
-	assert.Equal(t, fmt.Sprintf("%s", option.Some("foo")), "Some(foo)")
-	assert.Equal(t, fmt.Sprintf("%s", option.Some(42)), "Some(42)")
+	assert.Equal(t, fmt.Sprintf("%s", option.Some("foo")), "Some(foo)") //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", option.Some(42)), "Some(42)")     //nolint:gosimple
 }
 
 func TestNoneStringer(t *testing.T) {
-	assert.Equal(t, fmt.Sprintf("%s", option.None[string]()), "None")
+	assert.Equal(t, fmt.Sprintf("%s", option.None[string]()), "None") //nolint:gosimple
 }
 
 func TestSomeUnwrap(t *testing.T) {
