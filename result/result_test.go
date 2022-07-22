@@ -74,11 +74,11 @@ func ExampleResult_Value() {
 }
 
 func TestOkStringer(t *testing.T) {
-	assert.Equal(t, fmt.Sprintf("%s", result.Ok(42)), "Ok(42)")
+	assert.Equal(t, fmt.Sprintf("%s", result.Ok(42)), "Ok(42)") //nolint:gosimple
 }
 
 func TestErrStringer(t *testing.T) {
-	assert.Equal(t, fmt.Sprintf("%s", result.Err[int](errors.New("oops"))), "Err(oops)")
+	assert.Equal(t, fmt.Sprintf("%s", result.Err[int](errors.New("oops"))), "Err(oops)") //nolint:gosimple
 }
 
 func TestOkUnwrap(t *testing.T) {
