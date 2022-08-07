@@ -2,8 +2,6 @@
 
 A general purpose library offering functional helpers for Golang.
 
-_*Note: this library requires Go 1.18+.*_
-
 ```go
 // Find the first 5 prime numbers
 primes := iter.Take[int](iter.Filter[int](iter.Count(), isPrime), 5)
