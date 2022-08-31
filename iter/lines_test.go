@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
+	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
 	"github.com/BooleanCat/go-functional/iter/ops"
 	"github.com/BooleanCat/go-functional/result"
@@ -52,33 +52,9 @@ func TestLinesEmpty(t *testing.T) {
 	assert.True(t, lines.Next().IsNone())
 }
 
-type readResult struct {
-	content []byte
-	err     error
-}
-
-type fakeReader struct {
-	results []readResult
-	index   int
-}
-
-func newFakeReader(results ...readResult) *fakeReader {
-	return &fakeReader{results, 0}
-}
-
-func (r *fakeReader) Read(b []byte) (int, error) {
-	r.index += 1
-	if r.results[r.index-1].err != nil {
-		return 0, r.results[r.index-1].err
-	}
-	n := copy(b, r.results[r.index-1].content)
-	return n, nil
-}
-
-var _ io.Reader = new(fakeReader)
-
 func TestLinesFailure(t *testing.T) {
-	reader := newFakeReader(readResult{make([]byte, 0), errors.New("oops")})
+	reader := new(fakes.Reader)
+	reader.ReadReturns(0, errors.New("oops"))
 
 	_, err := iter.Lines(reader).Next().Unwrap().Value()
 	assert.NotNil(t, err)
@@ -86,12 +62,19 @@ func TestLinesFailure(t *testing.T) {
 }
 
 func TestLinesFailureLater(t *testing.T) {
-	lines := iter.Lines(newFakeReader(
-		readResult{[]byte("hello\n"), nil},
-		readResult{make([]byte, 0), errors.New("oops")},
-	))
+	reader := new(fakes.Reader)
+	reader.ReadStub = func(buffer []byte) (int, error) {
+		copy(buffer, []byte("hello\n"))
+		return 6, nil
+	}
+
+	lines := iter.Lines(reader)
 
 	assert.SliceEqual(t, lines.Next().Unwrap().Unwrap(), []byte("hello"))
+
+	reader.ReadStub = nil
+	reader.ReadReturns(0, errors.New("oops"))
+
 	assert.True(t, lines.Next().Unwrap().IsErr())
 }
 
@@ -118,7 +101,10 @@ func TestLinesStringEmpty(t *testing.T) {
 }
 
 func TestLinesStringFailure(t *testing.T) {
-	lines := iter.LinesString(newFakeReader(readResult{make([]byte, 0), errors.New("oops")}))
+	reader := new(fakes.Reader)
+	reader.ReadReturns(0, errors.New("oops"))
+
+	lines := iter.LinesString(reader)
 
 	_, err := lines.Next().Unwrap().Value()
 	assert.NotNil(t, err)
@@ -126,11 +112,18 @@ func TestLinesStringFailure(t *testing.T) {
 }
 
 func TestLinesStringFailureLater(t *testing.T) {
-	lines := iter.LinesString(newFakeReader(
-		readResult{[]byte("hello\n"), nil},
-		readResult{make([]byte, 0), errors.New("oops")},
-	))
+	reader := new(fakes.Reader)
+	reader.ReadStub = func(buffer []byte) (int, error) {
+		copy(buffer, []byte("hello\n"))
+		return 6, nil
+	}
+
+	lines := iter.LinesString(reader)
 
 	assert.Equal(t, lines.Next().Unwrap().Unwrap(), "hello")
+
+	reader.ReadStub = nil
+	reader.ReadReturns(0, errors.New("oops"))
+
 	assert.True(t, lines.Next().Unwrap().IsErr())
 }
