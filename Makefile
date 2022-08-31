@@ -1,4 +1,4 @@
-.phony: test check
+.phony: test check lint
 
 check: lint
 	@go vet ./...
