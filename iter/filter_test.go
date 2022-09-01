@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
+	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
 	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/option"
@@ -65,11 +66,29 @@ func TestFilterEmpty(t *testing.T) {
 	assert.True(t, evens.Next().IsNone())
 }
 
+func TestFilterExhausted(t *testing.T) {
+	delegate := new(fakes.Iterator[int])
+	ones := iter.Filter[int](delegate, func(_ int) bool { return true })
+
+	assert.True(t, ones.Next().IsNone())
+	assert.True(t, ones.Next().IsNone())
+	assert.Equal(t, delegate.NextCallCount(), 1)
+}
+
 func TestExclude(t *testing.T) {
 	isEven := func(a int) bool { return a%2 == 0 }
 	evens := iter.Exclude[int](iter.Count(), isEven)
 	assert.Equal(t, evens.Next().Unwrap(), 1)
 	assert.Equal(t, evens.Next().Unwrap(), 3)
+}
+
+func TestExcludeExhausted(t *testing.T) {
+	delegate := new(fakes.Iterator[int])
+	ones := iter.Exclude[int](delegate, func(_ int) bool { return false })
+
+	assert.True(t, ones.Next().IsNone())
+	assert.True(t, ones.Next().IsNone())
+	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
 func TestFilterMap(t *testing.T) {
@@ -105,4 +124,13 @@ func TestFilterMapEmpty(t *testing.T) {
 	)
 
 	assert.Empty(t, iter.Collect(fltMapEmpty))
+}
+
+func TestFilterMapExhausted(t *testing.T) {
+	delegate := new(fakes.Iterator[int])
+	ones := iter.FilterMap[int](delegate, func(_ int) option.Option[int] { return option.Some(1) })
+
+	assert.True(t, ones.Next().IsNone())
+	assert.True(t, ones.Next().IsNone())
+	assert.Equal(t, delegate.NextCallCount(), 1)
 }
