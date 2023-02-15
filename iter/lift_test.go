@@ -70,3 +70,87 @@ func TestLiftHashMapCloseAfterExhaustedSafe(t *testing.T) {
 	iter.Collect[iter.Tuple[string, string]](items)
 	items.Close()
 }
+
+func TestLiftHashMapKeys(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	keys := iter.Collect[string](iter.LiftHashMapKeys(pokemon))
+	sort.Strings(keys)
+
+	assert.SliceEqual(t, keys, []string{"name", "type"})
+}
+
+func TestLiftHashMapKeysCloseEarly(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMapKeys(pokemon)
+	assert.True(t, items.Next().IsSome())
+	items.Close()
+	assert.True(t, items.Next().IsNone())
+}
+
+func TestLiftHashMapKeysCloseMultipleSafe(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMapKeys(pokemon)
+	items.Close()
+	items.Close()
+}
+
+func TestLiftHashMapKeysCloseAfterExhaustedSafe(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMapKeys(pokemon)
+	iter.Collect[string](items)
+	items.Close()
+}
+
+func TestLiftHashMapValues(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	keys := iter.Collect[string](iter.LiftHashMapValues(pokemon))
+	sort.Strings(keys)
+
+	assert.SliceEqual(t, keys, []string{"electric", "pikachu"})
+}
+
+func TestLiftHashMapValuesCloseEarly(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMapValues(pokemon)
+	assert.True(t, items.Next().IsSome())
+	items.Close()
+	assert.True(t, items.Next().IsNone())
+}
+
+func TestLiftHashMapValuesCloseMultipleSafe(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMapValues(pokemon)
+	items.Close()
+	items.Close()
+}
+
+func TestLiftHashMapValuesCloseAfterExhaustedSafe(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMapValues(pokemon)
+	iter.Collect[string](items)
+	items.Close()
+}

@@ -91,3 +91,81 @@ func (iter *LiftHashMapIter[T, U]) Next() option.Option[Tuple[T, U]] {
 }
 
 var _ Iterator[Tuple[struct{}, struct{}]] = new(LiftHashMapIter[struct{}, struct{}])
+
+// LiftHashMapKeysIter implements `LiftHashMapKeys`. See `LiftHashMapKeys`'
+// documentation.
+type LiftHashMapKeysIter[T comparable, U any] struct {
+	delegate    *LiftHashMapIter[T, U]
+	delegateMap *MapIter[Tuple[T, U], T]
+	exhausted   bool
+}
+
+// LiftHashMapKeys instantiates a `LiftHashMapKeysIter` that will yield all
+// keys in the provided map.
+//
+// See documentation on `LiftHashMap` for information on closing this iterator.
+func LiftHashMapKeys[T comparable, U any](hashmap map[T]U) *LiftHashMapKeysIter[T, U] {
+	delegate := LiftHashMap(hashmap)
+
+	return &LiftHashMapKeysIter[T, U]{delegate, Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) T { return pair.One }), false}
+}
+
+// Close the iterator. See `LiftHashMapKeys` documentation for details.
+func (iter *LiftHashMapKeysIter[T, U]) Close() {
+	iter.delegate.Close()
+}
+
+// Next implements the Iterator interface for `LiftHashMapKeys`.
+func (iter *LiftHashMapKeysIter[T, U]) Next() option.Option[T] {
+	if iter.exhausted {
+		return option.None[T]()
+	}
+
+	next := iter.delegateMap.Next()
+	if next.IsNone() {
+		iter.exhausted = true
+	}
+
+	return next
+}
+
+var _ Iterator[struct{}] = new(LiftHashMapKeysIter[struct{}, struct{}])
+
+// LiftHashMapValuesIter implements `LiftHashMapValues`. See
+// `LiftHashMapValues`' documentation.
+type LiftHashMapValuesIter[T comparable, U any] struct {
+	delegate    *LiftHashMapIter[T, U]
+	delegateMap *MapIter[Tuple[T, U], U]
+	exhausted   bool
+}
+
+// LiftHashMapValues instantiates a `LiftHashMapValuesIter` that will yield all
+// values in the provided map.
+//
+// See documentation on `LiftHashMap` for information on closing this iterator.
+func LiftHashMapValues[T comparable, U any](hashmap map[T]U) *LiftHashMapValuesIter[T, U] {
+	delegate := LiftHashMap(hashmap)
+
+	return &LiftHashMapValuesIter[T, U]{delegate, Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) U { return pair.Two }), false}
+}
+
+// Close the iterator. See `LiftHashMapKeys` documentation for details.
+func (iter *LiftHashMapValuesIter[T, U]) Close() {
+	iter.delegate.Close()
+}
+
+// Next implements the Iterator interface for `LiftHashMapValuesIter`.
+func (iter *LiftHashMapValuesIter[T, U]) Next() option.Option[U] {
+	if iter.exhausted {
+		return option.None[U]()
+	}
+
+	next := iter.delegateMap.Next()
+	if next.IsNone() {
+		iter.exhausted = true
+	}
+
+	return next
+}
+
+var _ Iterator[struct{}] = new(LiftHashMapValuesIter[struct{}, struct{}])
