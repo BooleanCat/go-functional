@@ -2,6 +2,7 @@ package iter_test
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
@@ -24,4 +25,48 @@ func TestLift(t *testing.T) {
 
 func TestLiftEmpty(t *testing.T) {
 	assert.True(t, iter.Lift([]int{}).Next().IsNone())
+}
+
+func TestLiftHashMap(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.Collect[iter.Tuple[string, string]](iter.LiftHashMap(pokemon))
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].One < items[j].One
+	})
+
+	assert.SliceEqual(t, items, []iter.Tuple[string, string]{{"name", "pikachu"}, {"type", "electric"}})
+}
+
+func TestLiftHashMapCloseEarly(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMap(pokemon)
+	assert.True(t, items.Next().IsSome())
+	items.Close()
+	assert.True(t, items.Next().IsNone())
+}
+
+func TestLiftHashMapCloseMultipleSafe(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMap(pokemon)
+	items.Close()
+	items.Close()
+}
+
+func TestLiftHashMapCloseAfterExhaustedSafe(t *testing.T) {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMap(pokemon)
+	iter.Collect[iter.Tuple[string, string]](items)
+	items.Close()
 }
