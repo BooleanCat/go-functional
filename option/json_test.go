@@ -39,3 +39,28 @@ func TestMarshalNoneParsed(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, string(data), `{"middle_name":null}`)
 }
+
+func TestUnmarshalSome(t *testing.T) {
+	var number option.Option[int]
+	err := json.Unmarshal([]byte("4"), &number)
+	assert.Nil(t, err)
+	assert.Equal(t, number, option.Some(4))
+}
+
+func TestUnmarshalNone(t *testing.T) {
+	var number option.Option[int]
+	err := json.Unmarshal([]byte("null"), &number)
+	assert.Nil(t, err)
+	assert.True(t, number.IsNone())
+}
+
+func TestUnmarshalEmpty(t *testing.T) {
+	type name struct {
+		MiddleName option.Option[string] `json:"middle_name"`
+	}
+
+	var value name
+	err := json.Unmarshal([]byte("{}"), &value)
+	assert.Nil(t, err)
+	assert.True(t, value.MiddleName.IsNone())
+}
