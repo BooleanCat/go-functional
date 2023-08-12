@@ -64,3 +64,10 @@ func TestUnmarshalEmpty(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, value.MiddleName.IsNone())
 }
+
+func TestUnmarshalError(t *testing.T) {
+	var number option.Option[int]
+	err := number.UnmarshalJSON([]byte("not a number"))
+	assert.NotNil(t, err)
+	assert.True(t, number.IsNone())
+}
