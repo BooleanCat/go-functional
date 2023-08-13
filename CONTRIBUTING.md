@@ -12,7 +12,7 @@ issue if your query doesn't naturally fit into an existing template.
 
 - [ ] My code is formatted (`make check`)
 - [ ] I have run tests (`make test`)
-- [ ] _(Coming soon) My code has no lint errors (`golangci-lint run`)_
+- [ ] My code has no lint errors (`make lint`)
 - [ ] All commits in my PR conform to the commit hygiene section
 - [ ] I have added relevant tests
 - [ ] I have not added any dependencies
@@ -32,8 +32,7 @@ end-users (such as `golangci-lint`).
   function`)
 - Commit messages must explain what is changed, not how it is changed
 - The first line of a commit message should be a terse description of the change
-  containing 72 character or fewer
-- Commit messages should reference related issues
+  containing 72 characters or fewer
 
 ## Running tests
 
@@ -42,8 +41,8 @@ Run tests with `make test` from the project root directory.
 Tests are written using Go's `testing` package and helpers are available in
 `internal/assert`.
 
-_(Coming soon) Code is linted using `golangci-lint`. The linter may be run using
-`golangci-lint run`._
+Code is linted using `golangci-lint`. The linter may be run using
+`make lint`.
 
 ## Different types of changes
 
