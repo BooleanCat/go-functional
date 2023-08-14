@@ -13,6 +13,10 @@ jobs:
         env: { SKIP_LINT: true }
       - uses: golangci/golangci-lint-action@v3
         with: { version: "latest" }
+      - run: make cov
+      - uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   test:
     strategy:
       matrix:
