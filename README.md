@@ -1,4 +1,4 @@
-# Functional Programming in Go [![Actions Status](https://github.com/BooleanCat/go-functional/workflows/test/badge.svg)](https://github.com/BooleanCat/go-functional/actions) [![Go Reference](https://pkg.go.dev/badge/github.com/BooleanCat/go-functional.svg)](https://pkg.go.dev/github.com/BooleanCat/go-functional)
+# Functional Programming in Go [![Actions Status](https://github.com/BooleanCat/go-functional/workflows/test/badge.svg)](https://github.com/BooleanCat/go-functional/actions) [![Go Reference](https://pkg.go.dev/badge/github.com/BooleanCat/go-functional.svg)](https://pkg.go.dev/github.com/BooleanCat/go-functional) [![Go Report Card](https://goreportcard.com/badge/github.com/BooleanCat/go-functional)](https://goreportcard.com/report/github.com/BooleanCat/go-functional)
 
 A general purpose library offering functional helpers for Golang.
 
