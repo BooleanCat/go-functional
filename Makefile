@@ -12,3 +12,6 @@ endif
 
 test:
 	go test -v ./...
+
+cov:
+	go test -race -coverprofile=coverage.txt -covermode=atomic ./...
