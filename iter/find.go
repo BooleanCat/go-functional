@@ -2,7 +2,7 @@ package iter
 
 import "github.com/BooleanCat/go-functional/option"
 
-// Find the first occurance of a value that satisfies the predicate and return
+// Find the first occurrence of a value that satisfies the predicate and return
 // that value. If no value satisfies the predicate, return `None`.
 func Find[T any](iter Iterator[T], predicate func(v T) bool) option.Option[T] {
 	for {
