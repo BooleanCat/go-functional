@@ -6,8 +6,8 @@ A general purpose library offering functional helpers for Golang.
 
 ```go
 // Find the first 5 prime numbers
-primes := iter.Take[int](iter.Filter[int](iter.Count(), isPrime), 5)
-assert.SliceEqual(t, iter.Collect[int](primes), []int{2, 3, 5, 7, 11})
+primes := iter.Take(iter.Filter(iter.Count(), isPrime), 5)
+assert.SliceEqual(t, iter.Collect(primes), []int{2, 3, 5, 7, 11})
 ```
 
 _[Read the docs.](https://pkg.go.dev/github.com/BooleanCat/go-functional)_
@@ -53,15 +53,15 @@ library.
 ```go
 // All even natural numbers (2, 4, 6, 8...)
 isEven := func(n int) bool { return n%2 == 0 }
-evens := iter.Filter[int](iter.Drop[int](iter.Count(), 1), isEven)
+evens := iter.Filter(iter.Drop(iter.Count(), 1), isEven)
 ```
 
 ```go
 // All non-empty lines from a file
-lines := iter.Exclude[string](iter.LinesString(file), filters.IsZero[string])
+lines := iter.Exclude(iter.LinesString(file), filters.IsZero)
 ```
 
 ```go
 // String representations of numbers
-numbers := iter.Map[int, string](iter.Count(), strconv.Itoa)
+numbers := iter.Map(iter.Count(), strconv.Itoa)
 ```
