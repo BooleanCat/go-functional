@@ -82,6 +82,13 @@ func TestLiftHashMapKeys(t *testing.T) {
 	assert.SliceEqual(t, keys, []string{"name", "type"})
 }
 
+func TestLiftHashMapKeysExhausted(t *testing.T) {
+	pokemon := iter.LiftHashMapKeys(make(map[string]string))
+
+	iter.Collect[string](pokemon)
+	assert.True(t, pokemon.Next().IsNone())
+}
+
 func TestLiftHashMapKeysCloseEarly(t *testing.T) {
 	pokemon := make(map[string]string)
 	pokemon["name"] = "pikachu"
@@ -122,6 +129,13 @@ func TestLiftHashMapValues(t *testing.T) {
 	sort.Strings(keys)
 
 	assert.SliceEqual(t, keys, []string{"electric", "pikachu"})
+}
+
+func TestLiftHashMapValuesExhausted(t *testing.T) {
+	pokemon := iter.LiftHashMapValues(make(map[string]string))
+
+	iter.Collect[string](pokemon)
+	assert.True(t, pokemon.Next().IsNone())
 }
 
 func TestLiftHashMapValuesCloseEarly(t *testing.T) {
