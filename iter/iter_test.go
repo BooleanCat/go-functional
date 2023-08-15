@@ -70,3 +70,22 @@ func TestToChannelEmpty(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestForEach(t *testing.T) {
+	words := iter.Lift([]string{"foo", "bar", "baz"})
+	sum := ""
+	iter.ForEach[string](words, func(word string) {
+		sum += word
+	})
+	assert.Equal(t, "foobarbaz", sum)
+}
+
+func TestForEachEmpty(t *testing.T) {
+	words := iter.Lift([]string{})
+	sum := ""
+	iter.ForEach[string](words, func(word string) {
+		sum += word
+	})
+
+	assert.Empty[string](t, sum)
+}
