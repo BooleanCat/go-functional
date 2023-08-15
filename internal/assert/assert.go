@@ -57,7 +57,7 @@ func SliceEqual[T comparable](t *testing.T, a, b []T) {
 	}
 }
 
-func Empty[T any](t *testing.T, items []T) {
+func Empty[S any, T []S | ~string](t *testing.T, items T) {
 	t.Helper()
 
 	if len(items) != 0 {

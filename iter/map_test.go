@@ -30,7 +30,7 @@ func TestMap(t *testing.T) {
 func TestMapEmpty(t *testing.T) {
 	double := func(a int) int { return a * 2 }
 	items := iter.Collect[int](iter.Map[int](iter.Exhausted[int](), double))
-	assert.Empty(t, items)
+	assert.Empty[int](t, items)
 }
 
 func TestMapExhausted(t *testing.T) {

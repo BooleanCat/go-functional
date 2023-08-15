@@ -123,7 +123,7 @@ func TestFilterMapEmpty(t *testing.T) {
 		selectEvenAndDouble,
 	)
 
-	assert.Empty(t, iter.Collect(fltMapEmpty))
+	assert.Empty[int](t, iter.Collect(fltMapEmpty))
 }
 
 func TestFilterMapExhausted(t *testing.T) {

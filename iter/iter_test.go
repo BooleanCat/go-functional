@@ -42,7 +42,7 @@ func TestCollect(t *testing.T) {
 
 func TestCollectEmpty(t *testing.T) {
 	items := iter.Collect[int](iter.Take[int](iter.Count(), 0))
-	assert.Empty(t, items)
+	assert.Empty[int](t, items)
 }
 
 func TestFold(t *testing.T) {
