@@ -60,3 +60,14 @@ func ToChannel[T any](iter Iterator[T]) chan T {
 
 	return ch
 }
+
+// ForEach consumes an iterator and executes callback function on each item.
+func ForEach[T any](iter Iterator[T], callback func(T)) {
+	for {
+		if value, ok := iter.Next().Value(); ok {
+			callback(value)
+		} else {
+			break
+		}
+	}
+}
