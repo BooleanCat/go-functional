@@ -36,7 +36,7 @@ func ExampleFilterMap() {
 		selectAndTripleOdds,
 	)
 
-	fmt.Println(iter.Collect(triples))
+	fmt.Println(iter.Collect[int](triples))
 
 	// Output: [3 9 15]
 }
@@ -104,7 +104,7 @@ func TestFilterMap(t *testing.T) {
 		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
 		selectEvenAndDouble,
 	)
-	result := iter.Collect(fltMap)
+	result := iter.Collect[int](fltMap)
 
 	assert.SliceEqual(t, result, []int{4, 8, 12})
 }
@@ -123,7 +123,7 @@ func TestFilterMapEmpty(t *testing.T) {
 		selectEvenAndDouble,
 	)
 
-	assert.Empty[int](t, iter.Collect(fltMapEmpty))
+	assert.Empty[int](t, iter.Collect[int](fltMapEmpty))
 }
 
 func TestFilterMapExhausted(t *testing.T) {
