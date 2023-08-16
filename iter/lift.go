@@ -42,7 +42,10 @@ type LiftHashMapIter[T comparable, U any] struct {
 // LiftHashMap instantiates a `LiftHashMapIter` that will yield all items in
 // the provided map in the form iter.Tuple[key, value].
 //
-// Unlike most iterators, `LiftHashMap` should be closed after usage (because).
+// Unlike most iterators, `LiftHashMap` should be closed after usage (because
+// range order is non-deterministic and the iterator needs to preserve its
+// progress). This restriction may be removed if/when Go has a "yield" keyword.
+//
 // The iterator is closed when any of the two conditions are met.
 //
 // 1. The caller explicitly invokes the `Close` method.
