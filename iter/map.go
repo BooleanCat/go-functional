@@ -31,3 +31,8 @@ func (iter *MapIter[T, U]) Next() option.Option[U] {
 }
 
 var _ Iterator[struct{}] = new(MapIter[struct{}, struct{}])
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *MapIter[T, U]) Collect() []U {
+	return Collect[U](iter)
+}

@@ -31,3 +31,8 @@ func (iter *TakeIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(TakeIter[struct{}])
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *TakeIter[T]) Collect() []T {
+	return Collect[T](iter)
+}

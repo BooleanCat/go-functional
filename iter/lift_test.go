@@ -12,7 +12,7 @@ import (
 
 func ExampleLift() {
 	positives := iter.Filter[int](iter.Lift([]int{-1, 4, 6, 4, -5}), filters.GreaterThan(-1))
-	fmt.Println(iter.Collect[int](positives))
+	fmt.Println(positives.Collect())
 	// Output: [4 6 4]
 }
 
@@ -25,6 +25,11 @@ func TestLift(t *testing.T) {
 
 func TestLiftEmpty(t *testing.T) {
 	assert.True(t, iter.Lift([]int{}).Next().IsNone())
+}
+
+func TestLiftCollect(t *testing.T) {
+	items := iter.Lift([]int{1, 2}).Collect()
+	assert.SliceEqual(t, items, []int{1, 2})
 }
 
 func TestLiftHashMap(t *testing.T) {
@@ -69,6 +74,19 @@ func TestLiftHashMapCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMap(pokemon)
 	iter.Collect[iter.Tuple[string, string]](items)
 	items.Close()
+}
+
+func TestLiftHashMapCollect(t *testing.T) {
+	items := iter.LiftHashMap(map[string]string{
+		"name": "pikachu",
+		"type": "electric",
+	}).Collect()
+
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].One < items[j].One
+	})
+
+	assert.SliceEqual(t, items, []iter.Tuple[string, string]{{"name", "pikachu"}, {"type", "electric"}})
 }
 
 func TestLiftHashMapKeys(t *testing.T) {
@@ -120,6 +138,17 @@ func TestLiftHashMapKeysCloseAfterExhaustedSafe(t *testing.T) {
 	items.Close()
 }
 
+func TestLiftHashMapKeysCollect(t *testing.T) {
+	keys := iter.LiftHashMapKeys(map[string]string{
+		"name": "pikachu",
+		"type": "electric",
+	}).Collect()
+
+	sort.Strings(keys)
+
+	assert.SliceEqual(t, keys, []string{"name", "type"})
+}
+
 func TestLiftHashMapValues(t *testing.T) {
 	pokemon := make(map[string]string)
 	pokemon["name"] = "pikachu"
@@ -167,4 +196,15 @@ func TestLiftHashMapValuesCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMapValues(pokemon)
 	iter.Collect[string](items)
 	items.Close()
+}
+
+func TestLiftHashMapValuesCollect(t *testing.T) {
+	keys := iter.LiftHashMapValues(map[string]string{
+		"name": "pikachu",
+		"type": "electric",
+	}).Collect()
+
+	sort.Strings(keys)
+
+	assert.SliceEqual(t, keys, []string{"electric", "pikachu"})
 }

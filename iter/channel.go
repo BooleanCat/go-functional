@@ -24,3 +24,8 @@ func (iter *ChannelIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(ChannelIter[struct{}])
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *ChannelIter[T]) Collect() []T {
+	return Collect[T](iter)
+}

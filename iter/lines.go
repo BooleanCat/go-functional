@@ -64,3 +64,8 @@ func LinesString(r io.Reader) *MapIter[result.Result[[]byte], result.Result[stri
 
 	return Map[result.Result[[]byte]](iter, transform)
 }
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *LinesIter) Collect() []result.Result[[]byte] {
+	return Collect[result.Result[[]byte]](iter)
+}

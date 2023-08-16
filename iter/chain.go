@@ -38,3 +38,8 @@ func (iter *ChainIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(ChainIter[struct{}])
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *ChainIter[T]) Collect() []T {
+	return Collect[T](iter)
+}

@@ -33,3 +33,8 @@ func (iter *ZipIter[T, U]) Next() option.Option[Tuple[T, U]] {
 }
 
 var _ Iterator[Tuple[struct{}, struct{}]] = new(ZipIter[struct{}, struct{}])
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *ZipIter[T, U]) Collect() []Tuple[T, U] {
+	return Collect[Tuple[T, U]](iter)
+}

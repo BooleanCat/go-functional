@@ -40,3 +40,8 @@ func TestTakeExhausted(t *testing.T) {
 	assert.True(t, iter.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
+
+func TestTakeCollect(t *testing.T) {
+	items := iter.Take[int](iter.Count(), 3).Collect()
+	assert.SliceEqual(t, items, []int{0, 1, 2})
+}

@@ -17,3 +17,8 @@ func (iter *ExhaustedIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(ExhaustedIter[struct{}])
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *ExhaustedIter[T]) Collect() []T {
+	return Collect[T](iter)
+}

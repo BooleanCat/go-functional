@@ -6,8 +6,8 @@ A general purpose library offering functional helpers for Golang.
 
 ```go
 // Find the first 5 prime numbers
-primes := iter.Take(iter.Filter(iter.Count(), isPrime), 5)
-assert.SliceEqual(t, iter.Collect(primes), []int{2, 3, 5, 7, 11})
+primes := iter.Take(iter.Filter(iter.Count(), isPrime), 5).Collect()
+reflect.DeepEqual(t, primes, []int{2, 3, 5, 7, 11})
 ```
 
 _[Read the docs.](https://pkg.go.dev/github.com/BooleanCat/go-functional)_

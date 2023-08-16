@@ -31,6 +31,11 @@ func (iter *LiftIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(LiftIter[struct{}])
 
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *LiftIter[T]) Collect() []T {
+	return Collect[T](iter)
+}
+
 // LiftHashMapIter implements `LiftHashMap`. See `LiftHashMap`'s documentation.
 type LiftHashMapIter[T comparable, U any] struct {
 	hashmap  map[T]U
@@ -95,6 +100,11 @@ func (iter *LiftHashMapIter[T, U]) Next() option.Option[Tuple[T, U]] {
 
 var _ Iterator[Tuple[struct{}, struct{}]] = new(LiftHashMapIter[struct{}, struct{}])
 
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *LiftHashMapIter[T, U]) Collect() []Tuple[T, U] {
+	return Collect[Tuple[T, U]](iter)
+}
+
 // LiftHashMapKeysIter implements `LiftHashMapKeys`. See `LiftHashMapKeys`'
 // documentation.
 type LiftHashMapKeysIter[T comparable, U any] struct {
@@ -134,6 +144,11 @@ func (iter *LiftHashMapKeysIter[T, U]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(LiftHashMapKeysIter[struct{}, struct{}])
 
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *LiftHashMapKeysIter[T, U]) Collect() []T {
+	return Collect[T](iter)
+}
+
 // LiftHashMapValuesIter implements `LiftHashMapValues`. See
 // `LiftHashMapValues`' documentation.
 type LiftHashMapValuesIter[T comparable, U any] struct {
@@ -172,3 +187,8 @@ func (iter *LiftHashMapValuesIter[T, U]) Next() option.Option[U] {
 }
 
 var _ Iterator[struct{}] = new(LiftHashMapValuesIter[struct{}, struct{}])
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *LiftHashMapValuesIter[T, U]) Collect() []U {
+	return Collect[U](iter)
+}

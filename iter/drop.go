@@ -45,3 +45,8 @@ func (iter *DropIter[T]) delegateNext() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(DropIter[struct{}])
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *DropIter[T]) Collect() []T {
+	return Collect[T](iter)
+}
