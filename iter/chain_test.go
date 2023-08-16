@@ -10,7 +10,7 @@ import (
 )
 
 func ExampleChain() {
-	fmt.Println(iter.Collect[int](iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4}), iter.Lift([]int{0, 9}))))
+	fmt.Println(iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4}), iter.Lift([]int{0, 9})).Collect())
 	// Output: [1 2 3 4 0 9]
 }
 
@@ -43,4 +43,9 @@ func TestChainExhausted(t *testing.T) {
 	assert.True(t, iter.Next().IsNone())
 	assert.Equal(t, delegate1.NextCallCount(), 1)
 	assert.Equal(t, delegate2.NextCallCount(), 1)
+}
+
+func TestChainCollect(t *testing.T) {
+	items := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Collect()
+	assert.SliceEqual(t, items, []int{1, 2, 3, 4})
 }

@@ -36,6 +36,11 @@ func (iter *FilterIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(FilterIter[struct{}])
 
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *FilterIter[T]) Collect() []T {
+	return Collect[T](iter)
+}
+
 // Exclude instantiates a `FilterIter` that selectively yields only results that
 // cause the provided function to return `false`.
 func Exclude[T any](iter Iterator[T], fun func(T) bool) *FilterIter[T] {
@@ -75,4 +80,9 @@ var _ Iterator[struct{}] = new(FilterMapIter[struct{}, struct{}])
 // elements by returning a Some variant.
 func FilterMap[T any, U any](itr Iterator[T], fun func(T) option.Option[U]) *FilterMapIter[T, U] {
 	return &FilterMapIter[T, U]{itr, fun, false}
+}
+
+// Collect is an alternative way of invoking Collect(iter)
+func (iter *FilterMapIter[T, U]) Collect() []U {
+	return Collect[U](iter)
 }

@@ -12,7 +12,7 @@ import (
 
 func ExampleMap() {
 	double := func(a int) int { return a * 2 }
-	items := iter.Collect[int](iter.Map[int](iter.Lift([]int{0, 1, 2, 3}), double))
+	items := iter.Map[int](iter.Lift([]int{0, 1, 2, 3}), double).Collect()
 
 	fmt.Println(items)
 	// Output: [0 2 4 6]
@@ -40,4 +40,10 @@ func TestMapExhausted(t *testing.T) {
 	assert.True(t, iter.Next().IsNone())
 	assert.True(t, iter.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
+}
+
+func TestMapCollect(t *testing.T) {
+	double := func(a int) int { return a * 2 }
+	items := iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Collect()
+	assert.SliceEqual(t, items, []int{0, 2, 4, 6})
 }

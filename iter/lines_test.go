@@ -18,7 +18,7 @@ func ExampleLinesString() {
 	lines := iter.LinesString(bytes.NewBufferString("hello\nthere"))
 	unwrapped := iter.Map[result.Result[string]](lines, ops.UnwrapResult[string])
 
-	fmt.Println(iter.Collect[string](unwrapped))
+	fmt.Println(unwrapped.Collect())
 	// Output: [hello there]
 }
 
@@ -26,7 +26,7 @@ func ExampleLines() {
 	lines := iter.Lines(bytes.NewBufferString("hello\nthere"))
 	unwrapped := iter.Map[result.Result[[]byte]](lines, ops.UnwrapResult[[]byte])
 
-	fmt.Println(iter.Collect[[]byte](unwrapped))
+	fmt.Println(unwrapped.Collect())
 	// Output: [[104 101 108 108 111] [116 104 101 114 101]]
 }
 
@@ -78,6 +78,13 @@ func TestLinesFailureLater(t *testing.T) {
 	assert.True(t, lines.Next().Unwrap().IsErr())
 }
 
+func TestLinesCollect(t *testing.T) {
+	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Collect()
+	assert.Equal(t, 2, len(items))
+	assert.SliceEqual(t, items[0].Unwrap(), []byte("hello"))
+	assert.SliceEqual(t, items[1].Unwrap(), []byte("there"))
+}
+
 func TestLinesString(t *testing.T) {
 	file, err := os.Open("fixtures/lines.txt")
 	assert.Nil(t, err)
@@ -126,4 +133,9 @@ func TestLinesStringFailureLater(t *testing.T) {
 	reader.ReadReturns(0, errors.New("oops"))
 
 	assert.True(t, lines.Next().Unwrap().IsErr())
+}
+
+func TestLinesStringCollect(t *testing.T) {
+	items := iter.LinesString(bytes.NewBufferString("hello\nthere")).Collect()
+	assert.SliceEqual(t, items, []result.Result[string]{result.Ok("hello"), result.Ok("there")})
 }

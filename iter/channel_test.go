@@ -17,8 +17,7 @@ func ExampleFromChannel() {
 		close(ch)
 	}()
 
-	fmt.Println(iter.Collect[int](iter.FromChannel(ch)))
-
+	fmt.Println(iter.FromChannel(ch).Collect())
 	// Output: [1 2]
 }
 
@@ -32,14 +31,29 @@ func TestFromChannel(t *testing.T) {
 		close(ch)
 	}()
 
-	assert.Equal(t, iter.FromChannel(ch).Next().Unwrap(), 1)
-	assert.Equal(t, iter.FromChannel(ch).Next().Unwrap(), 2)
-	assert.Equal(t, iter.FromChannel(ch).Next().Unwrap(), 3)
-	assert.True(t, iter.FromChannel(ch).Next().IsNone())
+	numbers := iter.FromChannel(ch)
+
+	assert.Equal(t, numbers.Next().Unwrap(), 1)
+	assert.Equal(t, numbers.Next().Unwrap(), 2)
+	assert.Equal(t, numbers.Next().Unwrap(), 3)
+	assert.True(t, numbers.Next().IsNone())
 }
 
 func TestFromChannelEmpty(t *testing.T) {
 	ch := make(chan int)
 	close(ch)
 	assert.True(t, iter.FromChannel(ch).Next().IsNone())
+}
+
+func TestFromChannelCollect(t *testing.T) {
+	ch := make(chan int)
+
+	go func() {
+		ch <- 1
+		ch <- 2
+		close(ch)
+	}()
+
+	numbers := iter.FromChannel(ch).Collect()
+	assert.SliceEqual(t, numbers, []int{1, 2})
 }
