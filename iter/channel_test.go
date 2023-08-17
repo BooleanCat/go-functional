@@ -57,3 +57,17 @@ func TestFromChannelCollect(t *testing.T) {
 	numbers := iter.FromChannel(ch).Collect()
 	assert.SliceEqual(t, numbers, []int{1, 2})
 }
+
+func TestFromChannelDrop(t *testing.T) {
+	ch := make(chan int)
+
+	go func() {
+		ch <- 1
+		ch <- 2
+		ch <- 3
+		close(ch)
+	}()
+
+	numbers := iter.FromChannel(ch).Drop(1).Collect()
+	assert.SliceEqual(t, numbers, []int{2, 3})
+}

@@ -41,6 +41,11 @@ func (iter *FilterIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
 
+// Drop is an alternative way of invoking Drop(iter)
+func (iter *FilterIter[T]) Drop(n uint) *DropIter[T] {
+	return Drop[T](iter, n)
+}
+
 // Exclude instantiates a `FilterIter` that selectively yields only results that
 // cause the provided function to return `false`.
 func Exclude[T any](iter Iterator[T], fun func(T) bool) *FilterIter[T] {
@@ -85,4 +90,9 @@ func FilterMap[T any, U any](itr Iterator[T], fun func(T) option.Option[U]) *Fil
 // Collect is an alternative way of invoking Collect(iter)
 func (iter *FilterMapIter[T, U]) Collect() []U {
 	return Collect[U](iter)
+}
+
+// Drop is an alternative way of invoking Drop(iter)
+func (iter *FilterMapIter[T, U]) Drop(n uint) *DropIter[U] {
+	return Drop[U](iter, n)
 }

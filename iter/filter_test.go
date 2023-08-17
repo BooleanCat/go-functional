@@ -81,6 +81,12 @@ func TestFilterCollect(t *testing.T) {
 	assert.SliceEqual(t, evens, []int{0, 2})
 }
 
+func TestFilterDrop(t *testing.T) {
+	isEven := func(a int) bool { return a%2 == 0 }
+	evens := iter.Filter[int](iter.Lift([]int{0, 1, 2, 3}), isEven).Drop(1).Collect()
+	assert.SliceEqual(t, evens, []int{2})
+}
+
 func TestExclude(t *testing.T) {
 	isEven := func(a int) bool { return a%2 == 0 }
 	evens := iter.Exclude[int](iter.Count(), isEven)
@@ -101,6 +107,12 @@ func TestExcludeCollect(t *testing.T) {
 	isEven := func(a int) bool { return a%2 == 0 }
 	odds := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), isEven).Collect()
 	assert.SliceEqual(t, odds, []int{1, 3})
+}
+
+func TestExcludeDrop(t *testing.T) {
+	isEven := func(a int) bool { return a%2 == 0 }
+	odds := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), isEven).Drop(1).Collect()
+	assert.SliceEqual(t, odds, []int{3})
 }
 
 func TestFilterMap(t *testing.T) {
@@ -162,4 +174,21 @@ func TestFilterMapCollect(t *testing.T) {
 	).Collect()
 
 	assert.SliceEqual(t, doubles, []int{4, 8, 12})
+}
+
+func TestFilterMapDrop(t *testing.T) {
+	selectEvenAndDouble := func(x int) option.Option[int] {
+		if x%2 > 0 {
+			return option.None[int]()
+		}
+
+		return option.Some(x * 2)
+	}
+
+	doubles := iter.FilterMap[int](
+		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
+		selectEvenAndDouble,
+	).Drop(1).Collect()
+
+	assert.SliceEqual(t, doubles, []int{8, 12})
 }

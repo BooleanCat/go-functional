@@ -49,3 +49,8 @@ func TestChainCollect(t *testing.T) {
 	items := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Collect()
 	assert.SliceEqual(t, items, []int{1, 2, 3, 4})
 }
+
+func TestChainDrop(t *testing.T) {
+	items := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Drop(1).Collect()
+	assert.SliceEqual(t, items, []int{2, 3, 4})
+}

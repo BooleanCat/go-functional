@@ -45,3 +45,8 @@ func TestTakeCollect(t *testing.T) {
 	items := iter.Take[int](iter.Count(), 3).Collect()
 	assert.SliceEqual(t, items, []int{0, 1, 2})
 }
+
+func TestTakeDrop(t *testing.T) {
+	items := iter.Take[int](iter.Count(), 3).Drop(1).Collect()
+	assert.SliceEqual(t, items, []int{1, 2})
+}

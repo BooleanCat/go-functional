@@ -20,3 +20,8 @@ func (iter *RepeatIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(RepeatIter[struct{}])
+
+// Drop is an alternative way of invoking Drop(iter)
+func (iter *RepeatIter[T]) Drop(n uint) *DropIter[T] {
+	return Drop[T](iter, n)
+}

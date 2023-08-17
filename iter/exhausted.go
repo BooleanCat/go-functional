@@ -22,3 +22,8 @@ var _ Iterator[struct{}] = new(ExhaustedIter[struct{}])
 func (iter *ExhaustedIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
+
+// Drop is an alternative way of invoking Drop(iter)
+func (iter *ExhaustedIter[T]) Drop(n uint) *DropIter[T] {
+	return Drop[T](iter, n)
+}

@@ -21,3 +21,8 @@ func (c *CountIter) Next() option.Option[int] {
 }
 
 var _ Iterator[int] = new(CountIter)
+
+// Drop is an alternative way of invoking Drop(iter)
+func (c *CountIter) Drop(n uint) *DropIter[int] {
+	return Drop[int](c, n)
+}

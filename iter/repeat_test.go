@@ -17,9 +17,14 @@ func ExampleRepeat() {
 	// Some(42)
 }
 
-func TestRepeatIter(t *testing.T) {
+func TestRepeat(t *testing.T) {
 	numbers := iter.Repeat[int](42)
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
+	assert.Equal(t, numbers.Next().Unwrap(), 42)
+}
+
+func TestRepeatDrop(t *testing.T) {
+	numbers := iter.Repeat[int](42).Drop(1)
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
 }

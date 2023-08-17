@@ -48,3 +48,8 @@ func TestDropCollect(t *testing.T) {
 	numbers := iter.Drop[int](iter.Lift([]int{1, 2, 3}), 2).Collect()
 	assert.SliceEqual(t, numbers, []int{3})
 }
+
+func TestDropDrop(t *testing.T) {
+	counter := iter.Count().Drop(2).Drop(3)
+	assert.Equal(t, counter.Next().Unwrap(), 5)
+}

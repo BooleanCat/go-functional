@@ -69,3 +69,8 @@ func LinesString(r io.Reader) *MapIter[result.Result[[]byte], result.Result[stri
 func (iter *LinesIter) Collect() []result.Result[[]byte] {
 	return Collect[result.Result[[]byte]](iter)
 }
+
+// Drop is an alternative way of invoking Drop(iter)
+func (iter *LinesIter) Drop(n uint) *DropIter[result.Result[[]byte]] {
+	return Drop[result.Result[[]byte]](iter, n)
+}
