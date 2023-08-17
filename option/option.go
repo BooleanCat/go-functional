@@ -85,15 +85,3 @@ func (o Option[T]) IsNone() bool {
 func (o Option[T]) Value() (T, bool) {
 	return o.value, o.present
 }
-
-// Map allows functions to work with option types, the returned
-// closure will only invoke fn if Option[T] is a Some variant.
-func Map[T any, U any](fn func(T) U) func(Option[T]) Option[U] {
-	return func(o Option[T]) Option[U] {
-		if o.IsNone() {
-			return None[U]()
-		}
-
-		return Some(fn(o.Unwrap()))
-	}
-}

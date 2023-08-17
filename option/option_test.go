@@ -72,19 +72,6 @@ func ExampleOption_Value() {
 	// true
 }
 
-func ExampleMap() {
-	double := option.Map(func(x int) int {
-		return x * 2
-	})
-
-	fmt.Println(double(option.None[int]()))
-	fmt.Println(double(option.Some(25)))
-
-	// Output:
-	// None
-	// Some(50)
-}
-
 func TestSomeStringer(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("%s", option.Some("foo")), "Some(foo)") //nolint:gosimple
 	assert.Equal(t, fmt.Sprintf("%s", option.Some(42)), "Some(42)")     //nolint:gosimple
@@ -150,32 +137,5 @@ func TestSomeValue(t *testing.T) {
 func TestNoneValue(t *testing.T) {
 	value, ok := option.None[int]().Value()
 	assert.Equal(t, value, 0)
-	assert.False(t, ok)
-}
-
-func TestMapSome(t *testing.T) {
-	fn := func(x int) bool {
-		return x > 50
-	}
-
-	optFn := option.Map(fn)
-
-	resultWithSome := optFn(option.Some(40))
-
-	unwrappedSome, ok := resultWithSome.Value()
-	assert.True(t, ok)
-	assert.False(t, unwrappedSome)
-}
-
-func TestMapNone(t *testing.T) {
-	fn := func(x int) bool {
-		t.Error("fn was called!")
-		return x > 50
-	}
-
-	optFn := option.Map(fn)
-	resultWithNone := optFn(option.None[int]())
-
-	_, ok := resultWithNone.Value()
 	assert.False(t, ok)
 }
