@@ -40,3 +40,24 @@ func And[T any](filters ...func(T) bool) func(T) bool {
 		return true
 	}
 }
+
+// And aggregates multiple filters for use with iter.Filter (and iter.Exclude)
+// to create a filter that returns true when one of the provided filters return
+// true.
+//
+// If no filters are provided the result is always true.
+func Or[T any](filters ...func(T) bool) func(T) bool {
+	return func(t T) bool {
+		if len(filters) == 0 {
+			return true
+		}
+
+		for _, filter := range filters {
+			if filter(t) {
+				return true
+			}
+		}
+
+		return false
+	}
+}

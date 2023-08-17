@@ -57,5 +57,26 @@ func TestAnd(t *testing.T) {
 		filters.LessThan(7),
 	))
 
-	assert.SliceEqual(t, iter.Collect[int](items), []int{3, 4, 5, 6})
+	assert.SliceEqual(t, items.Collect(), []int{3, 4, 5, 6})
+}
+
+func TestAndEmpty(t *testing.T) {
+	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4, 5, 6, 7}), filters.And[int]())
+
+	assert.SliceEqual(t, items.Collect(), []int{1, 2, 3, 4, 5, 6, 7})
+}
+
+func TestOr(t *testing.T) {
+	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4, 5, 6, 7}), filters.Or(
+		filters.LessThan(3),
+		filters.GreaterThan(6),
+	))
+
+	assert.SliceEqual(t, items.Collect(), []int{1, 2, 7})
+}
+
+func TestOrEmpty(t *testing.T) {
+	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4, 5, 6, 7}), filters.Or[int]())
+
+	assert.SliceEqual(t, items.Collect(), []int{1, 2, 3, 4, 5, 6, 7})
 }
