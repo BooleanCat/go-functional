@@ -27,7 +27,9 @@ func LessThan[T constraints.Ordered](t T) func(T) bool {
 
 // And aggregates multiple filters for use with iter.Filter (and iter.Exclude)
 // to create a filter that returns true when all provided filters return true.
-func And[T constraints.Ordered](filters ...func(T) bool) func(T) bool {
+//
+// If no filters are provided the result is always true.
+func And[T any](filters ...func(T) bool) func(T) bool {
 	return func(t T) bool {
 		for _, filter := range filters {
 			if !filter(t) {

@@ -16,7 +16,7 @@ func Count() *CountIter {
 
 // Next implements the Iterator interface for `CountIter`.
 func (c *CountIter) Next() option.Option[int] {
-	c.index += 1
+	c.index++
 	return option.Some(c.index - 1)
 }
 
