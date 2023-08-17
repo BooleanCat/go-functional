@@ -44,3 +44,8 @@ var _ Iterator[Tuple[struct{}, struct{}]] = new(ZipIter[struct{}, struct{}])
 func (iter *ZipIter[T, U]) Collect() []Tuple[T, U] {
 	return Collect[Tuple[T, U]](iter)
 }
+
+// Drop is an alternative way of invoking Drop(iter)
+func (iter *ZipIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
+	return Drop[Tuple[T, U]](iter, n)
+}

@@ -53,7 +53,7 @@ library.
 ```go
 // All even natural numbers (2, 4, 6, 8...)
 isEven := func(n int) bool { return n%2 == 0 }
-evens := iter.Filter(iter.Drop(iter.Count(), 1), isEven)
+evens := iter.Filter(iter.Count().Drop(1), isEven)
 ```
 
 ```go

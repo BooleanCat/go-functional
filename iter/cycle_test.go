@@ -38,3 +38,8 @@ func TestCycleExhausted(t *testing.T) {
 	assert.True(t, ones.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
+
+func TestCycleDrop(t *testing.T) {
+	items := iter.Take[int](iter.Cycle[int](iter.Lift([]int{1, 2})).Drop(1), 5).Collect()
+	assert.SliceEqual(t, items, []int{2, 1, 2, 1, 2})
+}

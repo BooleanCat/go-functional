@@ -26,3 +26,8 @@ func TestCount(t *testing.T) {
 	assert.Equal(t, counter.Next().Unwrap(), 1)
 	assert.Equal(t, counter.Next().Unwrap(), 2)
 }
+
+func TestCountDrop(t *testing.T) {
+	counter := iter.Count().Drop(5)
+	assert.Equal(t, counter.Next().Unwrap(), 5)
+}
