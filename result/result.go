@@ -83,3 +83,13 @@ func (r Result[T]) IsErr() bool {
 func (r Result[T]) Value() (T, error) {
 	return r.value, r.err
 }
+
+// Unwrap returns the underlying error of an Err variant, or panics if called
+// on an Ok variant.
+func (r Result[T]) UnwrapErr() error {
+	if r.IsOk() {
+		panic("called `Result.UnwrapErr()` on an `Ok` value")
+	}
+
+	return r.err
+}

@@ -73,6 +73,12 @@ func ExampleResult_Value() {
 	// <nil>
 }
 
+func ExampleResult_UnwrapErr() {
+	err := result.Err[int](errors.New("oops")).UnwrapErr()
+	fmt.Println(err)
+	// Output: oops
+}
+
 func TestOkStringer(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("%s", result.Ok(42)), "Ok(42)") //nolint:gosimple
 }
@@ -139,4 +145,18 @@ func TestErrValue(t *testing.T) {
 	assert.Equal(t, value, 0)
 	assert.NotNil(t, err)
 	assert.Equal(t, err.Error(), "oops")
+}
+
+func TestErrUnwrapErr(t *testing.T) {
+	err := result.Err[int](errors.New("oops")).UnwrapErr()
+	assert.Equal(t, err.Error(), "oops")
+}
+
+func TestOkUnwrapErr(t *testing.T) {
+	defer func() {
+		assert.Equal(t, fmt.Sprintf("%v", recover()), "called `Result.UnwrapErr()` on an `Ok` value")
+	}()
+
+	_ = result.Ok(42).UnwrapErr()
+	t.Error("did not panic")
 }
