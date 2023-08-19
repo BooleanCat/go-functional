@@ -8,19 +8,29 @@ import (
 )
 
 func TestFromString(t *testing.T) {
-	line := "//gofunctional:generate *CounterIter int Drop Take Chain"
-	d := directive.FromString(line).Unwrap()
-	assert.Equal(t, d.Type, "*CounterIter")
-	assert.Equal(t, d.YieldedType, "int")
-	assert.SliceEqual(t, d.Methods, []string{"Drop", "Take", "Chain"})
-}
-
-func TestFromStringOneMethod(t *testing.T) {
-	line := "//gofunctional:generate *TakeIter[T] T Drop"
-	d := directive.FromString(line).Unwrap()
-	assert.Equal(t, d.Type, "*TakeIter[T]")
-	assert.Equal(t, d.YieldedType, "T")
-	assert.SliceEqual(t, d.Methods, []string{"Drop"})
+	testCases := []struct {
+		candidate string
+		directive directive.Directive
+	}{
+		{
+			candidate: "//gofunctional:generate *CounterIter int Drop Take Chain",
+			directive: directive.Directive{Type: "*CounterIter", YieldedType: "int", Methods: []string{"Drop", "Take", "Chain"}},
+		},
+		{
+			candidate: "//gofunctional:generate *TakeIter[T] T Drop",
+			directive: directive.Directive{Type: "*TakeIter[T]", YieldedType: "T", Methods: []string{"Drop"}},
+		},
+		{
+			candidate: "//gofunctional:generate *TakeIter[T, U, V] Tuple[U, V] Drop Collect",
+			directive: directive.Directive{Type: "*TakeIter[T, U, V]", YieldedType: "Tuple[U, V]", Methods: []string{"Drop", "Collect"}},
+		},
+	}
+	for _, tc := range testCases {
+		got := directive.FromString(tc.candidate).Unwrap()
+		assert.Equal(t, tc.directive.Type, got.Type)
+		assert.Equal(t, tc.directive.YieldedType, got.YieldedType)
+		assert.SliceEqual(t, tc.directive.Methods, got.Methods)
+	}
 }
 
 func TestFromInvalid(t *testing.T) {

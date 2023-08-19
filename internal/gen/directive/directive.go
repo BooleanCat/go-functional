@@ -8,7 +8,10 @@ import (
 	"github.com/BooleanCat/go-functional/result"
 )
 
-var pattern = regexp.MustCompile(`^\/\/gofunctional:generate (?P<Type>\*[A-Z][A-Za-z]*(\[[A-Za-z]+\])?) (?P<YieldedType>[A-Za-z]+)(?P<Methods>( [A-Z][A-Za-z]*)+)$`)
+var (
+	typePattern = `\*?[A-Za-z]+(\[[A-Za-z](, [A-Za-z])*\])?`
+	pattern     = regexp.MustCompile(fmt.Sprintf(`^\/\/gofunctional:generate (?P<Type>%s) (?P<YieldedType>%s)(?P<Methods>( [A-Z][A-Za-z]*)+)$`, typePattern, typePattern))
+)
 
 type Directive struct {
 	Type        string
