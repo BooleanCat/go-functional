@@ -5,12 +5,12 @@ import "github.com/BooleanCat/go-functional/option"
 // TakeIter implements `Take`. See `Take`'s documentation.
 type TakeIter[T any] struct {
 	iter  Iterator[T]
-	limit int
+	limit uint
 }
 
 // Take instantiates a `TakeIter` that will limit the number of items of its
 // wrapped iterator to a maximum limit.
-func Take[T any](iter Iterator[T], limit int) *TakeIter[T] {
+func Take[T any](iter Iterator[T], limit uint) *TakeIter[T] {
 	return &TakeIter[T]{iter, limit}
 }
 
