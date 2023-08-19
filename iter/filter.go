@@ -53,6 +53,7 @@ func Exclude[T any](iter Iterator[T], fun func(T) bool) *FilterIter[T] {
 	return &FilterIter[T]{iter, inverse, false}
 }
 
+// FilterMapIter implements `FilterMap`. See `FilterMap`'s documentation.
 type FilterMapIter[T any, U any] struct {
 	iter      Iterator[T]
 	fn        func(T) option.Option[U]
