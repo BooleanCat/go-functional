@@ -47,15 +47,10 @@ func RenderTemplate(name string, values []Values) result.Result[[]byte] {
 		return result.Err[[]byte](fmt.Errorf("invalid template: %s", name))
 	}
 
-	tmpl, err := template.New(name).Parse(targetTemplate)
-	if err != nil {
-		return result.Err[[]byte](err)
-	}
+	tmpl, _ := template.New(name).Parse(targetTemplate)
 
 	buffer := new(bytes.Buffer)
-	if err := tmpl.Execute(buffer, values); err != nil {
-		result.Err[[]byte](err)
-	}
+	_ = tmpl.Execute(buffer, values)
 
 	return result.Ok(buffer.Bytes())
 }

@@ -34,3 +34,7 @@ func TestRenderTemplate(t *testing.T) {
 	content := template.RenderTemplate("ForEach", []template.Values{{"*CountIter", "int"}}).Unwrap()
 	assert.Equal(t, strings.TrimSpace(string(content)), strings.TrimSpace(renderedForEach))
 }
+
+func TestRenderTemplateBadTemplate(t *testing.T) {
+	assert.True(t, template.RenderTemplate("Foo", []template.Values{}).IsErr())
+}
