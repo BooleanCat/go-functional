@@ -1,6 +1,0 @@
-{{range $iter := .}}
-// Take is an alternative way of invoking Take(iter)
-func (iter {{.TypeName}}) Take(n uint) *TakeIter[{{or .ReturnType "T"}}] {
-    return Take[{{or .ReturnType "T"}}](iter, n)
-}
-{{end}}

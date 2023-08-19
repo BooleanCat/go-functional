@@ -1,6 +1,0 @@
-{{range $iter := .}}
-// Drop is an alternative way of invoking Drop(iter)
-func (iter {{.TypeName}}) Drop(n uint) *DropIter[{{or .ReturnType "T"}}] {
-    return Drop[{{or .ReturnType "T"}}](iter, n)
-}
-{{end}}

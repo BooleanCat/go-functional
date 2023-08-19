@@ -1,4 +1,0 @@
-// ForEach is an alternative way of invoking ForEach(iter)
-func (iter *CountIter) ForEach(op func(int)) {
-    ForEach[int](iter, op)
-}

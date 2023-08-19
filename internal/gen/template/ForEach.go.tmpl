@@ -1,6 +1,0 @@
-{{range $iter := .}}
-// ForEach is an alternative way of invoking ForEach(iter)
-func (iter {{.TypeName}}) ForEach(op func({{or .ReturnType "T"}})) {
-    ForEach[{{or .ReturnType "T"}}](iter, op)
-}
-{{end}}
