@@ -60,6 +60,7 @@ type FilterMapIter[T any, U any] struct {
 	exhausted bool
 }
 
+// Next implements the Iterator interface for `FilterMapIter`.
 func (iter *FilterMapIter[T, U]) Next() option.Option[U] {
 	if iter.exhausted {
 		return option.None[U]()
