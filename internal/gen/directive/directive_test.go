@@ -24,6 +24,10 @@ func TestFromString(t *testing.T) {
 			candidate: "//gofunctional:generate *TakeIter[T, U, V] Tuple[U, V] Drop Collect",
 			directive: directive.Directive{Type: "*TakeIter[T, U, V]", YieldedType: "Tuple[U, V]", Methods: []string{"Drop", "Collect"}},
 		},
+		{
+			candidate: "//gofunctional:generate *LinesIter []byte Drop Collect",
+			directive: directive.Directive{Type: "*LinesIter", YieldedType: "[]byte", Methods: []string{"Drop", "Collect"}},
+		},
 	}
 	for _, tc := range testCases {
 		got := directive.FromString(tc.candidate).Unwrap()

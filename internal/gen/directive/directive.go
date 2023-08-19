@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	typePattern = `\*?[A-Za-z]+(\[[A-Za-z](, [A-Za-z])*\])?`
+	typePattern = `(\[\])?\*?[A-Za-z]+(\[[A-Za-z](, [A-Za-z])*\])?`
 	pattern     = regexp.MustCompile(fmt.Sprintf(`^\/\/gofunctional:generate (?P<Type>%s) (?P<YieldedType>%s)(?P<Methods>( [A-Z][A-Za-z]*)+)$`, typePattern, typePattern))
 )
 
