@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	typePattern = `(\[\])?\*?[A-Za-z]+(\[[A-Za-z](, [A-Za-z])*\])?`
-	pattern     = regexp.MustCompile(fmt.Sprintf(`^\/\/gofunctional:generate (?P<Type>%s) (?P<YieldedType>%s)(?P<Methods>( [A-Z][A-Za-z]*)+)$`, typePattern, typePattern))
+	typePattern = `(\[\])?\*?\w+(\[\w+(,\s\w+)*\])?`
+	pattern     = regexp.MustCompile(fmt.Sprintf(`^\/\/gofunctional:generate (?P<Type>%s) (?P<YieldedType>%s)(?P<Methods>(\s+\w+)+)$`, typePattern, typePattern))
 )
 
 type Directive struct {
