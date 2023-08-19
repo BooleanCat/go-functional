@@ -27,3 +27,8 @@ func (iter *ExhaustedIter[T]) Collect() []T {
 func (iter *ExhaustedIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *ExhaustedIter[T]) Take(n uint) *TakeIter[T] {
+	return Take[T](iter, n)
+}

@@ -26,3 +26,8 @@ var _ Iterator[int] = new(CountIter)
 func (c *CountIter) Drop(n uint) *DropIter[int] {
 	return Drop[int](c, n)
 }
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *CountIter) Take(n uint) *TakeIter[int] {
+	return Take[int](iter, n)
+}

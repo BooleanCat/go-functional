@@ -10,7 +10,7 @@ import (
 )
 
 func ExampleTake() {
-	iter := iter.Take[int](iter.Count(), 2)
+	iter := iter.Count().Take(2)
 	fmt.Println(iter.Next())
 	fmt.Println(iter.Next())
 	fmt.Println(iter.Next())
@@ -49,4 +49,9 @@ func TestTakeCollect(t *testing.T) {
 func TestTakeDrop(t *testing.T) {
 	items := iter.Take[int](iter.Count(), 3).Drop(1).Collect()
 	assert.SliceEqual(t, items, []int{1, 2})
+}
+
+func TestTakeTake(t *testing.T) {
+	items := iter.Count().Take(100).Take(2).Collect()
+	assert.SliceEqual(t, items, []int{0, 1})
 }

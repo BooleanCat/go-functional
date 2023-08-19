@@ -25,3 +25,8 @@ var _ Iterator[struct{}] = new(RepeatIter[struct{}])
 func (iter *RepeatIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *RepeatIter[T]) Take(n uint) *TakeIter[T] {
+	return Take[T](iter, n)
+}

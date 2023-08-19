@@ -53,3 +53,9 @@ func TestMapDrop(t *testing.T) {
 	items := iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Drop(2).Collect()
 	assert.SliceEqual(t, items, []int{4, 6})
 }
+
+func TestMapTake(t *testing.T) {
+	double := func(a int) int { return a * 2 }
+	items := iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Take(2).Collect()
+	assert.SliceEqual(t, items, []int{0, 2})
+}

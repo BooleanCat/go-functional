@@ -46,6 +46,11 @@ func (iter *FilterIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
+// Take is an alternative way of invoking Take(iter)
+func (iter *FilterIter[T]) Take(n uint) *TakeIter[T] {
+	return Take[T](iter, n)
+}
+
 // Exclude instantiates a `FilterIter` that selectively yields only results that
 // cause the provided function to return `false`.
 func Exclude[T any](iter Iterator[T], fun func(T) bool) *FilterIter[T] {
@@ -97,4 +102,9 @@ func (iter *FilterMapIter[T, U]) Collect() []U {
 // Drop is an alternative way of invoking Drop(iter)
 func (iter *FilterMapIter[T, U]) Drop(n uint) *DropIter[U] {
 	return Drop[U](iter, n)
+}
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *FilterMapIter[T, U]) Take(n uint) *TakeIter[U] {
+	return Take[U](iter, n)
 }

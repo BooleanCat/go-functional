@@ -31,3 +31,8 @@ func TestCountDrop(t *testing.T) {
 	counter := iter.Count().Drop(5)
 	assert.Equal(t, counter.Next().Unwrap(), 5)
 }
+
+func TestCountTake(t *testing.T) {
+	numbers := iter.Count().Take(3).Collect()
+	assert.SliceEqual(t, numbers, []int{0, 1, 2})
+}

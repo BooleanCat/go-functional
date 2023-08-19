@@ -71,3 +71,20 @@ func TestFromChannelDrop(t *testing.T) {
 	numbers := iter.FromChannel(ch).Drop(1).Collect()
 	assert.SliceEqual(t, numbers, []int{2, 3})
 }
+
+func TestFromChannelTake(t *testing.T) {
+	ch := make(chan int)
+
+	go func() {
+		defer close(ch)
+		ch <- 1
+		ch <- 2
+		ch <- 3
+	}()
+
+	iter := iter.FromChannel(ch)
+	numbers := iter.Take(2).Collect()
+	assert.SliceEqual(t, numbers, []int{1, 2})
+	iter.Collect() // To close the channel
+
+}
