@@ -14,7 +14,7 @@ func ExampleZip() {
 	evens := iter.Filter[int](iter.Count(), isEven)
 	odds := iter.Exclude[int](iter.Count(), isEven)
 
-	fmt.Println(iter.Take[iter.Tuple[int, int]](iter.Zip[int, int](evens, odds), 3).Collect())
+	fmt.Println(iter.Zip[int, int](evens, odds).Take(3).Collect())
 	// Output: [{0 1} {2 3} {4 5}]
 }
 
@@ -83,4 +83,13 @@ func TestZipDrop(t *testing.T) {
 
 	items := iter.Zip[int, int](evens, odds).Drop(1).Collect()
 	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{2, 3}})
+}
+
+func TestZipTake(t *testing.T) {
+	isEven := func(a int) bool { return a%2 == 0 }
+	evens := iter.Filter[int](iter.Count(), isEven)
+	odds := iter.Exclude[int](iter.Count(), isEven)
+
+	items := iter.Zip[int, int](evens, odds).Take(1).Collect()
+	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{0, 1}})
 }

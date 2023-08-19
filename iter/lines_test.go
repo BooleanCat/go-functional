@@ -91,6 +91,12 @@ func TestLinesDrop(t *testing.T) {
 	assert.SliceEqual(t, items[0].Unwrap(), []byte("there"))
 }
 
+func TestLinesTake(t *testing.T) {
+	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Take(1).Collect()
+	assert.Equal(t, 1, len(items))
+	assert.SliceEqual(t, items[0].Unwrap(), []byte("hello"))
+}
+
 func TestLinesString(t *testing.T) {
 	file, err := os.Open("fixtures/lines.txt")
 	assert.Nil(t, err)
@@ -149,4 +155,9 @@ func TestLinesStringCollect(t *testing.T) {
 func TestLinesStringDrop(t *testing.T) {
 	items := iter.LinesString(bytes.NewBufferString("hello\nthere")).Drop(1).Collect()
 	assert.SliceEqual(t, items, []result.Result[string]{result.Ok("there")})
+}
+
+func TestLinesStringTake(t *testing.T) {
+	items := iter.LinesString(bytes.NewBufferString("hello\nthere")).Take(1).Collect()
+	assert.SliceEqual(t, items, []result.Result[string]{result.Ok("hello")})
 }

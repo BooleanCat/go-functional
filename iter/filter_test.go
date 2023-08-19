@@ -32,12 +32,11 @@ func ExampleFilterMap() {
 	}
 
 	triples := iter.FilterMap[int](
-		iter.Take[int](iter.Count(), 6),
+		iter.Count().Take(6),
 		selectAndTripleOdds,
 	)
 
-	fmt.Println(iter.Collect[int](triples))
-
+	fmt.Println(triples.Collect())
 	// Output: [3 9 15]
 }
 
@@ -82,6 +81,11 @@ func TestFilterCollect(t *testing.T) {
 }
 
 func TestFilterDrop(t *testing.T) {
+	zeros := iter.Filter[int](iter.Lift([]int{0, 1, 0, 0}), filters.IsZero[int]).Take(2).Collect()
+	assert.SliceEqual(t, zeros, []int{0, 0})
+}
+
+func TestFilterTake(t *testing.T) {
 	isEven := func(a int) bool { return a%2 == 0 }
 	evens := iter.Filter[int](iter.Lift([]int{0, 1, 2, 3}), isEven).Drop(1).Collect()
 	assert.SliceEqual(t, evens, []int{2})
@@ -116,14 +120,6 @@ func TestExcludeDrop(t *testing.T) {
 }
 
 func TestFilterMap(t *testing.T) {
-	selectEvenAndDouble := func(x int) option.Option[int] {
-		if x%2 > 0 {
-			return option.None[int]()
-		}
-
-		return option.Some(x * 2)
-	}
-
 	fltMap := iter.FilterMap[int](
 		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
 		selectEvenAndDouble,
@@ -134,14 +130,6 @@ func TestFilterMap(t *testing.T) {
 }
 
 func TestFilterMapEmpty(t *testing.T) {
-	selectEvenAndDouble := func(x int) option.Option[int] {
-		if x%2 > 0 {
-			return option.None[int]()
-		}
-
-		return option.Some(x * 2)
-	}
-
 	fltMapEmpty := iter.FilterMap[int](
 		iter.Exhausted[int](),
 		selectEvenAndDouble,
@@ -160,14 +148,6 @@ func TestFilterMapExhausted(t *testing.T) {
 }
 
 func TestFilterMapCollect(t *testing.T) {
-	selectEvenAndDouble := func(x int) option.Option[int] {
-		if x%2 > 0 {
-			return option.None[int]()
-		}
-
-		return option.Some(x * 2)
-	}
-
 	doubles := iter.FilterMap[int](
 		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
 		selectEvenAndDouble,
@@ -177,18 +157,27 @@ func TestFilterMapCollect(t *testing.T) {
 }
 
 func TestFilterMapDrop(t *testing.T) {
-	selectEvenAndDouble := func(x int) option.Option[int] {
-		if x%2 > 0 {
-			return option.None[int]()
-		}
-
-		return option.Some(x * 2)
-	}
-
 	doubles := iter.FilterMap[int](
 		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
 		selectEvenAndDouble,
 	).Drop(1).Collect()
 
 	assert.SliceEqual(t, doubles, []int{8, 12})
+}
+
+func TestFilterMapTake(t *testing.T) {
+	doubles := iter.FilterMap[int](
+		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
+		selectEvenAndDouble,
+	).Take(2).Collect()
+
+	assert.SliceEqual(t, doubles, []int{4, 8})
+}
+
+func selectEvenAndDouble(x int) option.Option[int] {
+	if x%2 > 0 {
+		return option.None[int]()
+	}
+
+	return option.Some(x * 2)
 }

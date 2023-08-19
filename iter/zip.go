@@ -49,3 +49,8 @@ func (iter *ZipIter[T, U]) Collect() []Tuple[T, U] {
 func (iter *ZipIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
 	return Drop[Tuple[T, U]](iter, n)
 }
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *ZipIter[T, U]) Take(n uint) *TakeIter[Tuple[T, U]] {
+	return Take[Tuple[T, U]](iter, n)
+}

@@ -12,9 +12,7 @@ import (
 )
 
 func ExampleCollect() {
-	numbers := iter.Collect[int](iter.Take[int](iter.Count(), 3))
-
-	fmt.Println(numbers)
+	fmt.Println(iter.Count().Take(3).Collect())
 	// Output: [0 1 2]
 }
 

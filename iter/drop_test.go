@@ -11,7 +11,7 @@ import (
 )
 
 func ExampleDrop() {
-	counter := iter.Drop[int](iter.Count(), 2)
+	counter := iter.Count().Drop(2)
 	fmt.Println(counter.Next().Unwrap())
 	// Output: 2
 }
@@ -52,4 +52,9 @@ func TestDropCollect(t *testing.T) {
 func TestDropDrop(t *testing.T) {
 	counter := iter.Count().Drop(2).Drop(3)
 	assert.Equal(t, counter.Next().Unwrap(), 5)
+}
+
+func TestDropTake(t *testing.T) {
+	numbers := iter.Count().Drop(2).Take(3).Collect()
+	assert.SliceEqual(t, numbers, []int{2, 3, 4})
 }

@@ -28,3 +28,8 @@ func TestRepeatDrop(t *testing.T) {
 	numbers := iter.Repeat[int](42).Drop(1)
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
 }
+
+func TestRepeatTake(t *testing.T) {
+	numbers := iter.Repeat[int](42).Take(2).Collect()
+	assert.SliceEqual(t, numbers, []int{42, 42})
+}

@@ -41,3 +41,8 @@ func (iter *MapIter[T, U]) Collect() []U {
 func (iter *MapIter[T, U]) Drop(n uint) *DropIter[U] {
 	return Drop[U](iter, n)
 }
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *MapIter[T, U]) Take(n uint) *TakeIter[U] {
+	return Take[U](iter, n)
+}

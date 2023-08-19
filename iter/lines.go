@@ -74,3 +74,8 @@ func (iter *LinesIter) Collect() []result.Result[[]byte] {
 func (iter *LinesIter) Drop(n uint) *DropIter[result.Result[[]byte]] {
 	return Drop[result.Result[[]byte]](iter, n)
 }
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *LinesIter) Take(n uint) *TakeIter[result.Result[[]byte]] {
+	return Take[result.Result[[]byte]](iter, n)
+}

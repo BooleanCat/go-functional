@@ -41,3 +41,8 @@ func (iter *ChainIter[T]) Collect() []T {
 func (iter *ChainIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *ChainIter[T]) Take(n uint) *TakeIter[T] {
+	return Take[T](iter, n)
+}

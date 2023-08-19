@@ -24,3 +24,7 @@ func TestExhaustedCollect(t *testing.T) {
 func TestExhaustedDrop(t *testing.T) {
 	assert.True(t, iter.Exhausted[int]().Drop(1).Next().IsNone())
 }
+
+func TestExhaustedTake(t *testing.T) {
+	assert.Empty[int](t, iter.Exhausted[int]().Take(1).Collect())
+}

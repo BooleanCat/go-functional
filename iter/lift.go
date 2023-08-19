@@ -41,6 +41,11 @@ func (iter *LiftIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
+// Take is an alternative way of invoking Take(iter)
+func (iter *LiftIter[T]) Take(n uint) *TakeIter[T] {
+	return Take[T](iter, n)
+}
+
 // LiftHashMapIter implements `LiftHashMap`. See `LiftHashMap`'s documentation.
 type LiftHashMapIter[T comparable, U any] struct {
 	hashmap  map[T]U
@@ -115,6 +120,11 @@ func (iter *LiftHashMapIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
 	return Drop[Tuple[T, U]](iter, n)
 }
 
+// Take is an alternative way of invoking Take(iter)
+func (iter *LiftHashMapIter[T, U]) Take(n uint) *TakeIter[Tuple[T, U]] {
+	return Take[Tuple[T, U]](iter, n)
+}
+
 // LiftHashMapKeysIter implements `LiftHashMapKeys`. See `LiftHashMapKeys`'
 // documentation.
 type LiftHashMapKeysIter[T comparable, U any] struct {
@@ -164,6 +174,11 @@ func (iter *LiftHashMapKeysIter[T, U]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
+// Take is an alternative way of invoking Take(iter)
+func (iter *LiftHashMapKeysIter[T, U]) Take(n uint) *TakeIter[T] {
+	return Take[T](iter, n)
+}
+
 // LiftHashMapValuesIter implements `LiftHashMapValues`. See
 // `LiftHashMapValues`' documentation.
 type LiftHashMapValuesIter[T comparable, U any] struct {
@@ -211,4 +226,9 @@ func (iter *LiftHashMapValuesIter[T, U]) Collect() []U {
 // Drop is an alternative way of invoking Drop(iter)
 func (iter *LiftHashMapValuesIter[T, U]) Drop(n uint) *DropIter[U] {
 	return Drop[U](iter, n)
+}
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *LiftHashMapValuesIter[T, U]) Take(n uint) *TakeIter[U] {
+	return Take[U](iter, n)
 }

@@ -34,3 +34,8 @@ func (iter *ChannelIter[T]) Collect() []T {
 func (iter *ChannelIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
+
+// Take is an alternative way of invoking Take(iter)
+func (iter *ChannelIter[T]) Take(n uint) *TakeIter[T] {
+	return Take[T](iter, n)
+}
