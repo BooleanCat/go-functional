@@ -1,12 +1,17 @@
 package template_test
 
 import (
+	_ "embed"
 	"sort"
+	"strings"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/gen/template"
 )
+
+//go:embed fixtures/foreach.txt
+var renderedForEach string
 
 func TestFromMethodSetItems(t *testing.T) {
 	items := make(map[string]string)
@@ -23,4 +28,9 @@ func TestFromMethodSetItems(t *testing.T) {
 		{TypeName: "*ChainIter[T]", ReturnType: "T"},
 		{TypeName: "*CountIter", ReturnType: "int"},
 	})
+}
+
+func TestRenderTemplate(t *testing.T) {
+	content := template.RenderTemplate("ForEach", []template.Values{{"*CountIter", "int"}}).Unwrap()
+	assert.Equal(t, strings.TrimSpace(string(content)), strings.TrimSpace(renderedForEach))
 }
