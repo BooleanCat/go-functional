@@ -17,7 +17,7 @@ func ExampleCollect() {
 }
 
 func ExampleFold() {
-	sum := iter.Fold[int](iter.Take[int](iter.Count(), 4), 0, ops.Add[int])
+	sum := iter.Fold[int](iter.Count().Take(4), 0, ops.Add[int])
 
 	fmt.Println(sum)
 	// Output: 6
@@ -43,24 +43,24 @@ func ExampleFind() {
 }
 
 func TestCollect(t *testing.T) {
-	items := iter.Collect[int](iter.Take[int](iter.Count(), 5))
+	items := iter.Collect[int](iter.Count().Take(5))
 	assert.SliceEqual(t, items, []int{0, 1, 2, 3, 4})
 }
 
 func TestCollectEmpty(t *testing.T) {
-	items := iter.Collect[int](iter.Take[int](iter.Count(), 0))
+	items := iter.Collect[int](iter.Exhausted[int]())
 	assert.Empty[int](t, items)
 }
 
 func TestFold(t *testing.T) {
 	add := func(a, b int) int { return a + b }
-	sum := iter.Fold[int](iter.Take[int](iter.Count(), 11), 0, add)
+	sum := iter.Fold[int](iter.Count().Take(11), 0, add)
 	assert.Equal(t, sum, 55)
 
 	concat := func(path string, part int) string {
 		return path + strconv.Itoa(part) + "/"
 	}
-	result := iter.Fold[int](iter.Take[int](iter.Count(), 3), "/", concat)
+	result := iter.Fold[int](iter.Count().Take(3), "/", concat)
 	assert.Equal(t, result, "/0/1/2/")
 }
 

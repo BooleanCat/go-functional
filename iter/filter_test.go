@@ -120,22 +120,21 @@ func TestExcludeDrop(t *testing.T) {
 }
 
 func TestFilterMap(t *testing.T) {
-	fltMap := iter.FilterMap[int](
+	numbers := iter.FilterMap[int](
 		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
 		selectEvenAndDouble,
 	)
-	result := iter.Collect[int](fltMap)
 
-	assert.SliceEqual(t, result, []int{4, 8, 12})
+	assert.SliceEqual(t, numbers.Collect(), []int{4, 8, 12})
 }
 
 func TestFilterMapEmpty(t *testing.T) {
-	fltMapEmpty := iter.FilterMap[int](
+	numbers := iter.FilterMap[int](
 		iter.Exhausted[int](),
 		selectEvenAndDouble,
 	)
 
-	assert.Empty[int](t, iter.Collect[int](fltMapEmpty))
+	assert.Empty[int](t, numbers.Collect())
 }
 
 func TestFilterMapExhausted(t *testing.T) {

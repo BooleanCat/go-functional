@@ -47,7 +47,7 @@ func TestLiftHashMap(t *testing.T) {
 	pokemon["name"] = "pikachu"
 	pokemon["type"] = "electric"
 
-	items := iter.Collect[iter.Tuple[string, string]](iter.LiftHashMap(pokemon))
+	items := iter.LiftHashMap(pokemon).Collect()
 	sort.Slice(items, func(i, j int) bool {
 		return items[i].One < items[j].One
 	})
@@ -82,8 +82,8 @@ func TestLiftHashMapCloseAfterExhaustedSafe(t *testing.T) {
 	pokemon["type"] = "electric"
 
 	items := iter.LiftHashMap(pokemon)
-	iter.Collect[iter.Tuple[string, string]](items)
-	items.Close()
+	defer items.Close()
+	items.Collect()
 }
 
 func TestLiftHashMapCollect(t *testing.T) {
@@ -124,7 +124,7 @@ func TestLiftHashMapKeys(t *testing.T) {
 	pokemon["name"] = "pikachu"
 	pokemon["type"] = "electric"
 
-	keys := iter.Collect[string](iter.LiftHashMapKeys(pokemon))
+	keys := iter.LiftHashMapKeys(pokemon).Collect()
 	sort.Strings(keys)
 
 	assert.SliceEqual(t, keys, []string{"name", "type"})
@@ -133,7 +133,7 @@ func TestLiftHashMapKeys(t *testing.T) {
 func TestLiftHashMapKeysExhausted(t *testing.T) {
 	pokemon := iter.LiftHashMapKeys(make(map[string]string))
 
-	iter.Collect[string](pokemon)
+	pokemon.Collect()
 	assert.True(t, pokemon.Next().IsNone())
 }
 
@@ -164,8 +164,8 @@ func TestLiftHashMapKeysCloseAfterExhaustedSafe(t *testing.T) {
 	pokemon["type"] = "electric"
 
 	items := iter.LiftHashMapKeys(pokemon)
-	iter.Collect[string](items)
-	items.Close()
+	defer items.Close()
+	items.Collect()
 }
 
 func TestLiftHashMapKeysCollect(t *testing.T) {
@@ -202,7 +202,7 @@ func TestLiftHashMapValues(t *testing.T) {
 	pokemon["name"] = "pikachu"
 	pokemon["type"] = "electric"
 
-	keys := iter.Collect[string](iter.LiftHashMapValues(pokemon))
+	keys := iter.LiftHashMapValues(pokemon).Collect()
 	sort.Strings(keys)
 
 	assert.SliceEqual(t, keys, []string{"electric", "pikachu"})
@@ -211,7 +211,7 @@ func TestLiftHashMapValues(t *testing.T) {
 func TestLiftHashMapValuesExhausted(t *testing.T) {
 	pokemon := iter.LiftHashMapValues(make(map[string]string))
 
-	iter.Collect[string](pokemon)
+	pokemon.Collect()
 	assert.True(t, pokemon.Next().IsNone())
 }
 
@@ -242,8 +242,8 @@ func TestLiftHashMapValuesCloseAfterExhaustedSafe(t *testing.T) {
 	pokemon["type"] = "electric"
 
 	items := iter.LiftHashMapValues(pokemon)
-	iter.Collect[string](items)
-	items.Close()
+	defer items.Close()
+	items.Collect()
 }
 
 func TestLiftHashMapValuesCollect(t *testing.T) {

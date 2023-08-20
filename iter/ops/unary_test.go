@@ -21,7 +21,7 @@ func ExampleUnwrapOption() {
 
 	numbers := iter.Map[option.Option[int]](options, ops.UnwrapOption[int])
 
-	fmt.Println(iter.Collect[int](numbers))
+	fmt.Println(numbers.Collect())
 	// Output: [4 6 -1]
 }
 
@@ -34,14 +34,14 @@ func ExampleUnwrapResult() {
 
 	numbers := iter.Map[result.Result[int]](results, ops.UnwrapResult[int])
 
-	fmt.Println(iter.Collect[int](numbers))
+	fmt.Println(numbers.Collect())
 	// Output: [1 3 -6]
 }
 
 func ExamplePassthrough() {
 	numbers := iter.Map[int](iter.Lift([]int{1, 2, 3}), ops.Passthrough[int])
 
-	fmt.Println(iter.Collect[int](numbers))
+	fmt.Println(numbers.Collect())
 	// Output: [1 2 3]
 }
 
@@ -54,7 +54,7 @@ func TestUnwrapOption(t *testing.T) {
 
 	integers := iter.Map[option.Option[int]](options, ops.UnwrapOption[int])
 
-	assert.SliceEqual(t, iter.Collect[int](integers), []int{4, 6, -1})
+	assert.SliceEqual(t, integers.Collect(), []int{4, 6, -1})
 }
 
 func TestUnwrapOptionPanic(t *testing.T) {
@@ -62,14 +62,10 @@ func TestUnwrapOptionPanic(t *testing.T) {
 		assert.Equal(t, fmt.Sprint(recover()), "called `Option.Unwrap()` on a `None` value")
 	}()
 
-	iter.Collect[int](
-		iter.Map[option.Option[int]](
-			iter.Lift(
-				[]option.Option[int]{option.None[int]()},
-			),
-			ops.UnwrapOption[int],
-		),
-	)
+	iter.Map[option.Option[int]](
+		iter.Lift([]option.Option[int]{option.None[int]()}),
+		ops.UnwrapOption[int],
+	).Collect()
 
 	t.Error("did not panic")
 }
@@ -83,7 +79,7 @@ func TestUnwrapResult(t *testing.T) {
 
 	integers := iter.Map[result.Result[int]](results, ops.UnwrapResult[int])
 
-	assert.SliceEqual(t, iter.Collect[int](integers), []int{4, 6, -1})
+	assert.SliceEqual(t, integers.Collect(), []int{4, 6, -1})
 }
 
 func TestUnwrapResultPanic(t *testing.T) {
@@ -91,14 +87,12 @@ func TestUnwrapResultPanic(t *testing.T) {
 		assert.Equal(t, fmt.Sprint(recover()), "called `Result.Unwrap()` on an `Err` value")
 	}()
 
-	iter.Collect[int](
-		iter.Map[result.Result[int]](
-			iter.Lift(
-				[]result.Result[int]{result.Err[int](errors.New("oops"))},
-			),
-			ops.UnwrapResult[int],
+	iter.Map[result.Result[int]](
+		iter.Lift(
+			[]result.Result[int]{result.Err[int](errors.New("oops"))},
 		),
-	)
+		ops.UnwrapResult[int],
+	).Collect()
 
 	t.Error("did not panic")
 }

@@ -16,12 +16,12 @@ func ExampleCycle() {
 }
 
 func TestCycleIter(t *testing.T) {
-	items := iter.Take[int](iter.Cycle[int](iter.Lift([]int{1, 2, 3})), 2).Collect()
+	items := iter.Cycle[int](iter.Lift([]int{1, 2, 3})).Take(2).Collect()
 	assert.SliceEqual(t, items, []int{1, 2})
 }
 
 func TestCycleIterOverflow(t *testing.T) {
-	items := iter.Take[int](iter.Cycle[int](iter.Lift([]int{1, 2})), 5).Collect()
+	items := iter.Cycle[int](iter.Lift([]int{1, 2})).Take(5).Collect()
 	assert.SliceEqual(t, items, []int{1, 2, 1, 2, 1})
 }
 
@@ -40,7 +40,7 @@ func TestCycleExhausted(t *testing.T) {
 }
 
 func TestCycleDrop(t *testing.T) {
-	items := iter.Take[int](iter.Cycle[int](iter.Lift([]int{1, 2})).Drop(1), 5).Collect()
+	items := iter.Cycle[int](iter.Lift([]int{1, 2})).Drop(1).Take(5).Collect()
 	assert.SliceEqual(t, items, []int{2, 1, 2, 1, 2})
 }
 
