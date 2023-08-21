@@ -2,6 +2,10 @@ package option
 
 import "encoding/json"
 
+// MarshalJSON implements the [json.Marshaler] interface.
+//
+//   - [Some] variants will be marshaled as their underlying value.
+//   - [None] variants will be marshaled as "null".
 func (o Option[T]) MarshalJSON() ([]byte, error) {
 	if value, ok := o.Value(); ok {
 		return json.Marshal(value)
@@ -10,8 +14,10 @@ func (o Option[T]) MarshalJSON() ([]byte, error) {
 	return []byte("null"), nil
 }
 
-var _ json.Marshaler = Option[struct{}]{}
-
+// UnmarshalJSON implements the [json.Unmarshaler] interface.
+//
+//   - Values will be marshed as [Some] variants.
+//   - "null"s will be marshaled as [None] variants.
 func (o *Option[T]) UnmarshalJSON(data []byte) error {
 	*o = None[T]()
 
@@ -26,4 +32,7 @@ func (o *Option[T]) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var _ json.Unmarshaler = &Option[struct{}]{}
+var (
+	_ json.Unmarshaler = &Option[struct{}]{}
+	_ json.Marshaler   = Option[struct{}]{}
+)
