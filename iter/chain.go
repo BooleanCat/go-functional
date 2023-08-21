@@ -2,19 +2,19 @@ package iter
 
 import "github.com/BooleanCat/go-functional/option"
 
-// ChainIter implements `Chain`. See `Chain`'s documentation.
+// ChainIter iterator, see [Chain].
 type ChainIter[T any] struct {
 	iterators     []Iterator[T]
 	iteratorIndex int
 }
 
-// Chain instantiates a `ChainIter` that will yield all items in the provided
-// iterators to exhaustion, from left to right.
+// Chain instantiates a [ChainIter] that will yield all items in the provided
+// iterators to exhaustion first to last.
 func Chain[T any](iterators ...Iterator[T]) *ChainIter[T] {
 	return &ChainIter[T]{iterators, 0}
 }
 
-// Next implements the Iterator interface for `Chain`.
+// Next implements the [Iterator] interface.
 func (iter *ChainIter[T]) Next() option.Option[T] {
 	for {
 		if iter.iteratorIndex == len(iter.iterators) {
@@ -32,17 +32,20 @@ func (iter *ChainIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(ChainIter[struct{}])
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *ChainIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *ChainIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *ChainIter[T]) Take(n uint) *TakeIter[T] {
 	return Take[T](iter, n)
 }
