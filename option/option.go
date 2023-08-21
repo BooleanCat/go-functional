@@ -76,7 +76,7 @@ func (o Option[T]) IsSome() bool {
 	return o.present
 }
 
-// IsNone returns true if the [Option] is a [None] varaint.
+// IsNone returns true if the [Option] is a [None] variant.
 func (o Option[T]) IsNone() bool {
 	return !o.present
 }

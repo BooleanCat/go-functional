@@ -16,8 +16,8 @@ func (o Option[T]) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements the [json.Unmarshaler] interface.
 //
-//   - Values will be marshed as [Some] variants.
-//   - "null"s will be marshaled as [None] variants.
+//   - Values will be unmarshaled as [Some] variants.
+//   - "null"s will be unmarshaled as [None] variants.
 func (o *Option[T]) UnmarshalJSON(data []byte) error {
 	*o = None[T]()
 
