@@ -8,7 +8,7 @@ type ChainIter[T any] struct {
 	iteratorIndex int
 }
 
-// Chain instantiates a [ChainIter] that will yield all items in the provided
+// Chain instantiates a [*ChainIter] that will yield all items in the provided
 // iterators to exhaustion first to last.
 func Chain[T any](iterators ...Iterator[T]) *ChainIter[T] {
 	return &ChainIter[T]{iterators, 0}

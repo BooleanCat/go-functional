@@ -4,16 +4,16 @@ import "github.com/BooleanCat/go-functional/option"
 
 // Iterator declares that each Iterator must implement a Next method.
 // Successive calls to the next method shall return the next item in the
-// Iterator, wrapped in an `Option.Some` variant.
+// Iterator, wrapped in an [option.Some] variant.
 //
-// Exhausted Iterators shall return a `None` variant of `Option` on every
-// subsequent call.
+// Exhausted Iterators shall return a [option.None] variant on every subsequent
+// call.
 type Iterator[T any] interface {
 	Next() option.Option[T]
 }
 
-// Collect consumes an Iterator and returns all remaining items within a slice.
-// It does not protect against infinite Iterators.
+// Collect consumes an [Iterator] and returns all remaining items within a
+// slice. It does not protect against infinite Iterators.
 func Collect[T any](iter Iterator[T]) []T {
 	items := make([]T, 0)
 
@@ -26,10 +26,10 @@ func Collect[T any](iter Iterator[T]) []T {
 	}
 }
 
-// Fold consumes an Iterator and returns the final result of applying the accumulator function to each element.
-// The accumulator function accepts two arguments - an accumulator and an element and returns a new  accumulator.
-// The initial value is the accumulator for the first call.
-// Fold does not protect against infinite Iterators.
+// Fold consumes an [Iterator] and returns the final result of applying the
+// accumulator function to each element. The accumulator function accepts two
+// arguments - an accumulator and an initial value and returns a new value for
+// the next accumulation. Fold does not protect against infinite Iterators.
 func Fold[T any, U any](iter Iterator[T], initial U, biop func(U, T) U) U {
 	for {
 		if value, ok := iter.Next().Value(); ok {
@@ -40,9 +40,9 @@ func Fold[T any, U any](iter Iterator[T], initial U, biop func(U, T) U) U {
 	}
 }
 
-// ToChannel consumes an iterator and returns a channel that will receive all
-// values from the provided iterator. The channel is closed once the iterator
-// is exhausted.
+// ToChannel consumes an [Iterator] and returns a channel that will receive all
+// values from the provided [Iterator]. The channel is closed once the
+// [Iterator] is exhausted.
 func ToChannel[T any](iter Iterator[T]) chan T {
 	ch := make(chan T)
 
@@ -61,7 +61,7 @@ func ToChannel[T any](iter Iterator[T]) chan T {
 	return ch
 }
 
-// ForEach consumes an iterator and executes callback function on each item.
+// ForEach consumes an [Iterator] and executes callback function on each item.
 func ForEach[T any](iter Iterator[T], callback func(T)) {
 	for {
 		if value, ok := iter.Next().Value(); ok {
@@ -73,7 +73,7 @@ func ForEach[T any](iter Iterator[T], callback func(T)) {
 }
 
 // Find the first occurrence of a value that satisfies the predicate and return
-// that value. If no value satisfies the predicate, return `None`.
+// that value. If no value satisfies the predicate, return [option.None].
 func Find[T any](iter Iterator[T], predicate func(v T) bool) option.Option[T] {
 	for {
 		if value, ok := iter.Next().Value(); ok {

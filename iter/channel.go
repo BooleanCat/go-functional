@@ -7,8 +7,8 @@ type ChannelIter[T any] struct {
 	item chan T
 }
 
-// FromChannel instantiates a [ChannelIter] that will yield each value from the
-// provided channel.
+// FromChannel instantiates a [*ChannelIter] that will yield each value from
+// the provided channel.
 func FromChannel[T any](ch chan T) *ChannelIter[T] {
 	return &ChannelIter[T]{ch}
 }

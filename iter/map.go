@@ -2,20 +2,20 @@ package iter
 
 import "github.com/BooleanCat/go-functional/option"
 
-// MapIter implements `Map`. See `Map`'s documentation.
+// MapIter iterator, see [Map].
 type MapIter[T, U any] struct {
 	iter      Iterator[T]
 	fun       func(T) U
 	exhausted bool
 }
 
-// Take instantiates a `MapIter` that will apply the provided function to each
-// item yielded by the provided Iterator.
+// Map instantiates a [*MapIter] that will apply the provided function to each
+// item yielded by the provided [Iterator].
 func Map[T, U any](iter Iterator[T], f func(T) U) *MapIter[T, U] {
 	return &MapIter[T, U]{iter, f, false}
 }
 
-// Next implements the Iterator interface for `MapIter`.
+// Next implements the [Iterator] interface.
 func (iter *MapIter[T, U]) Next() option.Option[U] {
 	if iter.exhausted {
 		return option.None[U]()
@@ -32,17 +32,20 @@ func (iter *MapIter[T, U]) Next() option.Option[U] {
 
 var _ Iterator[struct{}] = new(MapIter[struct{}, struct{}])
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *MapIter[T, U]) Collect() []U {
 	return Collect[U](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *MapIter[T, U]) Drop(n uint) *DropIter[U] {
 	return Drop[U](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *MapIter[T, U]) Take(n uint) *TakeIter[U] {
 	return Take[U](iter, n)
 }

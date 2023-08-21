@@ -2,31 +2,33 @@ package iter
 
 import "github.com/BooleanCat/go-functional/option"
 
-// RepeatIter implements `Repeat`. See `Repeat`'s documentation.
+// RepeatIter iterator, see [Repeat].
 type RepeatIter[T any] struct {
 	item T
 }
 
-// Repeat instantiates a `RepeatIter` always yield the provided item.
+// Repeat instantiates a [*RepeatIter] always yield the provided item.
 //
 // This iterator will never be exhausted.
 func Repeat[T any](item T) *RepeatIter[T] {
 	return &RepeatIter[T]{item}
 }
 
-// Next implements the Iterator interface for `RepeatIter`.
+// Next implements the [Iterator] interface.
 func (iter *RepeatIter[T]) Next() option.Option[T] {
 	return option.Some(iter.item)
 }
 
 var _ Iterator[struct{}] = new(RepeatIter[struct{}])
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *RepeatIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *RepeatIter[T]) Take(n uint) *TakeIter[T] {
 	return Take[T](iter, n)
 }

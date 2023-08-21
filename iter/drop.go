@@ -2,7 +2,7 @@ package iter
 
 import "github.com/BooleanCat/go-functional/option"
 
-// DropIter implements `Drop`. See `Drop`'s documentation.
+// DropIter iterator, see [Drop].
 type DropIter[T any] struct {
 	iter      Iterator[T]
 	count     uint
@@ -10,13 +10,13 @@ type DropIter[T any] struct {
 	exhausted bool
 }
 
-// Drop instantiates a `DropIter` that will skip the number of items of its
+// Drop instantiates a [*DropIter] that will skip the number of items of its
 // wrapped iterator by the provided count.
 func Drop[T any](iter Iterator[T], count uint) *DropIter[T] {
 	return &DropIter[T]{iter, count, false, false}
 }
 
-// Next implements the Iterator interface for `DropIter`.
+// Next implements the [Iterator] interface.
 func (iter *DropIter[T]) Next() option.Option[T] {
 	if iter.exhausted {
 		return option.None[T]()
@@ -46,17 +46,20 @@ func (iter *DropIter[T]) delegateNext() option.Option[T] {
 
 var _ Iterator[struct{}] = new(DropIter[struct{}])
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *DropIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *DropIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *DropIter[T]) Take(n uint) *TakeIter[T] {
 	return Take[T](iter, n)
 }

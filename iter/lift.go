@@ -1,24 +1,25 @@
 package iter
 
 import (
+	"io"
 	"sync"
 
 	"github.com/BooleanCat/go-functional/option"
 )
 
-// LiftIter implements `Lift`. See `Lift`'s documentation.
+// LiftIter iterator, see [Lift].
 type LiftIter[T any] struct {
 	items []T
 	index int
 }
 
-// Lift instantiates a `LiftIter` that will yield all items in the provided
+// Lift instantiates a [*LiftIter] that will yield all items in the provided
 // slice.
 func Lift[T any](items []T) *LiftIter[T] {
 	return &LiftIter[T]{items, 0}
 }
 
-// Next implements the Iterator interface for `Lift`.
+// Next implements the [Iterator] interface.
 func (iter *LiftIter[T]) Next() option.Option[T] {
 	if iter.index >= len(iter.items) {
 		return option.None[T]()
@@ -31,22 +32,25 @@ func (iter *LiftIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(LiftIter[struct{}])
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *LiftIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *LiftIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *LiftIter[T]) Take(n uint) *TakeIter[T] {
 	return Take[T](iter, n)
 }
 
-// LiftHashMapIter implements `LiftHashMap`. See `LiftHashMap`'s documentation.
+// LiftHashMapIter iterator, see [LiftHashMap].
 type LiftHashMapIter[T comparable, U any] struct {
 	hashmap  map[T]U
 	items    chan Tuple[T, U]
@@ -54,10 +58,10 @@ type LiftHashMapIter[T comparable, U any] struct {
 	stop     chan struct{}
 }
 
-// LiftHashMap instantiates a `LiftHashMapIter` that will yield all items in
-// the provided map in the form iter.Tuple[key, value].
+// LiftHashMap instantiates a [*LiftHashMapIter] that will yield all items in
+// the provided map as a [Tuple].
 //
-// Unlike most iterators, `LiftHashMap` should be closed after usage (because
+// Unlike most iterators, [LiftHashMap] should be closed after usage (because
 // range order is non-deterministic and the iterator needs to preserve its
 // progress). This restriction may be removed if/when Go has a "yield" keyword.
 //
@@ -90,15 +94,21 @@ func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
 	return iter
 }
 
-// Close the iterator. See `LiftHashMap` documentation for details.
-func (iter *LiftHashMapIter[T, U]) Close() {
+// Close the iterator. See [LiftHashMap]'s documentation for details.
+//
+// This function implements the [io.Closer] interface.
+//
+// This function can never fail and the error can be ignored.
+func (iter *LiftHashMapIter[T, U]) Close() error {
 	iter.stopOnce.Do(func() {
 		iter.stop <- struct{}{}
 		close(iter.stop)
 	})
+
+	return nil
 }
 
-// Next implements the Iterator interface for `LiftHashMap`.
+// Next implements the [Iterator] interface.
 func (iter *LiftHashMapIter[T, U]) Next() option.Option[Tuple[T, U]] {
 	pair, ok := <-iter.items
 	if !ok {
@@ -108,47 +118,56 @@ func (iter *LiftHashMapIter[T, U]) Next() option.Option[Tuple[T, U]] {
 	return option.Some(pair)
 }
 
-var _ Iterator[Tuple[struct{}, struct{}]] = new(LiftHashMapIter[struct{}, struct{}])
+var (
+	_ Iterator[Tuple[struct{}, struct{}]] = new(LiftHashMapIter[struct{}, struct{}])
+	_ io.Closer                           = new(LiftHashMapIter[struct{}, struct{}])
+)
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *LiftHashMapIter[T, U]) Collect() []Tuple[T, U] {
 	return Collect[Tuple[T, U]](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *LiftHashMapIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
 	return Drop[Tuple[T, U]](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *LiftHashMapIter[T, U]) Take(n uint) *TakeIter[Tuple[T, U]] {
 	return Take[Tuple[T, U]](iter, n)
 }
 
-// LiftHashMapKeysIter implements `LiftHashMapKeys`. See `LiftHashMapKeys`'
-// documentation.
+// LiftHashMapKeysIter iterator, see [LiftHashMapKeys].
 type LiftHashMapKeysIter[T comparable, U any] struct {
 	delegate    *LiftHashMapIter[T, U]
 	delegateMap *MapIter[Tuple[T, U], T]
 	exhausted   bool
 }
 
-// LiftHashMapKeys instantiates a `LiftHashMapKeysIter` that will yield all
+// LiftHashMapKeys instantiates a [*LiftHashMapKeysIter] that will yield all
 // keys in the provided map.
 //
-// See documentation on `LiftHashMap` for information on closing this iterator.
+// See [LiftHashMap] for information on closing this iterator.
 func LiftHashMapKeys[T comparable, U any](hashmap map[T]U) *LiftHashMapKeysIter[T, U] {
 	delegate := LiftHashMap(hashmap)
 
 	return &LiftHashMapKeysIter[T, U]{delegate, Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) T { return pair.One }), false}
 }
 
-// Close the iterator. See `LiftHashMapKeys` documentation for details.
-func (iter *LiftHashMapKeysIter[T, U]) Close() {
-	iter.delegate.Close()
+// Close the iterator. See [LiftHashMap]'s documentation for details.
+//
+// This function implements the [io.Closer] interface.
+//
+// This function can never fail and the error can be ignored.
+func (iter *LiftHashMapKeysIter[T, U]) Close() error {
+	return iter.delegate.Close()
 }
 
-// Next implements the Iterator interface for `LiftHashMapKeys`.
+// Next implements the [Iterator] interface.
 func (iter *LiftHashMapKeysIter[T, U]) Next() option.Option[T] {
 	if iter.exhausted {
 		return option.None[T]()
@@ -162,47 +181,56 @@ func (iter *LiftHashMapKeysIter[T, U]) Next() option.Option[T] {
 	return next
 }
 
-var _ Iterator[struct{}] = new(LiftHashMapKeysIter[struct{}, struct{}])
+var (
+	_ Iterator[struct{}] = new(LiftHashMapKeysIter[struct{}, struct{}])
+	_ io.Closer          = new(LiftHashMapKeysIter[struct{}, struct{}])
+)
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *LiftHashMapKeysIter[T, U]) Collect() []T {
 	return Collect[T](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *LiftHashMapKeysIter[T, U]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *LiftHashMapKeysIter[T, U]) Take(n uint) *TakeIter[T] {
 	return Take[T](iter, n)
 }
 
-// LiftHashMapValuesIter implements `LiftHashMapValues`. See
-// `LiftHashMapValues`' documentation.
+// LiftHashMapValuesIter iterator, see [LiftHashMapValues].
 type LiftHashMapValuesIter[T comparable, U any] struct {
 	delegate    *LiftHashMapIter[T, U]
 	delegateMap *MapIter[Tuple[T, U], U]
 	exhausted   bool
 }
 
-// LiftHashMapValues instantiates a `LiftHashMapValuesIter` that will yield all
-// values in the provided map.
+// LiftHashMapValues instantiates a [*LiftHashMapValuesIter] that will yield
+// all keys in the provided map.
 //
-// See documentation on `LiftHashMap` for information on closing this iterator.
+// See [LiftHashMap] for information on closing this iterator.
 func LiftHashMapValues[T comparable, U any](hashmap map[T]U) *LiftHashMapValuesIter[T, U] {
 	delegate := LiftHashMap(hashmap)
 
 	return &LiftHashMapValuesIter[T, U]{delegate, Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) U { return pair.Two }), false}
 }
 
-// Close the iterator. See `LiftHashMapKeys` documentation for details.
-func (iter *LiftHashMapValuesIter[T, U]) Close() {
-	iter.delegate.Close()
+// Close the iterator. See [LiftHashMap]'s documentation for details.
+//
+// This function implements the [io.Closer] interface.
+//
+// This function can never fail and the error can be ignored.
+func (iter *LiftHashMapValuesIter[T, U]) Close() error {
+	return iter.delegate.Close()
 }
 
-// Next implements the Iterator interface for `LiftHashMapValuesIter`.
+// Next implements the [Iterator] interface.
 func (iter *LiftHashMapValuesIter[T, U]) Next() option.Option[U] {
 	if iter.exhausted {
 		return option.None[U]()
@@ -216,19 +244,25 @@ func (iter *LiftHashMapValuesIter[T, U]) Next() option.Option[U] {
 	return next
 }
 
-var _ Iterator[struct{}] = new(LiftHashMapValuesIter[struct{}, struct{}])
+var (
+	_ Iterator[struct{}] = new(LiftHashMapValuesIter[struct{}, struct{}])
+	_ io.Closer          = new(LiftHashMapValuesIter[struct{}, struct{}])
+)
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *LiftHashMapValuesIter[T, U]) Collect() []U {
 	return Collect[U](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *LiftHashMapValuesIter[T, U]) Drop(n uint) *DropIter[U] {
 	return Drop[U](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *LiftHashMapValuesIter[T, U]) Take(n uint) *TakeIter[U] {
 	return Take[U](iter, n)
 }

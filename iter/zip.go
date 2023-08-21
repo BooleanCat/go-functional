@@ -2,26 +2,27 @@ package iter
 
 import "github.com/BooleanCat/go-functional/option"
 
+// Tuples are pairs of values.
 type Tuple[T, U any] struct {
 	One T
 	Two U
 }
 
-// ZipIter implements `Zip`. See `Zip`'s documentation.
+// ZipIter iterator, see [Zip].
 type ZipIter[T, U any] struct {
 	iter1     Iterator[T]
 	iter2     Iterator[U]
 	exhausted bool
 }
 
-// Zip instantiates a `Zip` yield `Tuples` containing the result of a call to
-// each provided Iterator's `Next`. The Iterator is exhausted when one of the
-// provided Iterators is exhausted.
+// Zip instantiates a [*ZipIter] yielding a [Tuple] containing the result of a
+// call to each provided [Iterator]'s Next. This iterator is exhausted when one
+// of the provided iterators is exhausted.
 func Zip[T, U any](iter1 Iterator[T], iter2 Iterator[U]) *ZipIter[T, U] {
 	return &ZipIter[T, U]{iter1, iter2, false}
 }
 
-// Next implements the Iterator interface for `ZipIter`.
+// Next implements the [Iterator] interface.
 func (iter *ZipIter[T, U]) Next() option.Option[Tuple[T, U]] {
 	if iter.exhausted {
 		return option.Option[Tuple[T, U]]{}
@@ -40,17 +41,20 @@ func (iter *ZipIter[T, U]) Next() option.Option[Tuple[T, U]] {
 
 var _ Iterator[Tuple[struct{}, struct{}]] = new(ZipIter[struct{}, struct{}])
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *ZipIter[T, U]) Collect() []Tuple[T, U] {
 	return Collect[Tuple[T, U]](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *ZipIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
 	return Drop[Tuple[T, U]](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *ZipIter[T, U]) Take(n uint) *TakeIter[Tuple[T, U]] {
 	return Take[Tuple[T, U]](iter, n)
 }

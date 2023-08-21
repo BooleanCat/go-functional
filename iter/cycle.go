@@ -2,18 +2,18 @@ package iter
 
 import "github.com/BooleanCat/go-functional/option"
 
-// CycleIter implements `Cycle`. See `Cycle`'s documentation.
+// CycleIter iterator, see [Cycle].
 type CycleIter[T any] struct {
 	iter  Iterator[T]
 	items []T
 	index int
 }
 
-// Cycle instantiates a `CycleIter` yielding all items from the provided
+// Cycle instantiates a [*CycleIter] yielding all items from the provided
 // iterator until exhaustion, and then yields them all over again on repeat.
 //
-// Note that CycleIter stores the members from the underlying iterator so will
-// grow in size as items are yielded until the underlying iterator is
+// Note that [CycleIter] stores the members from the underlying iterator so
+// will grow in size as items are yielded until the underlying iterator is
 // exhausted.
 //
 // In most cases this iterator is infinite, except when the underlying iterator
@@ -23,7 +23,7 @@ func Cycle[T any](iter Iterator[T]) *CycleIter[T] {
 	return &CycleIter[T]{iter, make([]T, 0), 0}
 }
 
-// Next implements the Iterator interface for `CycleIter`.
+// Next implements the [Iterator] interface.
 func (iter *CycleIter[T]) Next() option.Option[T] {
 	if iter.iter != nil {
 		if value, ok := iter.iter.Next().Value(); ok {
@@ -49,12 +49,14 @@ func (iter *CycleIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(CycleIter[struct{}])
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *CycleIter[T]) Drop(n uint) *DropIter[T] {
 	return Drop[T](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *CycleIter[T]) Take(n uint) *TakeIter[T] {
 	return Take[T](iter, n)
 }

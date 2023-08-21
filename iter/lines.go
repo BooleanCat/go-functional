@@ -10,24 +10,22 @@ import (
 	"github.com/BooleanCat/go-functional/result"
 )
 
-// LinesIter implements `Lines`. See `Lines`' documentation.
+// LinesIter iterator, see [Lines].
 type LinesIter struct {
 	r        *bufio.Reader
 	finished bool
 }
 
-// Lines instantiates a `LinesIter` that will yield each line from the provided
-// `io.Reader`.
+// Lines instantiates a [*LinesIter] that will yield each line from the provided
+// [io.Reader].
 //
-// Be aware that since `Read` operations can fail, the result time of each item
-// is `result.Result[[]byte]`. Errors will need to be handled as a failure is
-// wrapped in an Ok variant. Multiple calls to `Next()` may simply repeat the
-// same error and cause an infinite loop when collected.
+// Be aware that since Read operations can fail, the result time of each item
+// is wrapped in a [result.Result].
 func Lines(r io.Reader) *LinesIter {
 	return &LinesIter{bufio.NewReader(r), false}
 }
 
-// Next implements the Iterator interface for `LinesIter`.
+// Next implements the [Iterator] interface.
 func (iter *LinesIter) Next() option.Option[result.Result[[]byte]] {
 	if iter.finished {
 		return option.None[result.Result[[]byte]]()
@@ -50,8 +48,8 @@ func (iter *LinesIter) Next() option.Option[result.Result[[]byte]] {
 
 var _ Iterator[result.Result[[]byte]] = new(LinesIter)
 
-// LinesString instantiates a `LinesIter` with results converted to a string
-// via a MapIter. See `Lines` documentation for more information.
+// LinesString instantiates a [*LinesIter] with results converted to a string
+// via a [*MapIter]. See [Lines] for more information.
 func LinesString(r io.Reader) *MapIter[result.Result[[]byte], result.Result[string]] {
 	iter := Lines(r)
 	transform := func(line result.Result[[]byte]) result.Result[string] {
@@ -65,17 +63,20 @@ func LinesString(r io.Reader) *MapIter[result.Result[[]byte], result.Result[stri
 	return Map[result.Result[[]byte]](iter, transform)
 }
 
-// Collect is an alternative way of invoking Collect(iter)
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
 func (iter *LinesIter) Collect() []result.Result[[]byte] {
 	return Collect[result.Result[[]byte]](iter)
 }
 
-// Drop is an alternative way of invoking Drop(iter)
+// Drop is a convenience method for [Drop], providing this iterator as an
+// argument.
 func (iter *LinesIter) Drop(n uint) *DropIter[result.Result[[]byte]] {
 	return Drop[result.Result[[]byte]](iter, n)
 }
 
-// Take is an alternative way of invoking Take(iter)
+// Take is a convenience method for [Take], providing this iterator as an
+// argument.
 func (iter *LinesIter) Take(n uint) *TakeIter[result.Result[[]byte]] {
 	return Take[result.Result[[]byte]](iter, n)
 }
