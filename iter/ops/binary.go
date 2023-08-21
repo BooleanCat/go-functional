@@ -1,8 +1,12 @@
+// This package contains functions intended for use with [iter.Map].
 package ops
 
 import (
 	"github.com/BooleanCat/go-functional/constraints"
+	"github.com/BooleanCat/go-functional/iter"
 )
+
+var _ = iter.Map[struct{}, struct{}]
 
 // Add performs the `+` operation for the two inputs, returning the result.
 func Add[T constraints.Integer | constraints.Float | ~string](a, b T) T {

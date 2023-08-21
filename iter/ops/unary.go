@@ -5,20 +5,17 @@ import (
 	"github.com/BooleanCat/go-functional/result"
 )
 
-// UnwrapOption may be used as an operation for iter.Map in order to unwrap
-// all options in an iterator.
+// UnwrapOption calls unwrap on an [option.Option].
 func UnwrapOption[T any](o option.Option[T]) T {
 	return o.Unwrap()
 }
 
-// UnwrapResult may be used as an operation for iter.Map in order to unwrap
-// all results in an iterator.
+// UnwrapResult calls unwrap on a [result.Result].
 func UnwrapResult[T any](r result.Result[T]) T {
 	return r.Unwrap()
 }
 
-// Passthrough may be used an an operation for iter.Map. It returns the
-// provided value without modification.
+// Passthrough returns the provided value.
 func Passthrough[T any](t T) T {
 	return t
 }
