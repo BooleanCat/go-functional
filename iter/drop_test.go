@@ -11,6 +11,12 @@ import (
 )
 
 func ExampleDrop() {
+	counter := iter.Drop[int](iter.Count(), 2)
+	fmt.Println(counter.Next().Unwrap())
+	// Output: 2
+}
+
+func ExampleDrop_method() {
 	counter := iter.Count().Drop(2)
 	fmt.Println(counter.Next().Unwrap())
 	// Output: 2

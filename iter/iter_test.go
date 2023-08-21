@@ -12,6 +12,11 @@ import (
 )
 
 func ExampleCollect() {
+	fmt.Println(iter.Collect[int](iter.Count().Take(3)))
+	// Output: [0 1 2]
+}
+
+func ExampleCollect_method() {
 	fmt.Println(iter.Count().Take(3).Collect())
 	// Output: [0 1 2]
 }

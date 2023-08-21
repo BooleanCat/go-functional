@@ -10,6 +10,17 @@ import (
 )
 
 func ExampleTake() {
+	iter := iter.Take[int](iter.Count(), 2)
+	fmt.Println(iter.Next())
+	fmt.Println(iter.Next())
+	fmt.Println(iter.Next())
+	// Output:
+	// Some(0)
+	// Some(1)
+	// None
+}
+
+func ExampleTake_method() {
 	iter := iter.Count().Take(2)
 	fmt.Println(iter.Next())
 	fmt.Println(iter.Next())
