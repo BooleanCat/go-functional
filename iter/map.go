@@ -15,14 +15,6 @@ func Map[T, U any](iter Iterator[T], f func(T) U) *MapIter[T, U] {
 	return &MapIter[T, U]{iter, f, false}
 }
 
-// func (iter *MapIter[T, U]) Filter(fun func(T) U) *FilterIter[U] {
-// 	return Filter[U]{iter, fun, false}
-// }
-
-// func (iter *MapIter[T, U]) Take(n uint) *TakeIter[U] {
-// 	return Take[U](iter, n)
-// }
-
 // Next implements the [Iterator] interface.
 func (iter *MapIter[T, U]) Next() option.Option[U] {
 	if iter.exhausted {

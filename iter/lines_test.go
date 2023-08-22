@@ -46,18 +46,6 @@ func TestLines(t *testing.T) {
 	assert.True(t, lines.Next().IsNone())
 }
 
-// func TestLinesFilter(t *testing.T) {
-// 	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Filter(filters.IsEven[result.Result[[]byte]]).Collect()
-// 	assert.Equal(t, 1, len(items))
-// 	assert.SliceEqual(t, items[0].Unwrap(), []byte("hello"))
-// }
-
-// func TestLinesTake(t *testing.T) {
-// 	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Take(1).Collect()
-// 	assert.Equal(t, 1, len(items))
-// 	assert.SliceEqual(t, items[0].Unwrap(), []byte("hello"))
-// }
-
 func TestLinesEmpty(t *testing.T) {
 	lines := iter.Lines(new(bytes.Buffer))
 
