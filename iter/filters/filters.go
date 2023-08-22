@@ -19,7 +19,7 @@ func IsEven[T constraints.Integer](integer T) bool {
 	return integer%2 == 0
 }
 
-// IsOdd returns true when the provided integer is even
+// IsOdd returns true when the provided integer is odd
 func IsOdd[T constraints.Integer](integer T) bool {
 	return integer%2 != 0
 }
