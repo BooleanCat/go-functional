@@ -11,7 +11,8 @@ func Exhausted[T any]() *ExhaustedIter[T] {
 	return new(ExhaustedIter[T])
 }
 
-// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
 func (iter *ExhaustedIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
 	return &FilterIter[T]{iter, fun, false}
 }

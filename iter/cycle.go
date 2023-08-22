@@ -23,7 +23,8 @@ func Cycle[T any](iter Iterator[T]) *CycleIter[T] {
 	return &CycleIter[T]{iter, make([]T, 0), 0}
 }
 
-// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
 func (iter *CycleIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
 	return &FilterIter[T]{iter, fun, false}
 }

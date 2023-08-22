@@ -16,7 +16,8 @@ func Drop[T any](iter Iterator[T], count uint) *DropIter[T] {
 	return &DropIter[T]{iter, count, false, false}
 }
 
-// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
 func (iter *DropIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
 	return &FilterIter[T]{iter, fun, false}
 }

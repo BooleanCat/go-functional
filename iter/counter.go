@@ -14,7 +14,8 @@ func Count() *CountIter {
 	return new(CountIter)
 }
 
-// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
 func (iter *CountIter) Filter(fun func(int) bool) *FilterIter[int] {
 	return &FilterIter[int]{iter, fun, false}
 }

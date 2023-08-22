@@ -13,7 +13,8 @@ func FromChannel[T any](ch chan T) *ChannelIter[T] {
 	return &ChannelIter[T]{ch}
 }
 
-// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
 func (iter *ChannelIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
 	return &FilterIter[T]{iter, fun, false}
 }

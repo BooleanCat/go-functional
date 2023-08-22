@@ -14,7 +14,8 @@ func Chain[T any](iterators ...Iterator[T]) *ChainIter[T] {
 	return &ChainIter[T]{iterators, 0}
 }
 
-// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
 func (iter *ChainIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
 	return &FilterIter[T]{iter, fun, false}
 }
