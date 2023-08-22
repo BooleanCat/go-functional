@@ -64,6 +64,11 @@ func TestFilter_method(t *testing.T) {
 	assert.Equal(t, evens.Next().Unwrap(), 2)
 }
 
+func TestFilterFilter(t *testing.T) {
+	evens := iter.Count().Filter(filters.IsEven[int]).Filter(filters.GreaterThan[int](1))
+	assert.Equal(t, evens.Next().Unwrap(), 2)
+}
+
 func TestFilterEmpty(t *testing.T) {
 	evens := iter.Filter[int](iter.Exhausted[int](), filters.IsEven[int])
 	assert.True(t, evens.Next().IsNone())
