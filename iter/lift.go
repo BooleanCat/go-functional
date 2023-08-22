@@ -80,7 +80,7 @@ type LiftHashMapIter[T comparable, U any] struct {
 // necessary to call Close if exhaustion is guaranteed, but may be wise to
 // redundantly call Close if you're unsure.
 func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
-	iter := &LiftHashMapIter[T, U]{hashmap, make(chan Tuple[T, U]), sync.Once{}, make(chan struct{})}
+	iter := &LiftHashMapIter[T, U]{hashmap, make(chan Tuple[T, U]), sync.Once{}, make(chan struct{}, 1)}
 
 	go func() {
 		defer close(iter.items)
