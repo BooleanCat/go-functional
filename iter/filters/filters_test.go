@@ -41,6 +41,16 @@ func TestIsZero(t *testing.T) {
 	assert.SliceEqual(t, items.Collect(), []int{1, 2, 3, 4})
 }
 
+func TestIsEven(t *testing.T) {
+	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4}), filters.IsEven[int])
+	assert.SliceEqual(t, items.Collect(), []int{2, 4})
+}
+
+func TestIsOdd(t *testing.T) {
+	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4}), filters.IsOdd[int])
+	assert.SliceEqual(t, items.Collect(), []int{1, 3})
+}
+
 func TestGreaterThan(t *testing.T) {
 	items := iter.Filter[int](iter.Lift([]int{1, 2, 3, 4, 5, 1}), filters.GreaterThan(2))
 	assert.SliceEqual(t, items.Collect(), []int{3, 4, 5})

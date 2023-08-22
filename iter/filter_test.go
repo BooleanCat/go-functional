@@ -53,15 +53,13 @@ func ExampleExclude() {
 }
 
 func TestFilter(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
 	assert.Equal(t, evens.Next().Unwrap(), 0)
 	assert.Equal(t, evens.Next().Unwrap(), 2)
 }
 
 func TestFilterEmpty(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Exhausted[int](), isEven)
+	evens := iter.Filter[int](iter.Exhausted[int](), filters.IsEven[int])
 	assert.True(t, evens.Next().IsNone())
 }
 
@@ -75,17 +73,14 @@ func TestFilterExhausted(t *testing.T) {
 }
 
 func TestFilterCollect(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Lift([]int{0, 1, 2, 3}), isEven).Collect()
+	evens := iter.Filter[int](iter.Lift([]int{0, 1, 2, 3}), filters.IsEven[int]).Collect()
 	assert.SliceEqual(t, evens, []int{0, 2})
 }
 
 func TestFilterForEach(t *testing.T) {
 	total := 0
 
-	isEven := func(number int) bool { return number%2 == 0 }
-
-	iter.Filter[int](iter.Lift([]int{1, 2, 3, 4}), isEven).ForEach(func(number int) {
+	iter.Filter[int](iter.Lift([]int{1, 2, 3, 4}), filters.IsEven[int]).ForEach(func(number int) {
 		total += number
 	})
 
@@ -98,14 +93,12 @@ func TestFilterDrop(t *testing.T) {
 }
 
 func TestFilterTake(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Lift([]int{0, 1, 2, 3}), isEven).Drop(1).Collect()
+	evens := iter.Filter[int](iter.Lift([]int{0, 1, 2, 3}), filters.IsEven[int]).Drop(1).Collect()
 	assert.SliceEqual(t, evens, []int{2})
 }
 
 func TestExclude(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Exclude[int](iter.Count(), isEven)
+	evens := iter.Exclude[int](iter.Count(), filters.IsEven[int])
 	assert.Equal(t, evens.Next().Unwrap(), 1)
 	assert.Equal(t, evens.Next().Unwrap(), 3)
 }
@@ -120,17 +113,14 @@ func TestExcludeExhausted(t *testing.T) {
 }
 
 func TestExcludeCollect(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	odds := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), isEven).Collect()
+	odds := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), filters.IsEven[int]).Collect()
 	assert.SliceEqual(t, odds, []int{1, 3})
 }
 
 func TestExcludeForEach(t *testing.T) {
 	total := 0
 
-	isEven := func(number int) bool { return number%2 == 0 }
-
-	iter.Exclude[int](iter.Lift([]int{1, 2, 3, 4}), isEven).ForEach(func(number int) {
+	iter.Exclude[int](iter.Lift([]int{1, 2, 3, 4}), filters.IsEven[int]).ForEach(func(number int) {
 		total += number
 	})
 
@@ -138,8 +128,7 @@ func TestExcludeForEach(t *testing.T) {
 }
 
 func TestExcludeDrop(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	odds := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), isEven).Drop(1).Collect()
+	odds := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), filters.IsEven[int]).Drop(1).Collect()
 	assert.SliceEqual(t, odds, []int{3})
 }
 

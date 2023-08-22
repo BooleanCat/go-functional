@@ -8,11 +8,20 @@ import (
 
 var _ = iter.Filter[struct{}]
 
-// IsZero returns a function that returns true when the provided value is equal
-// to its zero value.
+// IsZero returns true when the provided value is equal to its zero value.
 func IsZero[T comparable](t T) bool {
 	var u T
 	return t == u
+}
+
+// IsEven returns true when the provided integer is even
+func IsEven[T constraints.Integer](integer T) bool {
+	return integer%2 == 0
+}
+
+// IsOdd returns true when the provided integer is even
+func IsOdd[T constraints.Integer](integer T) bool {
+	return integer%2 != 0
 }
 
 // GreaterThan returns a function that returns true when a value is greater

@@ -7,48 +7,44 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 )
 
 func ExampleZip() {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven)
-	odds := iter.Exclude[int](iter.Count(), isEven)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
 
 	fmt.Println(iter.Zip[int, int](evens, odds).Take(3).Collect())
 	// Output: [{0 1} {2 3} {4 5}]
 }
 
 func TestZip(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven)
-	odds := iter.Exclude[int](iter.Count(), isEven)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
 
 	zipped := iter.Zip[int, int](evens, odds).Take(3).Collect()
 	assert.SliceEqual(t, zipped, []iter.Tuple[int, int]{{0, 1}, {2, 3}, {4, 5}})
 }
 
 func TestZipFirstExhausted(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven).Take(2)
-	odds := iter.Exclude[int](iter.Count(), isEven)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int]).Take(2)
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
 
 	zipped := iter.Zip[int, int](evens, odds).Collect()
 	assert.SliceEqual(t, zipped, []iter.Tuple[int, int]{{0, 1}, {2, 3}})
 }
 
 func TestZipSecondExhausted(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven)
-	odds := iter.Exclude[int](iter.Count(), isEven).Take(2)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
 
 	zipped := iter.Zip[int, int](evens, odds).Collect()
 	assert.SliceEqual(t, zipped, []iter.Tuple[int, int]{{0, 1}, {2, 3}})
 }
 
 func TestZipFirstExhaustedDelegate(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
 	delegate := new(fakes.Iterator[int])
-	odds := iter.Exclude[int](iter.Count(), isEven)
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
 
 	zipped := iter.Zip[int, int](delegate, odds)
 	assert.True(t, zipped.Next().IsNone())
@@ -57,9 +53,8 @@ func TestZipFirstExhaustedDelegate(t *testing.T) {
 }
 
 func TestZipSecondExhaustedDelegate(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
 	delegate := new(fakes.Iterator[int])
-	odds := iter.Exclude[int](iter.Count(), isEven)
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
 
 	zipped := iter.Zip[int, int](odds, delegate)
 	assert.True(t, zipped.Next().IsNone())
@@ -68,18 +63,16 @@ func TestZipSecondExhaustedDelegate(t *testing.T) {
 }
 
 func TestZipCollect(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven)
-	odds := iter.Exclude[int](iter.Count(), isEven).Take(2)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
 
 	items := iter.Zip[int, int](evens, odds).Collect()
 	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{0, 1}, {2, 3}})
 }
 
 func TestZipForEach(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven)
-	odds := iter.Exclude[int](iter.Count(), isEven).Take(2)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
 
 	totalOdd := 0
 
@@ -91,18 +84,16 @@ func TestZipForEach(t *testing.T) {
 }
 
 func TestZipDrop(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven)
-	odds := iter.Exclude[int](iter.Count(), isEven).Take(2)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
 
 	items := iter.Zip[int, int](evens, odds).Drop(1).Collect()
 	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{2, 3}})
 }
 
 func TestZipTake(t *testing.T) {
-	isEven := func(a int) bool { return a%2 == 0 }
-	evens := iter.Filter[int](iter.Count(), isEven)
-	odds := iter.Exclude[int](iter.Count(), isEven)
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
 
 	items := iter.Zip[int, int](evens, odds).Take(1).Collect()
 	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{0, 1}})
