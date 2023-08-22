@@ -7,12 +7,18 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleChain() {
 	fmt.Println(iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4}), iter.Lift([]int{0, 9})).Collect())
 	// Output: [1 2 3 4 0 9]
+}
+
+func TestChainFilter(t *testing.T) {
+	onlyEven := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Filter(filters.IsEven[int]).Collect()
+	assert.SliceEqual(t, onlyEven, []int{2, 4})
 }
 
 func TestChainMultiple(t *testing.T) {

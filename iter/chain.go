@@ -14,6 +14,11 @@ func Chain[T any](iterators ...Iterator[T]) *ChainIter[T] {
 	return &ChainIter[T]{iterators, 0}
 }
 
+// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+func (iter *ChainIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (iter *ChainIter[T]) Next() option.Option[T] {
 	for {
@@ -44,7 +49,7 @@ func (iter *ChainIter[T]) ForEach(callback func(T)) {
 	ForEach[T](iter, callback)
 }
 
-// ForEach is a convenience method for [Find], providing this iterator as an
+// Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *ChainIter[T]) Find(predicate func(T) bool) option.Option[T] {
 	return Find[T](iter, predicate)
