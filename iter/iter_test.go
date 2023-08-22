@@ -69,6 +69,15 @@ func ExampleFind() {
 	// Output: Some(bar)
 }
 
+func ExampleFind_method() {
+	bar := iter.Lift([]string{"foo", "bar", "baz"}).Find(func(v string) bool {
+		return v == "bar"
+	})
+
+	fmt.Println(bar)
+	// Output: Some(bar)
+}
+
 func TestCollect(t *testing.T) {
 	items := iter.Collect[int](iter.Count().Take(5))
 	assert.SliceEqual(t, items, []int{0, 1, 2, 3, 4})

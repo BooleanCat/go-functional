@@ -11,6 +11,7 @@ import (
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
 	"github.com/BooleanCat/go-functional/iter/ops"
+	"github.com/BooleanCat/go-functional/option"
 	"github.com/BooleanCat/go-functional/result"
 )
 
@@ -95,6 +96,14 @@ func TestLinesForEach(t *testing.T) {
 	assert.Equal(t, count, 2)
 }
 
+func TestLinesFind(t *testing.T) {
+	item := iter.Lines(bytes.NewBufferString("hello\nthere")).Find(func(item result.Result[[]byte]) bool {
+		return bytes.Equal(item.Unwrap(), []byte("there"))
+	})
+
+	assert.SliceEqual[byte](t, item.Unwrap().Unwrap(), []byte("there"))
+}
+
 func TestLinesDrop(t *testing.T) {
 	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Drop(1).Collect()
 	assert.Equal(t, 1, len(items))
@@ -170,6 +179,14 @@ func TestLinesStringForEach(t *testing.T) {
 	})
 
 	assert.Equal(t, count, 2)
+}
+
+func TestLinesStringFind(t *testing.T) {
+	item := iter.LinesString(bytes.NewBufferString("hello\nthere")).Find(func(item result.Result[string]) bool {
+		return item.Unwrap() == "there"
+	})
+
+	assert.Equal(t, item, option.Some(result.Ok("there")))
 }
 
 func TestLinesStringDrop(t *testing.T) {

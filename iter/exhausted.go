@@ -24,6 +24,12 @@ func (iter *ExhaustedIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
 
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *ExhaustedIter[T]) Find(predicate func(T) bool) option.Option[T] {
+	return Find[T](iter, predicate)
+}
+
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.
 func (iter *ExhaustedIter[T]) ForEach(callback func(T)) {

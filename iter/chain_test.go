@@ -7,6 +7,7 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleChain() {
@@ -58,6 +59,14 @@ func TestChainForEach(t *testing.T) {
 	})
 
 	assert.Equal(t, total, 10)
+}
+
+func TestChainFind(t *testing.T) {
+	number := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Find(func(number int) bool {
+		return number == 3
+	})
+
+	assert.Equal(t, number, option.Some(3))
 }
 
 func TestChainDrop(t *testing.T) {

@@ -65,6 +65,12 @@ func TestDropForEach(t *testing.T) {
 	assert.Equal(t, total, 9)
 }
 
+func TestDropFind(t *testing.T) {
+	assert.Equal(t, iter.Drop[int](iter.Count(), 5).Find(func(number int) bool {
+		return number%4 == 0
+	}), option.Some(8))
+}
+
 func TestDropDrop(t *testing.T) {
 	counter := iter.Count().Drop(2).Drop(3)
 	assert.Equal(t, counter.Next().Unwrap(), 5)

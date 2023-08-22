@@ -7,6 +7,7 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleTake() {
@@ -65,6 +66,12 @@ func TestTakeForEach(t *testing.T) {
 	})
 
 	assert.Equal(t, count, 2)
+}
+
+func TestTakeFind(t *testing.T) {
+	assert.Equal(t, iter.Take[int](iter.Count(), 3).Find(func(number int) bool {
+		return number == 2
+	}), option.Some(2))
 }
 
 func TestTakeDrop(t *testing.T) {
