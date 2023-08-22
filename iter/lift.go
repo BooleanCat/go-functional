@@ -13,6 +13,10 @@ type LiftIter[T any] struct {
 	index int
 }
 
+func (iter *LiftIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Lift instantiates a [*LiftIter] that will yield all items in the provided
 // slice.
 func Lift[T any](items []T) *LiftIter[T] {

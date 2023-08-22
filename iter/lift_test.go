@@ -12,9 +12,9 @@ import (
 )
 
 func ExampleLift() {
-	positives := iter.Filter[int](iter.Lift([]int{-1, 4, 6, 4, -5}), filters.GreaterThan(-1))
-	fmt.Println(positives.Collect())
-	// Output: [4 6 4]
+	filtered := iter.Lift([]int{0, 1, 0, 2}).Filter(filters.IsZero[int]).Collect()
+	fmt.Println(filtered)
+	// Output: [0 0]
 }
 
 func TestLift(t *testing.T) {
