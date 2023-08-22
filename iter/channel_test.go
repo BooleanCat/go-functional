@@ -6,6 +6,7 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/option"
 )
 
@@ -38,6 +39,24 @@ func TestFromChannel(t *testing.T) {
 	assert.Equal(t, numbers.Next().Unwrap(), 2)
 	assert.Equal(t, numbers.Next().Unwrap(), 3)
 	assert.True(t, numbers.Next().IsNone())
+}
+
+func TestFromChannelFilter(t *testing.T) {
+	ch := make(chan int)
+
+	go func() {
+		defer close(ch)
+		ch <- 1
+		ch <- 2
+		ch <- 3
+	}()
+
+	numbers := iter.FromChannel(ch)
+	defer numbers.Collect()
+
+	evenNumber := numbers.Filter(filters.IsEven[int]).Collect()
+
+	assert.SliceEqual(t, evenNumber, []int{2})
 }
 
 func TestFromChannelEmpty(t *testing.T) {

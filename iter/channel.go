@@ -13,6 +13,11 @@ func FromChannel[T any](ch chan T) *ChannelIter[T] {
 	return &ChannelIter[T]{ch}
 }
 
+// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+func (iter *ChannelIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (iter *ChannelIter[T]) Next() option.Option[T] {
 
