@@ -15,6 +15,12 @@ func Filter[T any](iter Iterator[T], fun func(T) bool) *FilterIter[T] {
 	return &FilterIter[T]{iter, fun, false}
 }
 
+// Filter method that instantiates a [*FilterIter] that selectively yields
+// only results that cause the provided function to return `true`.
+func (iter *FilterIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (iter *FilterIter[T]) Next() option.Option[T] {
 	if iter.exhausted {
