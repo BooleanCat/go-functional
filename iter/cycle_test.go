@@ -7,6 +7,7 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/option"
 )
 
@@ -14,6 +15,11 @@ func ExampleCycle() {
 	numbers := iter.Cycle[int](iter.Lift([]int{1, 2})).Take(5)
 	fmt.Println(numbers.Collect())
 	// Output: [1 2 1 2 1]
+}
+
+func TestCycleFilter(t *testing.T) {
+	items := iter.Cycle[int](iter.Lift([]int{1, 2})).Filter(filters.IsEven[int]).Take(4).Collect()
+	assert.SliceEqual(t, items, []int{2, 2, 2, 2})
 }
 
 func TestCycleIter(t *testing.T) {

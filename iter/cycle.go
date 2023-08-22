@@ -23,6 +23,11 @@ func Cycle[T any](iter Iterator[T]) *CycleIter[T] {
 	return &CycleIter[T]{iter, make([]T, 0), 0}
 }
 
+// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+func (iter *CycleIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (iter *CycleIter[T]) Next() option.Option[T] {
 	if iter.iter != nil {
