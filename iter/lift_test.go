@@ -24,6 +24,10 @@ func TestLift(t *testing.T) {
 	assert.True(t, items.Next().IsNone())
 }
 
+func TestLiftFilter(t *testing.T) {
+	assert.SliceEqual(t, iter.Lift([]int{0, 1, 0, 2}).Filter(filters.IsZero[int]).Collect(), []int{0, 0})
+}
+
 func TestLiftEmpty(t *testing.T) {
 	assert.True(t, iter.Lift([]int{}).Next().IsNone())
 }
