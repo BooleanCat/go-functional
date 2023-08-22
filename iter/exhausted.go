@@ -11,6 +11,11 @@ func Exhausted[T any]() *ExhaustedIter[T] {
 	return new(ExhaustedIter[T])
 }
 
+// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+func (iter *ExhaustedIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (iter *ExhaustedIter[T]) Next() option.Option[T] {
 	return option.None[T]()

@@ -6,6 +6,7 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 )
 
 func ExampleExhausted() {
@@ -15,6 +16,10 @@ func ExampleExhausted() {
 
 func TestExhausted(t *testing.T) {
 	assert.True(t, iter.Exhausted[int]().Next().IsNone())
+}
+
+func TestExhaustedFilter(t *testing.T) {
+	assert.Empty[int](t, iter.Exhausted[int]().Filter(filters.IsEven[int]).Collect())
 }
 
 func TestExhaustedCollect(t *testing.T) {
