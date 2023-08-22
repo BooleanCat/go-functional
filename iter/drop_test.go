@@ -7,6 +7,7 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/option"
 )
 
@@ -25,6 +26,11 @@ func ExampleDrop_method() {
 func TestDrop(t *testing.T) {
 	counter := iter.Drop[int](iter.Count(), 2)
 	assert.Equal(t, counter.Next().Unwrap(), 2)
+}
+
+func TestDropFilter(t *testing.T) {
+	numbers := iter.Count().Drop(2).Filter(filters.IsEven[int]).Take(3).Collect()
+	assert.SliceEqual(t, numbers, []int{2, 4, 6})
 }
 
 func TestDropExhausted(t *testing.T) {

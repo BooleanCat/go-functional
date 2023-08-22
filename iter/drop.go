@@ -16,6 +16,11 @@ func Drop[T any](iter Iterator[T], count uint) *DropIter[T] {
 	return &DropIter[T]{iter, count, false, false}
 }
 
+// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+func (iter *DropIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (iter *DropIter[T]) Next() option.Option[T] {
 	if iter.exhausted {
