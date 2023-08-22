@@ -21,6 +21,28 @@ func ExampleCollect_method() {
 	// Output: [0 1 2]
 }
 
+func ExampleForEach() {
+	iter.ForEach[int](iter.Lift([]int{1, 2, 3}), func(number int) {
+		fmt.Println(number)
+	})
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
+func ExampleForEach_method() {
+	iter.Lift([]int{1, 2, 3}).ForEach(func(number int) {
+		fmt.Println(number)
+	})
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
 func ExampleFold() {
 	sum := iter.Fold[int](iter.Count().Take(4), 0, ops.Add[int])
 

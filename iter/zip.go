@@ -47,6 +47,12 @@ func (iter *ZipIter[T, U]) Collect() []Tuple[T, U] {
 	return Collect[Tuple[T, U]](iter)
 }
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *ZipIter[T, U]) ForEach(callback func(Tuple[T, U])) {
+	ForEach[Tuple[T, U]](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *ZipIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {

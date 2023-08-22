@@ -58,6 +58,25 @@ func TestFromChannelCollect(t *testing.T) {
 	assert.SliceEqual(t, numbers, []int{1, 2})
 }
 
+func TestFromChannelForEach(t *testing.T) {
+	ch := make(chan int)
+
+	go func() {
+		defer close(ch)
+		ch <- 1
+		ch <- 2
+		ch <- 3
+	}()
+
+	total := 0
+
+	iter.FromChannel(ch).ForEach(func(number int) {
+		total += number
+	})
+
+	assert.Equal(t, total, 6)
+}
+
 func TestFromChannelDrop(t *testing.T) {
 	ch := make(chan int)
 
@@ -86,5 +105,4 @@ func TestFromChannelTake(t *testing.T) {
 	numbers := iter.Take(2).Collect()
 	assert.SliceEqual(t, numbers, []int{1, 2})
 	iter.Collect() // To close the channel
-
 }

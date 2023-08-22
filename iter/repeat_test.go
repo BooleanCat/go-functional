@@ -24,6 +24,18 @@ func TestRepeat(t *testing.T) {
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
 }
 
+func TestRepeatForEach(t *testing.T) {
+	defer func() {
+		assert.Equal(t, recover(), "oops")
+	}()
+
+	iter.Repeat(42).ForEach(func(_ int) {
+		panic("oops")
+	})
+
+	t.Error("did not panic")
+}
+
 func TestRepeatDrop(t *testing.T) {
 	numbers := iter.Repeat[int](42).Drop(1)
 	assert.Equal(t, numbers.Next().Unwrap(), 42)

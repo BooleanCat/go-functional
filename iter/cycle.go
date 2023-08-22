@@ -49,6 +49,12 @@ func (iter *CycleIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(CycleIter[struct{}])
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *CycleIter[T]) ForEach(callback func(T)) {
+	ForEach[T](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *CycleIter[T]) Drop(n uint) *DropIter[T] {

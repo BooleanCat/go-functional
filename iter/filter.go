@@ -42,6 +42,12 @@ func (iter *FilterIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *FilterIter[T]) ForEach(callback func(T)) {
+	ForEach[T](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *FilterIter[T]) Drop(n uint) *DropIter[T] {
@@ -101,6 +107,12 @@ func FilterMap[T any, U any](itr Iterator[T], fun func(T) option.Option[U]) *Fil
 // an argument.
 func (iter *FilterMapIter[T, U]) Collect() []U {
 	return Collect[U](iter)
+}
+
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *FilterMapIter[T, U]) ForEach(callback func(U)) {
+	ForEach[U](iter, callback)
 }
 
 // Drop is a convenience method for [Drop], providing this iterator as an

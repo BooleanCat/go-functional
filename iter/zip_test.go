@@ -76,6 +76,20 @@ func TestZipCollect(t *testing.T) {
 	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{0, 1}, {2, 3}})
 }
 
+func TestZipForEach(t *testing.T) {
+	isEven := func(a int) bool { return a%2 == 0 }
+	evens := iter.Filter[int](iter.Count(), isEven)
+	odds := iter.Exclude[int](iter.Count(), isEven).Take(2)
+
+	totalOdd := 0
+
+	iter.Zip[int, int](evens, odds).ForEach(func(pairs iter.Tuple[int, int]) {
+		totalOdd += pairs.Two
+	})
+
+	assert.Equal(t, totalOdd, 4)
+}
+
 func TestZipDrop(t *testing.T) {
 	isEven := func(a int) bool { return a%2 == 0 }
 	evens := iter.Filter[int](iter.Count(), isEven)

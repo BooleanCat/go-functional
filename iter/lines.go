@@ -69,6 +69,12 @@ func (iter *LinesIter) Collect() []result.Result[[]byte] {
 	return Collect[result.Result[[]byte]](iter)
 }
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *LinesIter) ForEach(callback func(result.Result[[]byte])) {
+	ForEach[result.Result[[]byte]](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *LinesIter) Drop(n uint) *DropIter[result.Result[[]byte]] {

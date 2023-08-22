@@ -45,6 +45,18 @@ func TestMapCollect(t *testing.T) {
 	assert.SliceEqual(t, items, []int{0, 2, 4, 6})
 }
 
+func TestMapForEach(t *testing.T) {
+	total := 0
+
+	double := func(a int) int { return a * 2 }
+
+	iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).ForEach(func(number int) {
+		total += number
+	})
+
+	assert.Equal(t, total, 12)
+}
+
 func TestMapDrop(t *testing.T) {
 	double := func(a int) int { return a * 2 }
 	items := iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Drop(2).Collect()

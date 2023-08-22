@@ -38,6 +38,12 @@ func (iter *TakeIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *TakeIter[T]) ForEach(callback func(T)) {
+	ForEach[T](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *TakeIter[T]) Drop(n uint) *DropIter[T] {

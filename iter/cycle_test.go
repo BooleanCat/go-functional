@@ -39,6 +39,18 @@ func TestCycleExhausted(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
+func TestCycleForEach(t *testing.T) {
+	defer func() {
+		assert.Equal(t, recover(), "oops")
+	}()
+
+	iter.Cycle[int](iter.Lift([]int{1, 2})).ForEach(func(_ int) {
+		panic("oops")
+	})
+
+	t.Error("did not panic")
+}
+
 func TestCycleDrop(t *testing.T) {
 	items := iter.Cycle[int](iter.Lift([]int{1, 2})).Drop(1).Take(5).Collect()
 	assert.SliceEqual(t, items, []int{2, 1, 2, 1, 2})
