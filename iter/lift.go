@@ -13,6 +13,7 @@ type LiftIter[T any] struct {
 	index int
 }
 
+// Filter istantiates a [*FilterIter] for filtering by a chosen function.
 func (iter *LiftIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
 	return &FilterIter[T]{iter, fun, false}
 }
