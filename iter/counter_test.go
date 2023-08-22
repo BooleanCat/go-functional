@@ -27,6 +27,18 @@ func TestCount(t *testing.T) {
 	assert.Equal(t, counter.Next().Unwrap(), 2)
 }
 
+func TestCountForEach(t *testing.T) {
+	defer func() {
+		assert.Equal(t, recover(), "oops")
+	}()
+
+	iter.Count().ForEach(func(_ int) {
+		panic("oops")
+	})
+
+	t.Error("did not panic")
+}
+
 func TestCountDrop(t *testing.T) {
 	counter := iter.Count().Drop(5)
 	assert.Equal(t, counter.Next().Unwrap(), 5)

@@ -21,6 +21,16 @@ func TestExhaustedCollect(t *testing.T) {
 	assert.Empty[int](t, iter.Exhausted[int]().Collect())
 }
 
+func TestExhaustedForEach(t *testing.T) {
+	total := 0
+
+	iter.Exhausted[int]().ForEach(func(number int) {
+		total += number
+	})
+
+	assert.Equal(t, total, 0)
+}
+
 func TestExhaustedDrop(t *testing.T) {
 	assert.True(t, iter.Exhausted[int]().Drop(1).Next().IsNone())
 }

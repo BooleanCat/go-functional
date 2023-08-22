@@ -22,6 +22,12 @@ func (c *CountIter) Next() option.Option[int] {
 
 var _ Iterator[int] = new(CountIter)
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *CountIter) ForEach(callback func(int)) {
+	ForEach[int](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (c *CountIter) Drop(n uint) *DropIter[int] {

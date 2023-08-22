@@ -32,6 +32,16 @@ func TestLiftCollect(t *testing.T) {
 	assert.SliceEqual(t, items, []int{1, 2})
 }
 
+func TestLiftForEach(t *testing.T) {
+	total := 0
+
+	iter.Lift([]int{1, 2, 3}).ForEach(func(number int) {
+		total += number
+	})
+
+	assert.Equal(t, total, 6)
+}
+
 func TestLiftDrop(t *testing.T) {
 	items := iter.Lift([]int{1, 2, 3}).Drop(1).Collect()
 	assert.SliceEqual(t, items, []int{2, 3})
@@ -97,6 +107,19 @@ func TestLiftHashMapCollect(t *testing.T) {
 	})
 
 	assert.SliceEqual(t, items, []iter.Tuple[string, string]{{"name", "pikachu"}, {"type", "electric"}})
+}
+
+func TestLiftHashMapForEach(t *testing.T) {
+	count := 0
+
+	iter.LiftHashMap(map[string]string{
+		"name": "pikachu",
+		"type": "electric",
+	}).ForEach(func(keyValue iter.Tuple[string, string]) {
+		count++
+	})
+
+	assert.Equal(t, count, 2)
 }
 
 func TestLiftHashMapDrop(t *testing.T) {
@@ -179,6 +202,19 @@ func TestLiftHashMapKeysCollect(t *testing.T) {
 	assert.SliceEqual(t, keys, []string{"name", "type"})
 }
 
+func TestLiftHashMapKeysForEach(t *testing.T) {
+	count := 0
+
+	iter.LiftHashMapKeys(map[string]string{
+		"name": "pikachu",
+		"type": "electric",
+	}).ForEach(func(keyValue string) {
+		count++
+	})
+
+	assert.Equal(t, count, 2)
+}
+
 func TestLiftHashMapKeysDrop(t *testing.T) {
 	keys := iter.LiftHashMapKeys(map[string]string{
 		"name": "pikachu",
@@ -255,6 +291,19 @@ func TestLiftHashMapValuesCollect(t *testing.T) {
 	sort.Strings(values)
 
 	assert.SliceEqual(t, values, []string{"electric", "pikachu"})
+}
+
+func TestLiftHashMapValuesForEach(t *testing.T) {
+	count := 0
+
+	iter.LiftHashMapValues(map[string]string{
+		"name": "pikachu",
+		"type": "electric",
+	}).ForEach(func(keyValue string) {
+		count++
+	})
+
+	assert.Equal(t, count, 2)
 }
 
 func TestLiftHashMapValuesDrop(t *testing.T) {

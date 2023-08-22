@@ -38,6 +38,12 @@ func (iter *MapIter[T, U]) Collect() []U {
 	return Collect[U](iter)
 }
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *MapIter[T, U]) ForEach(callback func(U)) {
+	ForEach[U](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *MapIter[T, U]) Drop(n uint) *DropIter[U] {

@@ -32,10 +32,16 @@ func (iter *ChainIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(ChainIter[struct{}])
 
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
+// Collect is a convenience method for [Collect], providing this iterator as an
+// argument.
 func (iter *ChainIter[T]) Collect() []T {
 	return Collect[T](iter)
+}
+
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *ChainIter[T]) ForEach(callback func(T)) {
+	ForEach[T](iter, callback)
 }
 
 // Drop is a convenience method for [Drop], providing this iterator as an

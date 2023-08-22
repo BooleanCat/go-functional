@@ -46,16 +46,26 @@ func TestChainExhausted(t *testing.T) {
 }
 
 func TestChainCollect(t *testing.T) {
-	items := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Collect()
-	assert.SliceEqual(t, items, []int{1, 2, 3, 4})
+	numbers := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Collect()
+	assert.SliceEqual(t, numbers, []int{1, 2, 3, 4})
+}
+
+func TestChainForEach(t *testing.T) {
+	total := 0
+
+	iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).ForEach(func(number int) {
+		total += number
+	})
+
+	assert.Equal(t, total, 10)
 }
 
 func TestChainDrop(t *testing.T) {
-	items := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Drop(1).Collect()
-	assert.SliceEqual(t, items, []int{2, 3, 4})
+	numbers := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Drop(1).Collect()
+	assert.SliceEqual(t, numbers, []int{2, 3, 4})
 }
 
 func TestChainTake(t *testing.T) {
-	items := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Take(3).Collect()
-	assert.SliceEqual(t, items, []int{1, 2, 3})
+	numbers := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Take(3).Collect()
+	assert.SliceEqual(t, numbers, []int{1, 2, 3})
 }

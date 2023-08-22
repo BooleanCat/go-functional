@@ -85,6 +85,16 @@ func TestLinesCollect(t *testing.T) {
 	assert.SliceEqual(t, items[1].Unwrap(), []byte("there"))
 }
 
+func TestLinesForEach(t *testing.T) {
+	count := 0
+
+	iter.Lines(bytes.NewBufferString("hello\nthere")).ForEach(func(_ result.Result[[]byte]) {
+		count++
+	})
+
+	assert.Equal(t, count, 2)
+}
+
 func TestLinesDrop(t *testing.T) {
 	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Drop(1).Collect()
 	assert.Equal(t, 1, len(items))
@@ -150,6 +160,16 @@ func TestLinesStringFailureLater(t *testing.T) {
 func TestLinesStringCollect(t *testing.T) {
 	items := iter.LinesString(bytes.NewBufferString("hello\nthere")).Collect()
 	assert.SliceEqual(t, items, []result.Result[string]{result.Ok("hello"), result.Ok("there")})
+}
+
+func TestLinesStringForEach(t *testing.T) {
+	count := 0
+
+	iter.LinesString(bytes.NewBufferString("hello\nthere")).ForEach(func(_ result.Result[string]) {
+		count++
+	})
+
+	assert.Equal(t, count, 2)
 }
 
 func TestLinesStringDrop(t *testing.T) {

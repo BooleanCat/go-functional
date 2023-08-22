@@ -38,6 +38,12 @@ func (iter *LiftIter[T]) Collect() []T {
 	return Collect[T](iter)
 }
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *LiftIter[T]) ForEach(callback func(T)) {
+	ForEach[T](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *LiftIter[T]) Drop(n uint) *DropIter[T] {
@@ -129,6 +135,12 @@ func (iter *LiftHashMapIter[T, U]) Collect() []Tuple[T, U] {
 	return Collect[Tuple[T, U]](iter)
 }
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *LiftHashMapIter[T, U]) ForEach(callback func(Tuple[T, U])) {
+	ForEach[Tuple[T, U]](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *LiftHashMapIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
@@ -192,6 +204,12 @@ func (iter *LiftHashMapKeysIter[T, U]) Collect() []T {
 	return Collect[T](iter)
 }
 
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *LiftHashMapKeysIter[T, U]) ForEach(callback func(T)) {
+	ForEach[T](iter, callback)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *LiftHashMapKeysIter[T, U]) Drop(n uint) *DropIter[T] {
@@ -253,6 +271,12 @@ var (
 // an argument.
 func (iter *LiftHashMapValuesIter[T, U]) Collect() []U {
 	return Collect[U](iter)
+}
+
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *LiftHashMapValuesIter[T, U]) ForEach(callback func(U)) {
+	ForEach[U](iter, callback)
 }
 
 // Drop is a convenience method for [Drop], providing this iterator as an
