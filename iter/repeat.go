@@ -14,6 +14,12 @@ func Repeat[T any](item T) *RepeatIter[T] {
 	return &RepeatIter[T]{item}
 }
 
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
+func (iter *RepeatIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (iter *RepeatIter[T]) Next() option.Option[T] {
 	return option.Some(iter.item)

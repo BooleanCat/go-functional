@@ -6,6 +6,7 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/option"
 )
 
@@ -23,6 +24,11 @@ func TestRepeat(t *testing.T) {
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
+}
+
+func TestRepeatFilter(t *testing.T) {
+	numbers := iter.Repeat[int](42).Filter(filters.IsEven[int]).Take(2).Collect()
+	assert.SliceEqual(t, numbers, []int{42, 42})
 }
 
 func TestRepeatForEach(t *testing.T) {
