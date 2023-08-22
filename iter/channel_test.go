@@ -6,6 +6,7 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleFromChannel() {
@@ -75,6 +76,26 @@ func TestFromChannelForEach(t *testing.T) {
 	})
 
 	assert.Equal(t, total, 6)
+}
+
+func TestFromChannelFind(t *testing.T) {
+	ch := make(chan int)
+
+	go func() {
+		defer close(ch)
+		ch <- 1
+		ch <- 2
+		ch <- 3
+	}()
+
+	numbers := iter.FromChannel(ch)
+	defer numbers.Collect()
+
+	number := numbers.Find(func(number int) bool {
+		return number == 2
+	})
+
+	assert.Equal(t, number, option.Some(2))
 }
 
 func TestFromChannelDrop(t *testing.T) {

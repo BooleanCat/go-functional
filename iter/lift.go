@@ -44,6 +44,12 @@ func (iter *LiftIter[T]) ForEach(callback func(T)) {
 	ForEach[T](iter, callback)
 }
 
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *LiftIter[T]) Find(predicate func(T) bool) option.Option[T] {
+	return Find[T](iter, predicate)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *LiftIter[T]) Drop(n uint) *DropIter[T] {
@@ -141,6 +147,12 @@ func (iter *LiftHashMapIter[T, U]) ForEach(callback func(Tuple[T, U])) {
 	ForEach[Tuple[T, U]](iter, callback)
 }
 
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *LiftHashMapIter[T, U]) Find(predicate func(Tuple[T, U]) bool) option.Option[Tuple[T, U]] {
+	return Find[Tuple[T, U]](iter, predicate)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *LiftHashMapIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
@@ -210,6 +222,12 @@ func (iter *LiftHashMapKeysIter[T, U]) ForEach(callback func(T)) {
 	ForEach[T](iter, callback)
 }
 
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *LiftHashMapKeysIter[T, U]) Find(predicate func(T) bool) option.Option[T] {
+	return Find[T](iter, predicate)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *LiftHashMapKeysIter[T, U]) Drop(n uint) *DropIter[T] {
@@ -277,6 +295,12 @@ func (iter *LiftHashMapValuesIter[T, U]) Collect() []U {
 // argument.
 func (iter *LiftHashMapValuesIter[T, U]) ForEach(callback func(U)) {
 	ForEach[U](iter, callback)
+}
+
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *LiftHashMapValuesIter[T, U]) Find(predicate func(U) bool) option.Option[U] {
+	return Find[U](iter, predicate)
 }
 
 // Drop is a convenience method for [Drop], providing this iterator as an

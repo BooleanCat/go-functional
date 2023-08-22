@@ -75,6 +75,12 @@ func (iter *LinesIter) ForEach(callback func(result.Result[[]byte])) {
 	ForEach[result.Result[[]byte]](iter, callback)
 }
 
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *LinesIter) Find(predicate func(result.Result[[]byte]) bool) option.Option[result.Result[[]byte]] {
+	return Find[result.Result[[]byte]](iter, predicate)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *LinesIter) Drop(n uint) *DropIter[result.Result[[]byte]] {

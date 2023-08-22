@@ -28,6 +28,12 @@ func (iter *CountIter) ForEach(callback func(int)) {
 	ForEach[int](iter, callback)
 }
 
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *CountIter) Find(predicate func(int) bool) option.Option[int] {
+	return Find[int](iter, predicate)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (c *CountIter) Drop(n uint) *DropIter[int] {

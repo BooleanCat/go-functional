@@ -53,6 +53,12 @@ func (iter *ZipIter[T, U]) ForEach(callback func(Tuple[T, U])) {
 	ForEach[Tuple[T, U]](iter, callback)
 }
 
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *ZipIter[T, U]) Find(predicate func(Tuple[T, U]) bool) option.Option[Tuple[T, U]] {
+	return Find[Tuple[T, U]](iter, predicate)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *ZipIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {

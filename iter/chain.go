@@ -44,6 +44,12 @@ func (iter *ChainIter[T]) ForEach(callback func(T)) {
 	ForEach[T](iter, callback)
 }
 
+// ForEach is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *ChainIter[T]) Find(predicate func(T) bool) option.Option[T] {
+	return Find[T](iter, predicate)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *ChainIter[T]) Drop(n uint) *DropIter[T] {

@@ -31,6 +31,12 @@ func TestExhaustedForEach(t *testing.T) {
 	assert.Equal(t, total, 0)
 }
 
+func TestExhaustedFind(t *testing.T) {
+	assert.True(t, iter.Exhausted[int]().Find(func(number int) bool {
+		return number == 0
+	}).IsNone())
+}
+
 func TestExhaustedDrop(t *testing.T) {
 	assert.True(t, iter.Exhausted[int]().Drop(1).Next().IsNone())
 }

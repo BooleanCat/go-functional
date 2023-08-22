@@ -87,6 +87,12 @@ func TestFilterForEach(t *testing.T) {
 	assert.Equal(t, total, 6)
 }
 
+func TestFilterFind(t *testing.T) {
+	assert.Equal(t, iter.Filter[int](iter.Count(), filters.IsEven[int]).Find(func(number int) bool {
+		return number == 2
+	}), option.Some(2))
+}
+
 func TestFilterDrop(t *testing.T) {
 	zeros := iter.Filter[int](iter.Lift([]int{0, 1, 0, 0}), filters.IsZero[int]).Take(2).Collect()
 	assert.SliceEqual(t, zeros, []int{0, 0})
@@ -125,6 +131,12 @@ func TestExcludeForEach(t *testing.T) {
 	})
 
 	assert.Equal(t, total, 4)
+}
+
+func TestExcludeFind(t *testing.T) {
+	assert.Equal(t, iter.Exclude[int](iter.Count(), filters.IsEven[int]).Find(func(number int) bool {
+		return number == 3
+	}), option.Some(3))
 }
 
 func TestExcludeDrop(t *testing.T) {

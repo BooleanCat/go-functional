@@ -44,6 +44,12 @@ func (iter *MapIter[T, U]) ForEach(callback func(U)) {
 	ForEach[U](iter, callback)
 }
 
+// Find is a convenience method for [Find], providing this iterator as an
+// argument.
+func (iter *MapIter[T, U]) Find(predicate func(U) bool) option.Option[U] {
+	return Find[U](iter, predicate)
+}
+
 // Drop is a convenience method for [Drop], providing this iterator as an
 // argument.
 func (iter *MapIter[T, U]) Drop(n uint) *DropIter[U] {

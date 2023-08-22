@@ -6,6 +6,7 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleRepeat() {
@@ -34,6 +35,12 @@ func TestRepeatForEach(t *testing.T) {
 	})
 
 	t.Error("did not panic")
+}
+
+func TestRepeatFind(t *testing.T) {
+	assert.Equal(t, iter.Repeat[int](42).Find(func(number int) bool {
+		return number == 42
+	}), option.Some(42))
 }
 
 func TestRepeatDrop(t *testing.T) {
