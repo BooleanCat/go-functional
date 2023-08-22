@@ -6,6 +6,7 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/option"
 )
 
@@ -26,6 +27,10 @@ func TestCount(t *testing.T) {
 	assert.Equal(t, counter.Next().Unwrap(), 0)
 	assert.Equal(t, counter.Next().Unwrap(), 1)
 	assert.Equal(t, counter.Next().Unwrap(), 2)
+}
+
+func TestCountFilter(t *testing.T) {
+	assert.SliceEqual[int](t, []int{0, 2, 4}, iter.Count().Filter(filters.IsEven[int]).Take(3).Collect())
 }
 
 func TestCountForEach(t *testing.T) {

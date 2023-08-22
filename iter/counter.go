@@ -14,6 +14,11 @@ func Count() *CountIter {
 	return new(CountIter)
 }
 
+// Filter istantiates a [*FilterIter] for filtering by a chosen function.
+func (iter *CountIter) Filter(fun func(int) bool) *FilterIter[int] {
+	return &FilterIter[int]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (c *CountIter) Next() option.Option[int] {
 	c.index++
