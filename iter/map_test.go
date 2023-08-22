@@ -25,6 +25,12 @@ func TestMap(t *testing.T) {
 	assert.SliceEqual(t, items, []int{0, 2, 4, 6})
 }
 
+// func TestMapFilter(t *testing.T) {
+// 	double := func(a int) int { return a * 2 }
+// 	items := iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Filter(filters.IsEven[int]).Collect()
+// 	assert.SliceEqual(t, items, []int{0, 2})
+// }
+
 func TestMapEmpty(t *testing.T) {
 	double := func(a int) int { return a * 2 }
 	items := iter.Map[int](iter.Exhausted[int](), double).Collect()

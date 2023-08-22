@@ -25,6 +25,12 @@ func Lines(r io.Reader) *LinesIter {
 	return &LinesIter{bufio.NewReader(r), false}
 }
 
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
+func (iter *LinesIter) Filter(fun func(result.Result[[]byte]) bool) *FilterIter[result.Result[[]byte]] {
+	return Filter[result.Result[[]byte]](iter, fun)
+}
+
 // Next implements the [Iterator] interface.
 func (iter *LinesIter) Next() option.Option[result.Result[[]byte]] {
 	if iter.finished {

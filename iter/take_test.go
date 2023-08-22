@@ -7,6 +7,7 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/option"
 )
 
@@ -37,6 +38,11 @@ func TestTakeIter(t *testing.T) {
 	assert.Equal(t, iter.Next().Unwrap(), 0)
 	assert.Equal(t, iter.Next().Unwrap(), 1)
 	assert.True(t, iter.Next().IsNone())
+}
+
+func TestTakeFilter(t *testing.T) {
+	items := iter.Count().Take(11).Filter(filters.IsEven[int]).Collect()
+	assert.SliceEqual(t, items, []int{0, 2, 4, 6, 8, 10})
 }
 
 func TestTakeIterEmpty(t *testing.T) {

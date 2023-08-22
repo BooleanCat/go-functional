@@ -14,6 +14,12 @@ func Take[T any](iter Iterator[T], limit uint) *TakeIter[T] {
 	return &TakeIter[T]{iter, limit}
 }
 
+// Filter instantiates a [*FilterIter] that selectively yields only results
+// that cause the provided function to return `true`.
+func (iter *TakeIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return &FilterIter[T]{iter, fun, false}
+}
+
 // Next implements the [Iterator] interface.
 func (iter *TakeIter[T]) Next() option.Option[T] {
 	if iter.limit == 0 {
