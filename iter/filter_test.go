@@ -144,6 +144,11 @@ func TestExcludeDrop(t *testing.T) {
 	assert.SliceEqual(t, odds, []int{3})
 }
 
+func TestExcludeTake(t *testing.T) {
+	evens := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), filters.IsEven[int]).Take(2).Collect()
+	assert.SliceEqual(t, evens, []int{1, 3})
+}
+
 func TestFilterMap(t *testing.T) {
 	numbers := iter.FilterMap[int](
 		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
