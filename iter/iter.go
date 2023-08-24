@@ -139,3 +139,9 @@ func (iter *BaseIter[T]) Chain(iterators ...Iterator[T]) *ChainIter[T] {
 func (iter *BaseIter[T]) ToChannel() chan T {
 	return ToChannel[T](iter)
 }
+
+// Enumerate is a convenience method for [Enumerate], providing this iterator
+// as an argument.
+func (iter *BaseIter[T]) Enumerate() *EnumerateIter[T] {
+	return Enumerate[T](iter)
+}
