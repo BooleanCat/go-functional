@@ -28,11 +28,6 @@ func TestLiftEmpty(t *testing.T) {
 	assert.True(t, iter.Lift([]int{}).Next().IsNone())
 }
 
-func TestLiftCollect(t *testing.T) {
-	items := iter.Lift([]int{1, 2}).Collect()
-	assert.SliceEqual(t, items, []int{1, 2})
-}
-
 func TestLiftForEach(t *testing.T) {
 	total := 0
 
@@ -101,19 +96,6 @@ func TestLiftHashMapCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMap(pokemon)
 	defer items.Close()
 	items.Collect()
-}
-
-func TestLiftHashMapCollect(t *testing.T) {
-	items := iter.LiftHashMap(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).Collect()
-
-	sort.Slice(items, func(i, j int) bool {
-		return items[i].One < items[j].One
-	})
-
-	assert.SliceEqual(t, items, []iter.Tuple[string, string]{{"name", "pikachu"}, {"type", "electric"}})
 }
 
 func TestLiftHashMapForEach(t *testing.T) {
@@ -210,17 +192,6 @@ func TestLiftHashMapKeysCloseAfterExhaustedSafe(t *testing.T) {
 	items.Collect()
 }
 
-func TestLiftHashMapKeysCollect(t *testing.T) {
-	keys := iter.LiftHashMapKeys(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).Collect()
-
-	sort.Strings(keys)
-
-	assert.SliceEqual(t, keys, []string{"name", "type"})
-}
-
 func TestLiftHashMapKeysForEach(t *testing.T) {
 	count := 0
 
@@ -311,17 +282,6 @@ func TestLiftHashMapValuesCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMapValues(pokemon)
 	defer items.Close()
 	items.Collect()
-}
-
-func TestLiftHashMapValuesCollect(t *testing.T) {
-	values := iter.LiftHashMapValues(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).Collect()
-
-	sort.Strings(values)
-
-	assert.SliceEqual(t, values, []string{"electric", "pikachu"})
 }
 
 func TestLiftHashMapValuesForEach(t *testing.T) {

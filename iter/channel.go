@@ -4,13 +4,16 @@ import "github.com/BooleanCat/go-functional/option"
 
 // ChannelIter iterator, see [FromChannel].
 type ChannelIter[T any] struct {
+	BaseIter[T]
 	item chan T
 }
 
 // FromChannel instantiates a [*ChannelIter] that will yield each value from
 // the provided channel.
 func FromChannel[T any](ch chan T) *ChannelIter[T] {
-	return &ChannelIter[T]{ch}
+	iter := &ChannelIter[T]{item: ch}
+	iter.BaseIter = BaseIter[T]{iter}
+	return iter
 }
 
 // Next implements the [Iterator] interface.
@@ -25,12 +28,6 @@ func (iter *ChannelIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(ChannelIter[struct{}])
-
-// Collect is a convenience method for [Collect], providing this iterator as an
-// argument.
-func (iter *ChannelIter[T]) Collect() []T {
-	return Collect[T](iter)
-}
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.

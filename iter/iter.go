@@ -85,3 +85,15 @@ func Find[T any](iter Iterator[T], predicate func(v T) bool) option.Option[T] {
 		}
 	}
 }
+
+// BaseIter is intended to be embeded in other iterators to expose method
+// chaining.
+type BaseIter[T any] struct {
+	Iterator[T]
+}
+
+// Collect is a convenience method for [Collect], providing this iterator as
+// an argument.
+func (iter *BaseIter[T]) Collect() []T {
+	return Collect[T](iter.Iterator)
+}

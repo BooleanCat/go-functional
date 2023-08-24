@@ -4,6 +4,7 @@ import "github.com/BooleanCat/go-functional/option"
 
 // RepeatIter iterator, see [Repeat].
 type RepeatIter[T any] struct {
+	BaseIter[T]
 	item T
 }
 
@@ -11,7 +12,9 @@ type RepeatIter[T any] struct {
 //
 // This iterator will never be exhausted.
 func Repeat[T any](item T) *RepeatIter[T] {
-	return &RepeatIter[T]{item}
+	iter := &RepeatIter[T]{item: item}
+	iter.BaseIter = BaseIter[T]{iter}
+	return iter
 }
 
 // Next implements the [Iterator] interface.

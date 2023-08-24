@@ -46,11 +46,6 @@ func TestChainExhausted(t *testing.T) {
 	assert.Equal(t, delegate2.NextCallCount(), 1)
 }
 
-func TestChainCollect(t *testing.T) {
-	numbers := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Collect()
-	assert.SliceEqual(t, numbers, []int{1, 2, 3, 4})
-}
-
 func TestChainForEach(t *testing.T) {
 	total := 0
 

@@ -4,6 +4,7 @@ import "github.com/BooleanCat/go-functional/option"
 
 // FilterIter iterator, see [Filter].
 type FilterIter[T any] struct {
+	BaseIter[T]
 	iter      Iterator[T]
 	fun       func(T) bool
 	exhausted bool
@@ -12,7 +13,9 @@ type FilterIter[T any] struct {
 // Filter instantiates a [*FilterIter] that selectively yields only results
 // that cause the provided function to return `true`.
 func Filter[T any](iter Iterator[T], fun func(T) bool) *FilterIter[T] {
-	return &FilterIter[T]{iter, fun, false}
+	iterator := &FilterIter[T]{iter: iter, fun: fun}
+	iterator.BaseIter = BaseIter[T]{iterator}
+	return iterator
 }
 
 // Next implements the [Iterator] interface.
@@ -35,12 +38,6 @@ func (iter *FilterIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(FilterIter[struct{}])
-
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *FilterIter[T]) Collect() []T {
-	return Collect[T](iter)
-}
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.
@@ -70,11 +67,14 @@ func (iter *FilterIter[T]) Take(n uint) *TakeIter[T] {
 // that cause the provided function to return `false`.
 func Exclude[T any](iter Iterator[T], fun func(T) bool) *FilterIter[T] {
 	inverse := func(t T) bool { return !fun(t) }
-	return &FilterIter[T]{iter, inverse, false}
+	iterator := &FilterIter[T]{iter: iter, fun: inverse}
+	iterator.BaseIter = BaseIter[T]{iterator}
+	return iterator
 }
 
 // FilterMapIter iterator, see [FilterMap].
 type FilterMapIter[T any, U any] struct {
+	BaseIter[U]
 	iter      Iterator[T]
 	fn        func(T) option.Option[U]
 	exhausted bool
@@ -105,14 +105,10 @@ var _ Iterator[struct{}] = new(FilterMapIter[struct{}, struct{}])
 // FilterMap instantiates a [*FilterMapIter] that selectively yields only
 // results that cause the provided function to return `true` with a map
 // operation performed on them.
-func FilterMap[T any, U any](itr Iterator[T], fun func(T) option.Option[U]) *FilterMapIter[T, U] {
-	return &FilterMapIter[T, U]{itr, fun, false}
-}
-
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *FilterMapIter[T, U]) Collect() []U {
-	return Collect[U](iter)
+func FilterMap[T any, U any](iter Iterator[T], fun func(T) option.Option[U]) *FilterMapIter[T, U] {
+	iterator := &FilterMapIter[T, U]{iter: iter, fn: fun}
+	iterator.BaseIter = BaseIter[U]{iterator}
+	return iterator
 }
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an

@@ -147,3 +147,8 @@ func TestFindEmpty(t *testing.T) {
 
 	assert.True(t, found.IsNone())
 }
+
+func TestBaseIteratorCollect(t *testing.T) {
+	numbers := iter.Chain[int](iter.Lift([]int{1, 2})).Collect()
+	assert.SliceEqual[int](t, numbers, []int{1, 2})
+}

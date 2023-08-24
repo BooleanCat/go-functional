@@ -12,6 +12,7 @@ import (
 
 // LinesIter iterator, see [Lines].
 type LinesIter struct {
+	BaseIter[result.Result[[]byte]]
 	r        *bufio.Reader
 	finished bool
 }
@@ -22,7 +23,9 @@ type LinesIter struct {
 // Be aware that since Read operations can fail, the result time of each item
 // is wrapped in a [result.Result].
 func Lines(r io.Reader) *LinesIter {
-	return &LinesIter{bufio.NewReader(r), false}
+	iter := &LinesIter{r: bufio.NewReader(r)}
+	iter.BaseIter = BaseIter[result.Result[[]byte]]{iter}
+	return iter
 }
 
 // Next implements the [Iterator] interface.
@@ -61,12 +64,6 @@ func LinesString(r io.Reader) *MapIter[result.Result[[]byte], result.Result[stri
 	}
 
 	return Map[result.Result[[]byte]](iter, transform)
-}
-
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *LinesIter) Collect() []result.Result[[]byte] {
-	return Collect[result.Result[[]byte]](iter)
 }
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an

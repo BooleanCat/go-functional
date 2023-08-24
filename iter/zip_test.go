@@ -63,14 +63,6 @@ func TestZipSecondExhaustedDelegate(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
-func TestZipCollect(t *testing.T) {
-	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
-	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
-
-	items := iter.Zip[int, int](evens, odds).Collect()
-	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{0, 1}, {2, 3}})
-}
-
 func TestZipForEach(t *testing.T) {
 	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
 	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)

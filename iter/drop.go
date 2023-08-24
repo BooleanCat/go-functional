@@ -4,6 +4,7 @@ import "github.com/BooleanCat/go-functional/option"
 
 // DropIter iterator, see [Drop].
 type DropIter[T any] struct {
+	BaseIter[T]
 	iter      Iterator[T]
 	count     uint
 	dropped   bool
@@ -13,7 +14,9 @@ type DropIter[T any] struct {
 // Drop instantiates a [*DropIter] that will skip the number of items of its
 // wrapped iterator by the provided count.
 func Drop[T any](iter Iterator[T], count uint) *DropIter[T] {
-	return &DropIter[T]{iter, count, false, false}
+	iterator := &DropIter[T]{iter: iter, count: count}
+	iterator.BaseIter = BaseIter[T]{iterator}
+	return iterator
 }
 
 // Next implements the [Iterator] interface.
@@ -45,12 +48,6 @@ func (iter *DropIter[T]) delegateNext() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(DropIter[struct{}])
-
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *DropIter[T]) Collect() []T {
-	return Collect[T](iter)
-}
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.

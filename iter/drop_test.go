@@ -50,11 +50,6 @@ func TestDropExhaustedLater(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 3)
 }
 
-func TestDropCollect(t *testing.T) {
-	numbers := iter.Drop[int](iter.Lift([]int{1, 2, 3}), 2).Collect()
-	assert.SliceEqual(t, numbers, []int{3})
-}
-
 func TestDropForEach(t *testing.T) {
 	total := 0
 
