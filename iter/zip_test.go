@@ -23,7 +23,7 @@ func TestZip(t *testing.T) {
 	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
 
 	zipped := iter.Zip[int, int](evens, odds).Take(3).Collect()
-	assert.SliceEqual(t, zipped, []iter.Tuple[int, int]{{0, 1}, {2, 3}, {4, 5}})
+	assert.SliceEqual(t, zipped, []iter.Pair[int, int]{{0, 1}, {2, 3}, {4, 5}})
 }
 
 func TestZipFirstExhausted(t *testing.T) {
@@ -31,7 +31,7 @@ func TestZipFirstExhausted(t *testing.T) {
 	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
 
 	zipped := iter.Zip[int, int](evens, odds).Collect()
-	assert.SliceEqual(t, zipped, []iter.Tuple[int, int]{{0, 1}, {2, 3}})
+	assert.SliceEqual(t, zipped, []iter.Pair[int, int]{{0, 1}, {2, 3}})
 }
 
 func TestZipSecondExhausted(t *testing.T) {
@@ -39,7 +39,7 @@ func TestZipSecondExhausted(t *testing.T) {
 	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
 
 	zipped := iter.Zip[int, int](evens, odds).Collect()
-	assert.SliceEqual(t, zipped, []iter.Tuple[int, int]{{0, 1}, {2, 3}})
+	assert.SliceEqual(t, zipped, []iter.Pair[int, int]{{0, 1}, {2, 3}})
 }
 
 func TestZipFirstExhaustedDelegate(t *testing.T) {

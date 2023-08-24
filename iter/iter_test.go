@@ -213,7 +213,7 @@ func TestBaseIteratorToChannel(t *testing.T) {
 func TestBaseIteratorEnumerate(t *testing.T) {
 	iterator := iter.Lift([]string{"Hello", "Friend"}).Enumerate()
 
-	assert.Equal(t, iterator.Next(), option.Some(iter.Tuple[uint, string]{0, "Hello"}))
-	assert.Equal(t, iterator.Next(), option.Some(iter.Tuple[uint, string]{1, "Friend"}))
+	assert.Equal(t, iterator.Next(), option.Some(iter.Pair[uint, string]{0, "Hello"}))
+	assert.Equal(t, iterator.Next(), option.Some(iter.Pair[uint, string]{1, "Friend"}))
 	assert.True(t, iterator.Next().IsNone())
 }

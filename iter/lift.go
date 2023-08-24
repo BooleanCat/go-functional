@@ -37,15 +37,15 @@ var _ Iterator[struct{}] = new(LiftIter[struct{}])
 
 // LiftHashMapIter iterator, see [LiftHashMap].
 type LiftHashMapIter[T comparable, U any] struct {
-	BaseIter[Tuple[T, U]]
+	BaseIter[Pair[T, U]]
 	hashmap  map[T]U
-	items    chan Tuple[T, U]
+	items    chan Pair[T, U]
 	stopOnce sync.Once
 	stop     chan struct{}
 }
 
 // LiftHashMap instantiates a [*LiftHashMapIter] that will yield all items in
-// the provided map as a [Tuple].
+// the provided map as a [Pair].
 //
 // Unlike most iterators, [LiftHashMap] should be closed after usage (because
 // range order is non-deterministic and the iterator needs to preserve its
@@ -62,12 +62,12 @@ type LiftHashMapIter[T comparable, U any] struct {
 func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
 	iter := &LiftHashMapIter[T, U]{
 		hashmap:  hashmap,
-		items:    make(chan Tuple[T, U]),
+		items:    make(chan Pair[T, U]),
 		stopOnce: sync.Once{},
 		stop:     make(chan struct{}, 1),
 	}
 
-	iter.BaseIter = BaseIter[Tuple[T, U]]{iter}
+	iter.BaseIter = BaseIter[Pair[T, U]]{iter}
 
 	go func() {
 		defer close(iter.items)
@@ -75,7 +75,7 @@ func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
 	outer:
 		for k, v := range hashmap {
 			select {
-			case iter.items <- Tuple[T, U]{k, v}:
+			case iter.items <- Pair[T, U]{k, v}:
 				continue
 			case <-iter.stop:
 				break outer
@@ -102,25 +102,25 @@ func (iter *LiftHashMapIter[T, U]) Close() error {
 }
 
 // Next implements the [Iterator] interface.
-func (iter *LiftHashMapIter[T, U]) Next() option.Option[Tuple[T, U]] {
+func (iter *LiftHashMapIter[T, U]) Next() option.Option[Pair[T, U]] {
 	pair, ok := <-iter.items
 	if !ok {
-		return option.None[Tuple[T, U]]()
+		return option.None[Pair[T, U]]()
 	}
 
 	return option.Some(pair)
 }
 
 var (
-	_ Iterator[Tuple[struct{}, struct{}]] = new(LiftHashMapIter[struct{}, struct{}])
-	_ io.Closer                           = new(LiftHashMapIter[struct{}, struct{}])
+	_ Iterator[Pair[struct{}, struct{}]] = new(LiftHashMapIter[struct{}, struct{}])
+	_ io.Closer                          = new(LiftHashMapIter[struct{}, struct{}])
 )
 
 // LiftHashMapKeysIter iterator, see [LiftHashMapKeys].
 type LiftHashMapKeysIter[T comparable, U any] struct {
 	BaseIter[T]
 	delegate    *LiftHashMapIter[T, U]
-	delegateMap *MapIter[Tuple[T, U], T]
+	delegateMap *MapIter[Pair[T, U], T]
 	exhausted   bool
 }
 
@@ -133,7 +133,7 @@ func LiftHashMapKeys[T comparable, U any](hashmap map[T]U) *LiftHashMapKeysIter[
 
 	iter := &LiftHashMapKeysIter[T, U]{
 		delegate:    delegate,
-		delegateMap: Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) T { return pair.One }),
+		delegateMap: Map[Pair[T, U]](delegate, func(pair Pair[T, U]) T { return pair.One }),
 	}
 
 	iter.BaseIter = BaseIter[T]{iter}
@@ -173,7 +173,7 @@ var (
 type LiftHashMapValuesIter[T comparable, U any] struct {
 	BaseIter[U]
 	delegate    *LiftHashMapIter[T, U]
-	delegateMap *MapIter[Tuple[T, U], U]
+	delegateMap *MapIter[Pair[T, U], U]
 	exhausted   bool
 }
 
@@ -186,7 +186,7 @@ func LiftHashMapValues[T comparable, U any](hashmap map[T]U) *LiftHashMapValuesI
 
 	iter := &LiftHashMapValuesIter[T, U]{
 		delegate:    delegate,
-		delegateMap: Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) U { return pair.Two }),
+		delegateMap: Map[Pair[T, U]](delegate, func(pair Pair[T, U]) U { return pair.Two }),
 	}
 
 	iter.BaseIter = BaseIter[U]{iter}

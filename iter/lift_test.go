@@ -37,7 +37,7 @@ func TestLiftHashMap(t *testing.T) {
 		return items[i].One < items[j].One
 	})
 
-	assert.SliceEqual(t, items, []iter.Tuple[string, string]{{"name", "pikachu"}, {"type", "electric"}})
+	assert.SliceEqual(t, items, []iter.Pair[string, string]{{"name", "pikachu"}, {"type", "electric"}})
 }
 
 func TestLiftHashMapCloseEarly(t *testing.T) {
