@@ -5,9 +5,9 @@
 A general purpose library offering functional helpers for Golang.
 
 ```go
-// Find the first 5 prime numbers
-primes := iter.Filter(iter.Count(), isPrime).Take(5).Collect()
-reflect.DeepEqual(t, primes, []int{2, 3, 5, 7, 11})
+// Find the first 5 even numbers
+evens := iter.Count().Filter(filters.IsEven[int]).Take(5).Collect()
+reflect.DeepEqual(t, evens, []int{0, 2, 4, 6, 8})
 ```
 
 _[Read the docs.](https://pkg.go.dev/github.com/BooleanCat/go-functional)_
@@ -51,9 +51,8 @@ Here are a few trivial example of what's possible using the iterators in this
 library.
 
 ```go
-// All even natural numbers (2, 4, 6, 8...)
-isEven := func(n int) bool { return n%2 == 0 }
-evens := iter.Filter(iter.Count().Drop(1), isEven)
+// All odd natural numbers (2, 4, 6, 8...) up to 99
+odds := iter.Count().Drop(1).Filter(filters.IsOdd[int]).Take(50).Collect()
 ```
 
 ```go
