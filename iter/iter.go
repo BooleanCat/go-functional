@@ -97,3 +97,9 @@ type BaseIter[T any] struct {
 func (iter *BaseIter[T]) Collect() []T {
 	return Collect[T](iter.Iterator)
 }
+
+// ForEach is a convenience method for [ForEach], providing this iterator as an
+// argument.
+func (iter *BaseIter[T]) ForEach(callback func(T)) {
+	ForEach[T](iter, callback)
+}

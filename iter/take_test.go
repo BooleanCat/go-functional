@@ -53,16 +53,6 @@ func TestTakeExhausted(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
-func TestTakeForEach(t *testing.T) {
-	count := 0
-
-	iter.Take[int](iter.Count(), 2).ForEach(func(number int) {
-		count++
-	})
-
-	assert.Equal(t, count, 2)
-}
-
 func TestTakeFind(t *testing.T) {
 	assert.Equal(t, iter.Take[int](iter.Count(), 3).Find(func(number int) bool {
 		return number == 2

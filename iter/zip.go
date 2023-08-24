@@ -44,12 +44,6 @@ func (iter *ZipIter[T, U]) Next() option.Option[Tuple[T, U]] {
 
 var _ Iterator[Tuple[struct{}, struct{}]] = new(ZipIter[struct{}, struct{}])
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *ZipIter[T, U]) ForEach(callback func(Tuple[T, U])) {
-	ForEach[Tuple[T, U]](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *ZipIter[T, U]) Find(predicate func(Tuple[T, U]) bool) option.Option[Tuple[T, U]] {

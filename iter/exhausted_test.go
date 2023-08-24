@@ -17,16 +17,6 @@ func TestExhausted(t *testing.T) {
 	assert.True(t, iter.Exhausted[int]().Next().IsNone())
 }
 
-func TestExhaustedForEach(t *testing.T) {
-	total := 0
-
-	iter.Exhausted[int]().ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 0)
-}
-
 func TestExhaustedFind(t *testing.T) {
 	assert.True(t, iter.Exhausted[int]().Find(func(number int) bool {
 		return number == 0

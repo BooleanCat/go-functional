@@ -79,16 +79,6 @@ func TestLinesFailureLater(t *testing.T) {
 	assert.True(t, lines.Next().Unwrap().IsErr())
 }
 
-func TestLinesForEach(t *testing.T) {
-	count := 0
-
-	iter.Lines(bytes.NewBufferString("hello\nthere")).ForEach(func(_ result.Result[[]byte]) {
-		count++
-	})
-
-	assert.Equal(t, count, 2)
-}
-
 func TestLinesFind(t *testing.T) {
 	item := iter.Lines(bytes.NewBufferString("hello\nthere")).Find(func(item result.Result[[]byte]) bool {
 		return bytes.Equal(item.Unwrap(), []byte("there"))
@@ -157,16 +147,6 @@ func TestLinesStringFailureLater(t *testing.T) {
 	reader.ReadReturns(0, errors.New("oops"))
 
 	assert.True(t, lines.Next().Unwrap().IsErr())
-}
-
-func TestLinesStringForEach(t *testing.T) {
-	count := 0
-
-	iter.LinesString(bytes.NewBufferString("hello\nthere")).ForEach(func(_ result.Result[string]) {
-		count++
-	})
-
-	assert.Equal(t, count, 2)
 }
 
 func TestLinesStringFind(t *testing.T) {

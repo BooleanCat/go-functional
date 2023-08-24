@@ -35,12 +35,6 @@ func (iter *LiftIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(LiftIter[struct{}])
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *LiftIter[T]) ForEach(callback func(T)) {
-	ForEach[T](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *LiftIter[T]) Find(predicate func(T) bool) option.Option[T] {
@@ -140,12 +134,6 @@ var (
 	_ io.Closer                           = new(LiftHashMapIter[struct{}, struct{}])
 )
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *LiftHashMapIter[T, U]) ForEach(callback func(Tuple[T, U])) {
-	ForEach[Tuple[T, U]](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *LiftHashMapIter[T, U]) Find(predicate func(Tuple[T, U]) bool) option.Option[Tuple[T, U]] {
@@ -217,12 +205,6 @@ var (
 	_ io.Closer          = new(LiftHashMapKeysIter[struct{}, struct{}])
 )
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *LiftHashMapKeysIter[T, U]) ForEach(callback func(T)) {
-	ForEach[T](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *LiftHashMapKeysIter[T, U]) Find(predicate func(T) bool) option.Option[T] {
@@ -293,12 +275,6 @@ var (
 	_ Iterator[struct{}] = new(LiftHashMapValuesIter[struct{}, struct{}])
 	_ io.Closer          = new(LiftHashMapValuesIter[struct{}, struct{}])
 )
-
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *LiftHashMapValuesIter[T, U]) ForEach(callback func(U)) {
-	ForEach[U](iter, callback)
-}
 
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.

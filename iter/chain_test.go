@@ -46,16 +46,6 @@ func TestChainExhausted(t *testing.T) {
 	assert.Equal(t, delegate2.NextCallCount(), 1)
 }
 
-func TestChainForEach(t *testing.T) {
-	total := 0
-
-	iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 10)
-}
-
 func TestChainFind(t *testing.T) {
 	number := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4})).Find(func(number int) bool {
 		return number == 3

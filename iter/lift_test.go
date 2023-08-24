@@ -28,16 +28,6 @@ func TestLiftEmpty(t *testing.T) {
 	assert.True(t, iter.Lift([]int{}).Next().IsNone())
 }
 
-func TestLiftForEach(t *testing.T) {
-	total := 0
-
-	iter.Lift([]int{1, 2, 3}).ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 6)
-}
-
 func TestLiftFind(t *testing.T) {
 	assert.Equal(t, iter.Lift([]int{1, 2, 3}).Find(func(number int) bool {
 		return number == 2
@@ -96,19 +86,6 @@ func TestLiftHashMapCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMap(pokemon)
 	defer items.Close()
 	items.Collect()
-}
-
-func TestLiftHashMapForEach(t *testing.T) {
-	count := 0
-
-	iter.LiftHashMap(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).ForEach(func(keyValue iter.Tuple[string, string]) {
-		count++
-	})
-
-	assert.Equal(t, count, 2)
 }
 
 func TestLiftHashMapFind(t *testing.T) {
@@ -192,19 +169,6 @@ func TestLiftHashMapKeysCloseAfterExhaustedSafe(t *testing.T) {
 	items.Collect()
 }
 
-func TestLiftHashMapKeysForEach(t *testing.T) {
-	count := 0
-
-	iter.LiftHashMapKeys(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).ForEach(func(keyValue string) {
-		count++
-	})
-
-	assert.Equal(t, count, 2)
-}
-
 func TestLiftHashMapKeysFind(t *testing.T) {
 	pokemon := iter.LiftHashMapKeys(map[string]string{
 		"name": "pikachu",
@@ -282,19 +246,6 @@ func TestLiftHashMapValuesCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMapValues(pokemon)
 	defer items.Close()
 	items.Collect()
-}
-
-func TestLiftHashMapValuesForEach(t *testing.T) {
-	count := 0
-
-	iter.LiftHashMapValues(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).ForEach(func(keyValue string) {
-		count++
-	})
-
-	assert.Equal(t, count, 2)
 }
 
 func TestLiftHashMapValuesFind(t *testing.T) {

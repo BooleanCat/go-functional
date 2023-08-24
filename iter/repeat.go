@@ -24,12 +24,6 @@ func (iter *RepeatIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(RepeatIter[struct{}])
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *RepeatIter[T]) ForEach(callback func(T)) {
-	ForEach[T](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *RepeatIter[T]) Find(predicate func(T) bool) option.Option[T] {

@@ -49,12 +49,6 @@ func (iter *DropIter[T]) delegateNext() option.Option[T] {
 
 var _ Iterator[struct{}] = new(DropIter[struct{}])
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *DropIter[T]) ForEach(callback func(T)) {
-	ForEach[T](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *DropIter[T]) Find(predicate func(T) bool) option.Option[T] {

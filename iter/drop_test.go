@@ -50,16 +50,6 @@ func TestDropExhaustedLater(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 3)
 }
 
-func TestDropForEach(t *testing.T) {
-	total := 0
-
-	iter.Lift([]int{1, 2, 3, 4}).Drop(1).ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 9)
-}
-
 func TestDropFind(t *testing.T) {
 	assert.Equal(t, iter.Drop[int](iter.Count(), 5).Find(func(number int) bool {
 		return number%4 == 0

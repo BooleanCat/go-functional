@@ -39,12 +39,6 @@ func (iter *FilterIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(FilterIter[struct{}])
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *FilterIter[T]) ForEach(callback func(T)) {
-	ForEach[T](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *FilterIter[T]) Find(predicate func(T) bool) option.Option[T] {
@@ -109,12 +103,6 @@ func FilterMap[T any, U any](iter Iterator[T], fun func(T) option.Option[U]) *Fi
 	iterator := &FilterMapIter[T, U]{iter: iter, fn: fun}
 	iterator.BaseIter = BaseIter[U]{iterator}
 	return iterator
-}
-
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *FilterMapIter[T, U]) ForEach(callback func(U)) {
-	ForEach[U](iter, callback)
 }
 
 // Drop is a convenience method for [Drop], providing this iterator as an

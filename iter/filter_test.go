@@ -72,16 +72,6 @@ func TestFilterExhausted(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
-func TestFilterForEach(t *testing.T) {
-	total := 0
-
-	iter.Filter[int](iter.Lift([]int{1, 2, 3, 4}), filters.IsEven[int]).ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 6)
-}
-
 func TestFilterFind(t *testing.T) {
 	assert.Equal(t, iter.Filter[int](iter.Count(), filters.IsEven[int]).Find(func(number int) bool {
 		return number == 2
@@ -111,16 +101,6 @@ func TestExcludeExhausted(t *testing.T) {
 	assert.True(t, ones.Next().IsNone())
 	assert.True(t, ones.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
-}
-
-func TestExcludeForEach(t *testing.T) {
-	total := 0
-
-	iter.Exclude[int](iter.Lift([]int{1, 2, 3, 4}), filters.IsEven[int]).ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 4)
 }
 
 func TestExcludeFind(t *testing.T) {
@@ -164,16 +144,6 @@ func TestFilterMapExhausted(t *testing.T) {
 	assert.True(t, ones.Next().IsNone())
 	assert.True(t, ones.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
-}
-
-func TestFilterMapForEach(t *testing.T) {
-	total := 0
-
-	iter.FilterMap[int](iter.Lift([]int{1, 2, 3, 4}), selectEvenAndDouble).ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 12)
 }
 
 func TestFilterMapDrop(t *testing.T) {

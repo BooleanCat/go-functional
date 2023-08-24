@@ -35,12 +35,6 @@ func (iter *MapIter[T, U]) Next() option.Option[U] {
 
 var _ Iterator[struct{}] = new(MapIter[struct{}, struct{}])
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *MapIter[T, U]) ForEach(callback func(U)) {
-	ForEach[U](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *MapIter[T, U]) Find(predicate func(U) bool) option.Option[U] {

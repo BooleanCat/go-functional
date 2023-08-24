@@ -66,12 +66,6 @@ func LinesString(r io.Reader) *MapIter[result.Result[[]byte], result.Result[stri
 	return Map[result.Result[[]byte]](iter, transform)
 }
 
-// ForEach is a convenience method for [ForEach], providing this iterator as an
-// argument.
-func (iter *LinesIter) ForEach(callback func(result.Result[[]byte])) {
-	ForEach[result.Result[[]byte]](iter, callback)
-}
-
 // Find is a convenience method for [Find], providing this iterator as an
 // argument.
 func (iter *LinesIter) Find(predicate func(result.Result[[]byte]) bool) option.Option[result.Result[[]byte]] {

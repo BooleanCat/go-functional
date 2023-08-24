@@ -63,19 +63,6 @@ func TestZipSecondExhaustedDelegate(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
-func TestZipForEach(t *testing.T) {
-	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
-	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
-
-	totalOdd := 0
-
-	iter.Zip[int, int](evens, odds).ForEach(func(pairs iter.Tuple[int, int]) {
-		totalOdd += pairs.Two
-	})
-
-	assert.Equal(t, totalOdd, 4)
-}
-
 func TestZipFind(t *testing.T) {
 	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
 	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)

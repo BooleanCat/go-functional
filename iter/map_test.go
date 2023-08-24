@@ -40,18 +40,6 @@ func TestMapExhausted(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
-func TestMapForEach(t *testing.T) {
-	total := 0
-
-	double := func(a int) int { return a * 2 }
-
-	iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 12)
-}
-
 func TestMapFind(t *testing.T) {
 	double := func(a int) int { return a * 2 }
 	assert.Equal(t, iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Find(func(number int) bool {

@@ -46,25 +46,6 @@ func TestFromChannelEmpty(t *testing.T) {
 	assert.True(t, iter.FromChannel(ch).Next().IsNone())
 }
 
-func TestFromChannelForEach(t *testing.T) {
-	ch := make(chan int)
-
-	go func() {
-		defer close(ch)
-		ch <- 1
-		ch <- 2
-		ch <- 3
-	}()
-
-	total := 0
-
-	iter.FromChannel(ch).ForEach(func(number int) {
-		total += number
-	})
-
-	assert.Equal(t, total, 6)
-}
-
 func TestFromChannelFind(t *testing.T) {
 	ch := make(chan int)
 

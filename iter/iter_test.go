@@ -152,3 +152,12 @@ func TestBaseIteratorCollect(t *testing.T) {
 	numbers := iter.Chain[int](iter.Lift([]int{1, 2})).Collect()
 	assert.SliceEqual[int](t, numbers, []int{1, 2})
 }
+
+func TestBaseIteratorForEach(t *testing.T) {
+	count := 0
+	iter.Lift([]int{1, 2}).ForEach(func(number int) {
+		count++
+	})
+
+	assert.Equal(t, count, 2)
+}
