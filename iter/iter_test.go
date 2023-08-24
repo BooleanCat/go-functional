@@ -161,3 +161,21 @@ func TestBaseIteratorForEach(t *testing.T) {
 
 	assert.Equal(t, count, 2)
 }
+
+func TestBaseIteratorFind(t *testing.T) {
+	found := iter.Lift([]int{1, 2, 3}).Find(func(number int) bool {
+		return number == 2
+	})
+
+	assert.Equal(t, found, option.Some(2))
+}
+
+func TestBaseIteratorDrop(t *testing.T) {
+	items := iter.Lift([]int{1, 2, 3}).Drop(1).Collect()
+	assert.SliceEqual(t, items, []int{2, 3})
+}
+
+func TestBaseIteratorTake(t *testing.T) {
+	items := iter.Lift([]int{1, 2, 3}).Take(2).Collect()
+	assert.SliceEqual(t, items, []int{1, 2})
+}

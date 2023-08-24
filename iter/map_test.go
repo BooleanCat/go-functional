@@ -8,7 +8,6 @@ import (
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
 	"github.com/BooleanCat/go-functional/iter/ops"
-	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleMap() {
@@ -38,23 +37,4 @@ func TestMapExhausted(t *testing.T) {
 	assert.True(t, iter.Next().IsNone())
 	assert.True(t, iter.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
-}
-
-func TestMapFind(t *testing.T) {
-	double := func(a int) int { return a * 2 }
-	assert.Equal(t, iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Find(func(number int) bool {
-		return number == 4
-	}), option.Some(4))
-}
-
-func TestMapDrop(t *testing.T) {
-	double := func(a int) int { return a * 2 }
-	items := iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Drop(2).Collect()
-	assert.SliceEqual(t, items, []int{4, 6})
-}
-
-func TestMapTake(t *testing.T) {
-	double := func(a int) int { return a * 2 }
-	items := iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Take(2).Collect()
-	assert.SliceEqual(t, items, []int{0, 2})
 }

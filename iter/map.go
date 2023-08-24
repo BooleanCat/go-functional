@@ -34,21 +34,3 @@ func (iter *MapIter[T, U]) Next() option.Option[U] {
 }
 
 var _ Iterator[struct{}] = new(MapIter[struct{}, struct{}])
-
-// Find is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *MapIter[T, U]) Find(predicate func(U) bool) option.Option[U] {
-	return Find[U](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *MapIter[T, U]) Drop(n uint) *DropIter[U] {
-	return Drop[U](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *MapIter[T, U]) Take(n uint) *TakeIter[U] {
-	return Take[U](iter, n)
-}

@@ -43,21 +43,3 @@ func (iter *ZipIter[T, U]) Next() option.Option[Tuple[T, U]] {
 }
 
 var _ Iterator[Tuple[struct{}, struct{}]] = new(ZipIter[struct{}, struct{}])
-
-// Find is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *ZipIter[T, U]) Find(predicate func(Tuple[T, U]) bool) option.Option[Tuple[T, U]] {
-	return Find[Tuple[T, U]](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *ZipIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
-	return Drop[Tuple[T, U]](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *ZipIter[T, U]) Take(n uint) *TakeIter[Tuple[T, U]] {
-	return Take[Tuple[T, U]](iter, n)
-}

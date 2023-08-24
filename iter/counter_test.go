@@ -6,7 +6,6 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
-	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleCount() {
@@ -26,20 +25,4 @@ func TestCount(t *testing.T) {
 	assert.Equal(t, counter.Next().Unwrap(), 0)
 	assert.Equal(t, counter.Next().Unwrap(), 1)
 	assert.Equal(t, counter.Next().Unwrap(), 2)
-}
-
-func TestCountFind(t *testing.T) {
-	assert.Equal(t, iter.Count().Find(func(number int) bool {
-		return number == 5
-	}), option.Some(5))
-}
-
-func TestCountDrop(t *testing.T) {
-	counter := iter.Count().Drop(5)
-	assert.Equal(t, counter.Next().Unwrap(), 5)
-}
-
-func TestCountTake(t *testing.T) {
-	numbers := iter.Count().Take(3).Collect()
-	assert.SliceEqual(t, numbers, []int{0, 1, 2})
 }

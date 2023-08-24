@@ -39,24 +39,6 @@ func (iter *FilterIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(FilterIter[struct{}])
 
-// Find is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *FilterIter[T]) Find(predicate func(T) bool) option.Option[T] {
-	return Find[T](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *FilterIter[T]) Drop(n uint) *DropIter[T] {
-	return Drop[T](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *FilterIter[T]) Take(n uint) *TakeIter[T] {
-	return Take[T](iter, n)
-}
-
 // Exclude instantiates a [*FilterIter] that selectively yields only results
 // that cause the provided function to return `false`.
 func Exclude[T any](iter Iterator[T], fun func(T) bool) *FilterIter[T] {
@@ -103,16 +85,4 @@ func FilterMap[T any, U any](iter Iterator[T], fun func(T) option.Option[U]) *Fi
 	iterator := &FilterMapIter[T, U]{iter: iter, fn: fun}
 	iterator.BaseIter = BaseIter[U]{iterator}
 	return iterator
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *FilterMapIter[T, U]) Drop(n uint) *DropIter[U] {
-	return Drop[U](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *FilterMapIter[T, U]) Take(n uint) *TakeIter[U] {
-	return Take[U](iter, n)
 }

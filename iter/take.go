@@ -34,21 +34,3 @@ func (iter *TakeIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(TakeIter[struct{}])
-
-// Find is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *TakeIter[T]) Find(predicate func(T) bool) option.Option[T] {
-	return Find[T](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *TakeIter[T]) Drop(n uint) *DropIter[T] {
-	return Drop[T](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *TakeIter[T]) Take(n uint) *TakeIter[T] {
-	return Take[T](iter, n)
-}

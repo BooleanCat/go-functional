@@ -34,21 +34,3 @@ func (iter *ChainIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(ChainIter[struct{}])
-
-// ForEach is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *ChainIter[T]) Find(predicate func(T) bool) option.Option[T] {
-	return Find[T](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *ChainIter[T]) Drop(n uint) *DropIter[T] {
-	return Drop[T](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *ChainIter[T]) Take(n uint) *TakeIter[T] {
-	return Take[T](iter, n)
-}

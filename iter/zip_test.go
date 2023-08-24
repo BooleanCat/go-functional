@@ -8,7 +8,6 @@ import (
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
 	"github.com/BooleanCat/go-functional/iter/filters"
-	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleZip() {
@@ -61,31 +60,4 @@ func TestZipSecondExhaustedDelegate(t *testing.T) {
 	assert.True(t, zipped.Next().IsNone())
 	assert.True(t, zipped.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
-}
-
-func TestZipFind(t *testing.T) {
-	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
-	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
-
-	item := iter.Zip[int, int](evens, odds).Find(func(pairs iter.Tuple[int, int]) bool {
-		return pairs.One == 2
-	})
-
-	assert.Equal(t, item, option.Some(iter.Tuple[int, int]{2, 3}))
-}
-
-func TestZipDrop(t *testing.T) {
-	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
-	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int]).Take(2)
-
-	items := iter.Zip[int, int](evens, odds).Drop(1).Collect()
-	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{2, 3}})
-}
-
-func TestZipTake(t *testing.T) {
-	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
-	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
-
-	items := iter.Zip[int, int](evens, odds).Take(1).Collect()
-	assert.SliceEqual(t, items, []iter.Tuple[int, int]{{0, 1}})
 }

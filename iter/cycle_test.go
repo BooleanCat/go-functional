@@ -7,7 +7,6 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
-	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleCycle() {
@@ -38,20 +37,4 @@ func TestCycleExhausted(t *testing.T) {
 	assert.True(t, ones.Next().IsNone())
 	assert.True(t, ones.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
-}
-
-func TestCycleFind(t *testing.T) {
-	assert.Equal(t, iter.Cycle[int](iter.Lift([]int{1, 2})).Find(func(number int) bool {
-		return number == 2
-	}), option.Some(2))
-}
-
-func TestCycleDrop(t *testing.T) {
-	items := iter.Cycle[int](iter.Lift([]int{1, 2})).Drop(1).Take(5).Collect()
-	assert.SliceEqual(t, items, []int{2, 1, 2, 1, 2})
-}
-
-func TestCycleTake(t *testing.T) {
-	items := iter.Cycle[int](iter.Lift([]int{1, 2})).Take(5).Collect()
-	assert.SliceEqual(t, items, []int{1, 2, 1, 2, 1})
 }

@@ -11,7 +11,6 @@ import (
 	"github.com/BooleanCat/go-functional/internal/fakes"
 	"github.com/BooleanCat/go-functional/iter"
 	"github.com/BooleanCat/go-functional/iter/ops"
-	"github.com/BooleanCat/go-functional/option"
 	"github.com/BooleanCat/go-functional/result"
 )
 
@@ -79,26 +78,6 @@ func TestLinesFailureLater(t *testing.T) {
 	assert.True(t, lines.Next().Unwrap().IsErr())
 }
 
-func TestLinesFind(t *testing.T) {
-	item := iter.Lines(bytes.NewBufferString("hello\nthere")).Find(func(item result.Result[[]byte]) bool {
-		return bytes.Equal(item.Unwrap(), []byte("there"))
-	})
-
-	assert.SliceEqual[byte](t, item.Unwrap().Unwrap(), []byte("there"))
-}
-
-func TestLinesDrop(t *testing.T) {
-	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Drop(1).Collect()
-	assert.Equal(t, 1, len(items))
-	assert.SliceEqual(t, items[0].Unwrap(), []byte("there"))
-}
-
-func TestLinesTake(t *testing.T) {
-	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Take(1).Collect()
-	assert.Equal(t, 1, len(items))
-	assert.SliceEqual(t, items[0].Unwrap(), []byte("hello"))
-}
-
 func TestLinesString(t *testing.T) {
 	file, err := os.Open("fixtures/lines.txt")
 	assert.Nil(t, err)
@@ -147,22 +126,4 @@ func TestLinesStringFailureLater(t *testing.T) {
 	reader.ReadReturns(0, errors.New("oops"))
 
 	assert.True(t, lines.Next().Unwrap().IsErr())
-}
-
-func TestLinesStringFind(t *testing.T) {
-	item := iter.LinesString(bytes.NewBufferString("hello\nthere")).Find(func(item result.Result[string]) bool {
-		return item.Unwrap() == "there"
-	})
-
-	assert.Equal(t, item, option.Some(result.Ok("there")))
-}
-
-func TestLinesStringDrop(t *testing.T) {
-	items := iter.LinesString(bytes.NewBufferString("hello\nthere")).Drop(1).Collect()
-	assert.SliceEqual(t, items, []result.Result[string]{result.Ok("there")})
-}
-
-func TestLinesStringTake(t *testing.T) {
-	items := iter.LinesString(bytes.NewBufferString("hello\nthere")).Take(1).Collect()
-	assert.SliceEqual(t, items, []result.Result[string]{result.Ok("hello")})
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
 	"github.com/BooleanCat/go-functional/iter/filters"
-	"github.com/BooleanCat/go-functional/option"
 )
 
 func ExampleLift() {
@@ -26,22 +25,6 @@ func TestLift(t *testing.T) {
 
 func TestLiftEmpty(t *testing.T) {
 	assert.True(t, iter.Lift([]int{}).Next().IsNone())
-}
-
-func TestLiftFind(t *testing.T) {
-	assert.Equal(t, iter.Lift([]int{1, 2, 3}).Find(func(number int) bool {
-		return number == 2
-	}), option.Some(2))
-}
-
-func TestLiftDrop(t *testing.T) {
-	items := iter.Lift([]int{1, 2, 3}).Drop(1).Collect()
-	assert.SliceEqual(t, items, []int{2, 3})
-}
-
-func TestLiftTake(t *testing.T) {
-	items := iter.Lift([]int{1, 2, 3}).Take(2).Collect()
-	assert.SliceEqual(t, items, []int{1, 2})
 }
 
 func TestLiftHashMap(t *testing.T) {
@@ -86,38 +69,6 @@ func TestLiftHashMapCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMap(pokemon)
 	defer items.Close()
 	items.Collect()
-}
-
-func TestLiftHashMapFind(t *testing.T) {
-	pokemon := iter.LiftHashMap[string, string](map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	})
-	defer pokemon.Close()
-
-	assert.Equal(t, pokemon.Find(func(keyValue iter.Tuple[string, string]) bool {
-		return keyValue.One == "type"
-	}), option.Some(iter.Tuple[string, string]{"type", "electric"}))
-}
-
-func TestLiftHashMapDrop(t *testing.T) {
-	pokemon := make(map[string]string)
-	pokemon["name"] = "pikachu"
-	pokemon["type"] = "electric"
-
-	items := iter.LiftHashMap(pokemon).Drop(1).Collect()
-
-	assert.Equal(t, 1, len(items))
-}
-
-func TestLiftHashMapTake(t *testing.T) {
-	pokemon := make(map[string]string)
-	pokemon["name"] = "pikachu"
-	pokemon["type"] = "electric"
-
-	items := iter.LiftHashMap(pokemon).Take(1).Collect()
-
-	assert.Equal(t, 1, len(items))
 }
 
 func TestLiftHashMapKeys(t *testing.T) {
@@ -169,36 +120,6 @@ func TestLiftHashMapKeysCloseAfterExhaustedSafe(t *testing.T) {
 	items.Collect()
 }
 
-func TestLiftHashMapKeysFind(t *testing.T) {
-	pokemon := iter.LiftHashMapKeys(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	})
-	defer pokemon.Close()
-
-	assert.Equal(t, pokemon.Find(func(key string) bool {
-		return key == "type"
-	}), option.Some("type"))
-}
-
-func TestLiftHashMapKeysDrop(t *testing.T) {
-	keys := iter.LiftHashMapKeys(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).Drop(1).Collect()
-
-	assert.Equal(t, 1, len(keys))
-}
-
-func TestLiftHashMapKeysTake(t *testing.T) {
-	keys := iter.LiftHashMapKeys(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).Take(1).Collect()
-
-	assert.Equal(t, 1, len(keys))
-}
-
 func TestLiftHashMapValues(t *testing.T) {
 	pokemon := make(map[string]string)
 	pokemon["name"] = "pikachu"
@@ -246,34 +167,4 @@ func TestLiftHashMapValuesCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMapValues(pokemon)
 	defer items.Close()
 	items.Collect()
-}
-
-func TestLiftHashMapValuesFind(t *testing.T) {
-	pokemon := iter.LiftHashMapValues(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	})
-	defer pokemon.Close()
-
-	assert.Equal(t, pokemon.Find(func(value string) bool {
-		return value == "electric"
-	}), option.Some("electric"))
-}
-
-func TestLiftHashMapValuesDrop(t *testing.T) {
-	values := iter.LiftHashMapValues(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).Drop(1).Collect()
-
-	assert.Equal(t, 1, len(values))
-}
-
-func TestLiftHashMapValuesTake(t *testing.T) {
-	values := iter.LiftHashMapValues(map[string]string{
-		"name": "pikachu",
-		"type": "electric",
-	}).Take(1).Collect()
-
-	assert.Equal(t, 1, len(values))
 }

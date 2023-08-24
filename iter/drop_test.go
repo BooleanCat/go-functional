@@ -49,19 +49,3 @@ func TestDropExhaustedLater(t *testing.T) {
 	assert.True(t, iterator.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 3)
 }
-
-func TestDropFind(t *testing.T) {
-	assert.Equal(t, iter.Drop[int](iter.Count(), 5).Find(func(number int) bool {
-		return number%4 == 0
-	}), option.Some(8))
-}
-
-func TestDropDrop(t *testing.T) {
-	counter := iter.Count().Drop(2).Drop(3)
-	assert.Equal(t, counter.Next().Unwrap(), 5)
-}
-
-func TestDropTake(t *testing.T) {
-	numbers := iter.Count().Drop(2).Take(3).Collect()
-	assert.SliceEqual(t, numbers, []int{2, 3, 4})
-}

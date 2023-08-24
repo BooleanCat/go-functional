@@ -72,22 +72,6 @@ func TestFilterExhausted(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
-func TestFilterFind(t *testing.T) {
-	assert.Equal(t, iter.Filter[int](iter.Count(), filters.IsEven[int]).Find(func(number int) bool {
-		return number == 2
-	}), option.Some(2))
-}
-
-func TestFilterDrop(t *testing.T) {
-	zeros := iter.Filter[int](iter.Lift([]int{0, 1, 0, 0}), filters.IsZero[int]).Take(2).Collect()
-	assert.SliceEqual(t, zeros, []int{0, 0})
-}
-
-func TestFilterTake(t *testing.T) {
-	evens := iter.Filter[int](iter.Lift([]int{0, 1, 2, 3}), filters.IsEven[int]).Drop(1).Collect()
-	assert.SliceEqual(t, evens, []int{2})
-}
-
 func TestExclude(t *testing.T) {
 	evens := iter.Exclude[int](iter.Count(), filters.IsEven[int])
 	assert.Equal(t, evens.Next().Unwrap(), 1)
@@ -144,24 +128,6 @@ func TestFilterMapExhausted(t *testing.T) {
 	assert.True(t, ones.Next().IsNone())
 	assert.True(t, ones.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
-}
-
-func TestFilterMapDrop(t *testing.T) {
-	doubles := iter.FilterMap[int](
-		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
-		selectEvenAndDouble,
-	).Drop(1).Collect()
-
-	assert.SliceEqual(t, doubles, []int{8, 12})
-}
-
-func TestFilterMapTake(t *testing.T) {
-	doubles := iter.FilterMap[int](
-		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
-		selectEvenAndDouble,
-	).Take(2).Collect()
-
-	assert.SliceEqual(t, doubles, []int{4, 8})
 }
 
 func selectEvenAndDouble(x int) option.Option[int] {

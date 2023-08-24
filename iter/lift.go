@@ -35,24 +35,6 @@ func (iter *LiftIter[T]) Next() option.Option[T] {
 
 var _ Iterator[struct{}] = new(LiftIter[struct{}])
 
-// Find is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *LiftIter[T]) Find(predicate func(T) bool) option.Option[T] {
-	return Find[T](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *LiftIter[T]) Drop(n uint) *DropIter[T] {
-	return Drop[T](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *LiftIter[T]) Take(n uint) *TakeIter[T] {
-	return Take[T](iter, n)
-}
-
 // LiftHashMapIter iterator, see [LiftHashMap].
 type LiftHashMapIter[T comparable, U any] struct {
 	BaseIter[Tuple[T, U]]
@@ -134,24 +116,6 @@ var (
 	_ io.Closer                           = new(LiftHashMapIter[struct{}, struct{}])
 )
 
-// Find is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *LiftHashMapIter[T, U]) Find(predicate func(Tuple[T, U]) bool) option.Option[Tuple[T, U]] {
-	return Find[Tuple[T, U]](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *LiftHashMapIter[T, U]) Drop(n uint) *DropIter[Tuple[T, U]] {
-	return Drop[Tuple[T, U]](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *LiftHashMapIter[T, U]) Take(n uint) *TakeIter[Tuple[T, U]] {
-	return Take[Tuple[T, U]](iter, n)
-}
-
 // LiftHashMapKeysIter iterator, see [LiftHashMapKeys].
 type LiftHashMapKeysIter[T comparable, U any] struct {
 	BaseIter[T]
@@ -205,24 +169,6 @@ var (
 	_ io.Closer          = new(LiftHashMapKeysIter[struct{}, struct{}])
 )
 
-// Find is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *LiftHashMapKeysIter[T, U]) Find(predicate func(T) bool) option.Option[T] {
-	return Find[T](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *LiftHashMapKeysIter[T, U]) Drop(n uint) *DropIter[T] {
-	return Drop[T](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *LiftHashMapKeysIter[T, U]) Take(n uint) *TakeIter[T] {
-	return Take[T](iter, n)
-}
-
 // LiftHashMapValuesIter iterator, see [LiftHashMapValues].
 type LiftHashMapValuesIter[T comparable, U any] struct {
 	BaseIter[U]
@@ -275,21 +221,3 @@ var (
 	_ Iterator[struct{}] = new(LiftHashMapValuesIter[struct{}, struct{}])
 	_ io.Closer          = new(LiftHashMapValuesIter[struct{}, struct{}])
 )
-
-// Find is a convenience method for [Find], providing this iterator as an
-// argument.
-func (iter *LiftHashMapValuesIter[T, U]) Find(predicate func(U) bool) option.Option[U] {
-	return Find[U](iter, predicate)
-}
-
-// Drop is a convenience method for [Drop], providing this iterator as an
-// argument.
-func (iter *LiftHashMapValuesIter[T, U]) Drop(n uint) *DropIter[U] {
-	return Drop[U](iter, n)
-}
-
-// Take is a convenience method for [Take], providing this iterator as an
-// argument.
-func (iter *LiftHashMapValuesIter[T, U]) Take(n uint) *TakeIter[U] {
-	return Take[U](iter, n)
-}
