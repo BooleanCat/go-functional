@@ -62,6 +62,17 @@ func ExampleToChannel() {
 	// 3
 }
 
+func ExampleToChannel_method() {
+	for number := range iter.Lift([]int{1, 2, 3}).ToChannel() {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
 func ExampleFind() {
 	values := iter.Lift([]string{"foo", "bar", "baz"})
 	bar := iter.Find[string](values, func(v string) bool { return v == "bar" })
@@ -189,4 +200,12 @@ func TestBaseIteratorFilter(t *testing.T) {
 func TestBaseIteratorChain(t *testing.T) {
 	numbers := iter.Lift([]int{1, 2}).Chain(iter.Lift([]int{3, 4})).Collect()
 	assert.SliceEqual[int](t, numbers, []int{1, 2, 3, 4})
+}
+
+func TestBaseIteratorToChannel(t *testing.T) {
+	expected := 0
+	for number := range iter.Lift([]int{1, 2, 3, 4}).ToChannel() {
+		expected += 1
+		assert.Equal(t, number, expected)
+	}
 }
