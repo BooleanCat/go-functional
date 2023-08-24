@@ -4,6 +4,7 @@ import "github.com/BooleanCat/go-functional/option"
 
 // CountIter iterator, see [Count].
 type CountIter struct {
+	BaseIter[int]
 	index int
 }
 
@@ -11,7 +12,9 @@ type CountIter struct {
 // natural numbers. Count is functionally "unlimited" although it does not
 // protect against the integer limit.
 func Count() *CountIter {
-	return new(CountIter)
+	iter := new(CountIter)
+	iter.BaseIter = BaseIter[int]{iter}
+	return iter
 }
 
 // Next implements the [Iterator] interface.

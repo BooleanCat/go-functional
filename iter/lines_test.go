@@ -79,13 +79,6 @@ func TestLinesFailureLater(t *testing.T) {
 	assert.True(t, lines.Next().Unwrap().IsErr())
 }
 
-func TestLinesCollect(t *testing.T) {
-	items := iter.Lines(bytes.NewBufferString("hello\nthere")).Collect()
-	assert.Equal(t, 2, len(items))
-	assert.SliceEqual(t, items[0].Unwrap(), []byte("hello"))
-	assert.SliceEqual(t, items[1].Unwrap(), []byte("there"))
-}
-
 func TestLinesForEach(t *testing.T) {
 	count := 0
 
@@ -164,11 +157,6 @@ func TestLinesStringFailureLater(t *testing.T) {
 	reader.ReadReturns(0, errors.New("oops"))
 
 	assert.True(t, lines.Next().Unwrap().IsErr())
-}
-
-func TestLinesStringCollect(t *testing.T) {
-	items := iter.LinesString(bytes.NewBufferString("hello\nthere")).Collect()
-	assert.SliceEqual(t, items, []result.Result[string]{result.Ok("hello"), result.Ok("there")})
 }
 
 func TestLinesStringForEach(t *testing.T) {

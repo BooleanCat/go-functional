@@ -9,6 +9,7 @@ import (
 
 // LiftIter iterator, see [Lift].
 type LiftIter[T any] struct {
+	BaseIter[T]
 	items []T
 	index int
 }
@@ -16,7 +17,9 @@ type LiftIter[T any] struct {
 // Lift instantiates a [*LiftIter] that will yield all items in the provided
 // slice.
 func Lift[T any](items []T) *LiftIter[T] {
-	return &LiftIter[T]{items, 0}
+	iterator := &LiftIter[T]{items: items}
+	iterator.BaseIter = BaseIter[T]{iterator}
+	return iterator
 }
 
 // Next implements the [Iterator] interface.
@@ -31,12 +34,6 @@ func (iter *LiftIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(LiftIter[struct{}])
-
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *LiftIter[T]) Collect() []T {
-	return Collect[T](iter)
-}
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.
@@ -64,6 +61,7 @@ func (iter *LiftIter[T]) Take(n uint) *TakeIter[T] {
 
 // LiftHashMapIter iterator, see [LiftHashMap].
 type LiftHashMapIter[T comparable, U any] struct {
+	BaseIter[Tuple[T, U]]
 	hashmap  map[T]U
 	items    chan Tuple[T, U]
 	stopOnce sync.Once
@@ -86,7 +84,14 @@ type LiftHashMapIter[T comparable, U any] struct {
 // necessary to call Close if exhaustion is guaranteed, but may be wise to
 // redundantly call Close if you're unsure.
 func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
-	iter := &LiftHashMapIter[T, U]{hashmap, make(chan Tuple[T, U]), sync.Once{}, make(chan struct{}, 1)}
+	iter := &LiftHashMapIter[T, U]{
+		hashmap:  hashmap,
+		items:    make(chan Tuple[T, U]),
+		stopOnce: sync.Once{},
+		stop:     make(chan struct{}, 1),
+	}
+
+	iter.BaseIter = BaseIter[Tuple[T, U]]{iter}
 
 	go func() {
 		defer close(iter.items)
@@ -135,12 +140,6 @@ var (
 	_ io.Closer                           = new(LiftHashMapIter[struct{}, struct{}])
 )
 
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *LiftHashMapIter[T, U]) Collect() []Tuple[T, U] {
-	return Collect[Tuple[T, U]](iter)
-}
-
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.
 func (iter *LiftHashMapIter[T, U]) ForEach(callback func(Tuple[T, U])) {
@@ -167,6 +166,7 @@ func (iter *LiftHashMapIter[T, U]) Take(n uint) *TakeIter[Tuple[T, U]] {
 
 // LiftHashMapKeysIter iterator, see [LiftHashMapKeys].
 type LiftHashMapKeysIter[T comparable, U any] struct {
+	BaseIter[T]
 	delegate    *LiftHashMapIter[T, U]
 	delegateMap *MapIter[Tuple[T, U], T]
 	exhausted   bool
@@ -179,7 +179,14 @@ type LiftHashMapKeysIter[T comparable, U any] struct {
 func LiftHashMapKeys[T comparable, U any](hashmap map[T]U) *LiftHashMapKeysIter[T, U] {
 	delegate := LiftHashMap(hashmap)
 
-	return &LiftHashMapKeysIter[T, U]{delegate, Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) T { return pair.One }), false}
+	iter := &LiftHashMapKeysIter[T, U]{
+		delegate:    delegate,
+		delegateMap: Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) T { return pair.One }),
+	}
+
+	iter.BaseIter = BaseIter[T]{iter}
+
+	return iter
 }
 
 // Close the iterator. See [LiftHashMap]'s documentation for details.
@@ -210,12 +217,6 @@ var (
 	_ io.Closer          = new(LiftHashMapKeysIter[struct{}, struct{}])
 )
 
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *LiftHashMapKeysIter[T, U]) Collect() []T {
-	return Collect[T](iter)
-}
-
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.
 func (iter *LiftHashMapKeysIter[T, U]) ForEach(callback func(T)) {
@@ -242,6 +243,7 @@ func (iter *LiftHashMapKeysIter[T, U]) Take(n uint) *TakeIter[T] {
 
 // LiftHashMapValuesIter iterator, see [LiftHashMapValues].
 type LiftHashMapValuesIter[T comparable, U any] struct {
+	BaseIter[U]
 	delegate    *LiftHashMapIter[T, U]
 	delegateMap *MapIter[Tuple[T, U], U]
 	exhausted   bool
@@ -254,7 +256,14 @@ type LiftHashMapValuesIter[T comparable, U any] struct {
 func LiftHashMapValues[T comparable, U any](hashmap map[T]U) *LiftHashMapValuesIter[T, U] {
 	delegate := LiftHashMap(hashmap)
 
-	return &LiftHashMapValuesIter[T, U]{delegate, Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) U { return pair.Two }), false}
+	iter := &LiftHashMapValuesIter[T, U]{
+		delegate:    delegate,
+		delegateMap: Map[Tuple[T, U]](delegate, func(pair Tuple[T, U]) U { return pair.Two }),
+	}
+
+	iter.BaseIter = BaseIter[U]{iter}
+
+	return iter
 }
 
 // Close the iterator. See [LiftHashMap]'s documentation for details.
@@ -284,12 +293,6 @@ var (
 	_ Iterator[struct{}] = new(LiftHashMapValuesIter[struct{}, struct{}])
 	_ io.Closer          = new(LiftHashMapValuesIter[struct{}, struct{}])
 )
-
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *LiftHashMapValuesIter[T, U]) Collect() []U {
-	return Collect[U](iter)
-}
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.

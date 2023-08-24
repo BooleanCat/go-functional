@@ -40,12 +40,6 @@ func TestMapExhausted(t *testing.T) {
 	assert.Equal(t, delegate.NextCallCount(), 1)
 }
 
-func TestMapCollect(t *testing.T) {
-	double := func(a int) int { return a * 2 }
-	items := iter.Map[int, int](iter.Lift([]int{0, 1, 2, 3}), double).Collect()
-	assert.SliceEqual(t, items, []int{0, 2, 4, 6})
-}
-
 func TestMapForEach(t *testing.T) {
 	total := 0
 

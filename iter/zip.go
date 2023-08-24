@@ -10,6 +10,7 @@ type Tuple[T, U any] struct {
 
 // ZipIter iterator, see [Zip].
 type ZipIter[T, U any] struct {
+	BaseIter[Tuple[T, U]]
 	iter1     Iterator[T]
 	iter2     Iterator[U]
 	exhausted bool
@@ -19,7 +20,9 @@ type ZipIter[T, U any] struct {
 // call to each provided [Iterator]'s Next. This iterator is exhausted when one
 // of the provided iterators is exhausted.
 func Zip[T, U any](iter1 Iterator[T], iter2 Iterator[U]) *ZipIter[T, U] {
-	return &ZipIter[T, U]{iter1, iter2, false}
+	iter := &ZipIter[T, U]{iter1: iter1, iter2: iter2}
+	iter.BaseIter = BaseIter[Tuple[T, U]]{iter}
+	return iter
 }
 
 // Next implements the [Iterator] interface.
@@ -40,12 +43,6 @@ func (iter *ZipIter[T, U]) Next() option.Option[Tuple[T, U]] {
 }
 
 var _ Iterator[Tuple[struct{}, struct{}]] = new(ZipIter[struct{}, struct{}])
-
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *ZipIter[T, U]) Collect() []Tuple[T, U] {
-	return Collect[Tuple[T, U]](iter)
-}
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.

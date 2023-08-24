@@ -4,6 +4,7 @@ import "github.com/BooleanCat/go-functional/option"
 
 // TakeIter iterator, see [Take].
 type TakeIter[T any] struct {
+	BaseIter[T]
 	iter  Iterator[T]
 	limit uint
 }
@@ -11,7 +12,9 @@ type TakeIter[T any] struct {
 // Take instantiates a [*TakeIter] that will limit the number of items of its
 // wrapped iterator to a maximum limit.
 func Take[T any](iter Iterator[T], limit uint) *TakeIter[T] {
-	return &TakeIter[T]{iter, limit}
+	iterator := &TakeIter[T]{iter: iter, limit: limit}
+	iterator.BaseIter = BaseIter[T]{iterator}
+	return iterator
 }
 
 // Next implements the [Iterator] interface.
@@ -31,12 +34,6 @@ func (iter *TakeIter[T]) Next() option.Option[T] {
 }
 
 var _ Iterator[struct{}] = new(TakeIter[struct{}])
-
-// Collect is a convenience method for [Collect], providing this iterator as
-// an argument.
-func (iter *TakeIter[T]) Collect() []T {
-	return Collect[T](iter)
-}
 
 // ForEach is a convenience method for [ForEach], providing this iterator as an
 // argument.

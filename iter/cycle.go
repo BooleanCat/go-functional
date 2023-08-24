@@ -4,6 +4,7 @@ import "github.com/BooleanCat/go-functional/option"
 
 // CycleIter iterator, see [Cycle].
 type CycleIter[T any] struct {
+	BaseIter[T]
 	iter  Iterator[T]
 	items []T
 	index int
@@ -20,7 +21,9 @@ type CycleIter[T any] struct {
 // is exhausted before the first call to Next() in which case this iterator
 // will always yield None.
 func Cycle[T any](iter Iterator[T]) *CycleIter[T] {
-	return &CycleIter[T]{iter, make([]T, 0), 0}
+	iterator := &CycleIter[T]{iter: iter, items: make([]T, 0)}
+	iterator.BaseIter = BaseIter[T]{iterator}
+	return iterator
 }
 
 // Next implements the [Iterator] interface.

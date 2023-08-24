@@ -46,19 +46,6 @@ func TestFromChannelEmpty(t *testing.T) {
 	assert.True(t, iter.FromChannel(ch).Next().IsNone())
 }
 
-func TestFromChannelCollect(t *testing.T) {
-	ch := make(chan int)
-
-	go func() {
-		ch <- 1
-		ch <- 2
-		close(ch)
-	}()
-
-	numbers := iter.FromChannel(ch).Collect()
-	assert.SliceEqual(t, numbers, []int{1, 2})
-}
-
 func TestFromChannelForEach(t *testing.T) {
 	ch := make(chan int)
 
