@@ -121,3 +121,9 @@ func (iter *BaseIter[T]) Drop(n uint) *DropIter[T] {
 func (iter *BaseIter[T]) Take(n uint) *TakeIter[T] {
 	return Take[T](iter, n)
 }
+
+// Filter is a convenience method for [Filter], providing this iterator
+// as an argument.
+func (iter *BaseIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
+	return Filter[T](iter, fun)
+}

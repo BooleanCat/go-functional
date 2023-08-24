@@ -7,6 +7,7 @@ import (
 
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/iter"
+	"github.com/BooleanCat/go-functional/iter/filters"
 	"github.com/BooleanCat/go-functional/iter/ops"
 	"github.com/BooleanCat/go-functional/option"
 )
@@ -178,4 +179,9 @@ func TestBaseIteratorDrop(t *testing.T) {
 func TestBaseIteratorTake(t *testing.T) {
 	items := iter.Lift([]int{1, 2, 3}).Take(2).Collect()
 	assert.SliceEqual(t, items, []int{1, 2})
+}
+
+func TestBaseIteratorFilter(t *testing.T) {
+	items := iter.Lift([]int{1, 2, 3}).Filter(filters.IsEven[int]).Collect()
+	assert.SliceEqual(t, items, []int{2})
 }
