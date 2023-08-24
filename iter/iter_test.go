@@ -185,3 +185,8 @@ func TestBaseIteratorFilter(t *testing.T) {
 	items := iter.Lift([]int{1, 2, 3}).Filter(filters.IsEven[int]).Collect()
 	assert.SliceEqual(t, items, []int{2})
 }
+
+func TestBaseIteratorChain(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2}).Chain(iter.Lift([]int{3, 4})).Collect()
+	assert.SliceEqual[int](t, numbers, []int{1, 2, 3, 4})
+}

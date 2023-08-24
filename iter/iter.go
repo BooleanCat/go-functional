@@ -127,3 +127,9 @@ func (iter *BaseIter[T]) Take(n uint) *TakeIter[T] {
 func (iter *BaseIter[T]) Filter(fun func(T) bool) *FilterIter[T] {
 	return Filter[T](iter, fun)
 }
+
+// Chain is a convenience method for [Chain], providing this iterator as an
+// argument.
+func (iter *BaseIter[T]) Chain(iterators ...Iterator[T]) *ChainIter[T] {
+	return Chain[T](append([]Iterator[T]{iter}, iterators...)...)
+}

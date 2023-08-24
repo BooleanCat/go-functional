@@ -23,6 +23,18 @@ func ExampleFilter() {
 	// None
 }
 
+func ExampleFilter_method() {
+	filtered := iter.Lift([]int{0, 1, 0, 2}).Filter(filters.IsZero[int])
+	fmt.Println(filtered.Next())
+	fmt.Println(filtered.Next())
+	fmt.Println(filtered.Next())
+
+	// Output:
+	// Some(0)
+	// Some(0)
+	// None
+}
+
 func ExampleFilterMap() {
 	selectAndTripleOdds := func(x int) option.Option[int] {
 		if x%2 == 0 {

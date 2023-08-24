@@ -14,6 +14,11 @@ func ExampleChain() {
 	// Output: [1 2 3 4 0 9]
 }
 
+func ExampleChain_method() {
+	fmt.Println(iter.Lift([]int{1, 2}).Chain(iter.Lift([]int{3, 4}), iter.Lift([]int{0, 9})).Collect())
+	// Output: [1 2 3 4 0 9]
+}
+
 func TestChainMultiple(t *testing.T) {
 	items := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4}))
 	assert.Equal(t, items.Next().Unwrap(), 1)
