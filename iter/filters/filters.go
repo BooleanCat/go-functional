@@ -32,11 +32,27 @@ func GreaterThan[T constraints.Ordered](t T) func(T) bool {
 	}
 }
 
+// GreaterThanEqual returns a function that returns true when a value is
+// greater than or equal to a threshold.
+func GreaterThanEqual[T constraints.Ordered](t T) func(T) bool {
+	return func(s T) bool {
+		return s >= t
+	}
+}
+
 // LessThan returns a function that returns true when a value is less than a
 // threshold.
 func LessThan[T constraints.Ordered](t T) func(T) bool {
 	return func(s T) bool {
 		return s < t
+	}
+}
+
+// LessThanEqual returns a function that returns true when a value is less than
+// or equal to a threshold.
+func LessThanEqual[T constraints.Ordered](t T) func(T) bool {
+	return func(s T) bool {
+		return s <= t
 	}
 }
 
