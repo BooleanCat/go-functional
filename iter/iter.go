@@ -91,7 +91,7 @@ func Find[T any](iter Iterator[T], predicate func(v T) bool) option.Option[T] {
 	}
 }
 
-// BaseIter is intended to be embeded in other iterators to expose method
+// BaseIter is intended to be embedded in other iterators to expose method
 // chaining.
 type BaseIter[T any] struct {
 	Iterator[T]
