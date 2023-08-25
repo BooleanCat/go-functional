@@ -81,6 +81,11 @@ var _ Iterator[struct{}] = new(FilterMapIter[struct{}, struct{}])
 // FilterMap instantiates a [*FilterMapIter] that selectively yields only
 // results that cause the provided function to return `true` with a map
 // operation performed on them.
+//
+// Unlike other iterators (e.g. [Filter]), it is not possible to call FilterMap
+// as a method on iterators defined in this package. This is due to a
+// limitation of Go's type system; new type parameters cannot be defined on
+// methods.
 func FilterMap[T any, U any](iter Iterator[T], fun func(T) option.Option[U]) *FilterMapIter[T, U] {
 	iterator := &FilterMapIter[T, U]{iter: iter, fn: fun}
 	iterator.BaseIter = BaseIter[U]{iterator}

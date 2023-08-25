@@ -12,6 +12,10 @@ type MapIter[T, U any] struct {
 
 // Map instantiates a [*MapIter] that will apply the provided function to each
 // item yielded by the provided [Iterator].
+//
+// Unlike other iterators (e.g. [Filter]), it is not possible to call Map as a
+// method on iterators defined in this package. This is due to a limitation of
+// Go's type system; new type parameters cannot be defined on methods.
 func Map[T, U any](iter Iterator[T], f func(T) U) *MapIter[T, U] {
 	iterator := &MapIter[T, U]{iter: iter, fun: f}
 	iterator.BaseIter = BaseIter[U]{iterator}

@@ -30,6 +30,11 @@ func Collect[T any](iter Iterator[T]) []T {
 // accumulator function to each element. The accumulator function accepts two
 // arguments - an accumulator and an initial value and returns a new value for
 // the next accumulation. Fold does not protect against infinite Iterators.
+//
+// Unlike other [Iterator] consumers (e.g. [Collect]), it is not possible to
+// call Fold as a method on iterators defined in this package. This is due to a
+// limitation of Go's type system; new type parameters cannot be defined on
+// methods.
 func Fold[T any, U any](iter Iterator[T], initial U, biop func(U, T) U) U {
 	for {
 		if value, ok := iter.Next().Value(); ok {
