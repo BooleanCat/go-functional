@@ -22,6 +22,16 @@ func Map[T, U any](iter Iterator[T], f func(T) U) *MapIter[T, U] {
 	return iterator
 }
 
+// Transform instantiates a [*MapIter] that will apply the provided function to
+// each item yielded by the provided [Iterator].
+//
+// Transform is a special case of [Map] where the argument and returned value
+// for the operation are of the same type. This makes it possible to call
+// Transform as a method on other iterators.
+func Transform[T any](iter Iterator[T], op func(T) T) *MapIter[T, T] {
+	return Map[T, T](iter, op)
+}
+
 // Next implements the [Iterator] interface.
 func (iter *MapIter[T, U]) Next() option.Option[U] {
 	if iter.exhausted {

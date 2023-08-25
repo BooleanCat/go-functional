@@ -39,7 +39,7 @@ func ExampleUnwrapResult() {
 }
 
 func ExamplePassthrough() {
-	numbers := iter.Map[int](iter.Lift([]int{1, 2, 3}), ops.Passthrough[int])
+	numbers := iter.Lift([]int{1, 2, 3}).Transform(ops.Passthrough[int])
 
 	fmt.Println(numbers.Collect())
 	// Output: [1 2 3]
@@ -98,7 +98,7 @@ func TestUnwrapResultPanic(t *testing.T) {
 }
 
 func TestPassthrough(t *testing.T) {
-	iter := iter.Map[int](iter.Lift([]int{1, 2}), ops.Passthrough[int])
+	iter := iter.Lift([]int{1, 2}).Transform(ops.Passthrough[int])
 	assert.Equal(t, iter.Next().Unwrap(), 1)
 	assert.Equal(t, iter.Next().Unwrap(), 2)
 	assert.True(t, iter.Next().IsNone())

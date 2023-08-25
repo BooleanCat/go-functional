@@ -18,6 +18,22 @@ func ExampleMap() {
 	// Output: [0 2 4 6]
 }
 
+func ExampleTransform() {
+	addTwo := func(number int) int { return number + 2 }
+	numbers := iter.Transform[int](iter.Count(), addTwo).Take(3).Collect()
+
+	fmt.Println(numbers)
+	// Output: [2 3 4]
+}
+
+func ExampleTransform_method() {
+	addTwo := func(number int) int { return number + 2 }
+	numbers := iter.Count().Transform(addTwo).Take(3).Collect()
+
+	fmt.Println(numbers)
+	// Output: [2 3 4]
+}
+
 func TestMap(t *testing.T) {
 	double := func(a int) int { return a * 2 }
 	items := iter.Map[int](iter.Count(), double).Take(4).Collect()
@@ -37,4 +53,11 @@ func TestMapExhausted(t *testing.T) {
 	assert.True(t, iter.Next().IsNone())
 	assert.True(t, iter.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
+}
+
+func TestTransform(t *testing.T) {
+	addTwo := func(number int) int { return number + 2 }
+	numbers := iter.Transform[int](iter.Count(), addTwo).Take(3).Collect()
+
+	assert.SliceEqual[int](t, numbers, []int{2, 3, 4})
 }

@@ -150,3 +150,9 @@ func (iter *BaseIter[T]) ToChannel() chan T {
 func (iter *BaseIter[T]) Enumerate() *EnumerateIter[T] {
 	return Enumerate[T](iter)
 }
+
+// Transform is a convenience method for [Transform], providing this iterator
+// as an argument.
+func (iter *BaseIter[T]) Transform(op func(T) T) *MapIter[T, T] {
+	return Transform[T](iter, op)
+}
