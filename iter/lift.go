@@ -1,8 +1,8 @@
 package iter
 
 import (
+	"context"
 	"io"
-	"sync"
 
 	"github.com/BooleanCat/go-functional/option"
 )
@@ -38,10 +38,9 @@ var _ Iterator[struct{}] = new(LiftIter[struct{}])
 // LiftHashMapIter iterator, see [LiftHashMap].
 type LiftHashMapIter[T comparable, U any] struct {
 	BaseIter[Pair[T, U]]
-	hashmap  map[T]U
-	items    chan Pair[T, U]
-	stopOnce sync.Once
-	stop     chan struct{}
+	hashmap map[T]U
+	items   chan Pair[T, U]
+	cancel  func()
 }
 
 // LiftHashMap instantiates a [*LiftHashMapIter] that will yield all items in
@@ -60,25 +59,24 @@ type LiftHashMapIter[T comparable, U any] struct {
 // necessary to call Close if exhaustion is guaranteed, but may be wise to
 // redundantly call Close if you're unsure.
 func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
+	ctx, cancel := context.WithCancel(context.Background())
+
 	iter := &LiftHashMapIter[T, U]{
-		hashmap:  hashmap,
-		items:    make(chan Pair[T, U]),
-		stopOnce: sync.Once{},
-		stop:     make(chan struct{}, 1),
+		hashmap: hashmap,
+		items:   make(chan Pair[T, U]),
+		cancel:  cancel,
 	}
 
 	iter.BaseIter = BaseIter[Pair[T, U]]{iter}
 
 	go func() {
 		defer close(iter.items)
-		defer iter.stopOnce.Do(func() { close(iter.stop) })
-	outer:
+
 		for k, v := range hashmap {
 			select {
+			case <-ctx.Done():
+				return
 			case iter.items <- Pair[T, U]{k, v}:
-				continue
-			case <-iter.stop:
-				break outer
 			}
 		}
 	}()
@@ -92,14 +90,8 @@ func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
 //
 // This function can never fail and the error can be ignored.
 func (iter *LiftHashMapIter[T, U]) Close() error {
-	iter.stopOnce.Do(func() {
-		iter.stop <- struct{}{}
-		close(iter.stop)
-	})
-
-	for range iter.items {
-		// Wait for close
-	}
+	iter.cancel()
+	<-iter.items
 
 	return nil
 }
