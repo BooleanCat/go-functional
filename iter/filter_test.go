@@ -53,6 +53,18 @@ func ExampleFilterMap() {
 }
 
 func ExampleExclude() {
+	filtered := iter.Exclude[int](iter.Lift([]int{0, 1, 0, 2}), filters.IsZero[int])
+	fmt.Println(filtered.Next())
+	fmt.Println(filtered.Next())
+	fmt.Println(filtered.Next())
+
+	// Output:
+	// Some(1)
+	// Some(2)
+	// None
+}
+
+func ExampleExclude_method() {
 	filtered := iter.Lift([]int{0, 1, 0, 2}).Exclude(filters.IsZero[int])
 	fmt.Println(filtered.Next())
 	fmt.Println(filtered.Next())
@@ -85,7 +97,7 @@ func TestFilterExhausted(t *testing.T) {
 }
 
 func TestExclude(t *testing.T) {
-	evens := iter.Count().Exclude(filters.IsEven[int])
+	evens := iter.Exclude[int](iter.Count(), filters.IsEven[int])
 	assert.Equal(t, evens.Next().Unwrap(), 1)
 	assert.Equal(t, evens.Next().Unwrap(), 3)
 }
@@ -100,18 +112,18 @@ func TestExcludeExhausted(t *testing.T) {
 }
 
 func TestExcludeFind(t *testing.T) {
-	assert.Equal(t, iter.Count().Exclude(filters.IsEven[int]).Find(func(number int) bool {
+	assert.Equal(t, iter.Exclude[int](iter.Count(), filters.IsEven[int]).Find(func(number int) bool {
 		return number == 3
 	}), option.Some(3))
 }
 
 func TestExcludeDrop(t *testing.T) {
-	odds := iter.Lift([]int{0, 1, 2, 3}).Exclude(filters.IsEven[int]).Drop(1).Collect()
+	odds := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), filters.IsEven[int]).Drop(1).Collect()
 	assert.SliceEqual(t, odds, []int{3})
 }
 
 func TestExcludeTake(t *testing.T) {
-	evens := iter.Lift([]int{0, 1, 2, 3}).Exclude(filters.IsEven[int]).Take(2).Collect()
+	evens := iter.Exclude[int](iter.Lift([]int{0, 1, 2, 3}), filters.IsEven[int]).Take(2).Collect()
 	assert.SliceEqual(t, evens, []int{1, 3})
 }
 
