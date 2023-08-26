@@ -76,12 +76,7 @@ func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
 		for k, v := range hashmap {
 			select {
 			case iter.items <- Pair[T, U]{k, v}:
-				select {
-				case <-iter.stop:
-					break outer
-				default:
-					continue
-				}
+				continue
 			case <-iter.stop:
 				break outer
 			}
@@ -101,6 +96,10 @@ func (iter *LiftHashMapIter[T, U]) Close() error {
 		iter.stop <- struct{}{}
 		close(iter.stop)
 	})
+
+	for range iter.items {
+		// Wait for close
+	}
 
 	return nil
 }
