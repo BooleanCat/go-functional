@@ -76,11 +76,15 @@ func LiftHashMap[T comparable, U any](hashmap map[T]U) *LiftHashMapIter[T, U] {
 		for k, v := range hashmap {
 			select {
 			case iter.items <- Pair[T, U]{k, v}:
-				continue
+				select {
+				case <-iter.stop:
+					break outer
+				default:
+					continue
+				}
 			case <-iter.stop:
 				break outer
 			}
-
 		}
 	}()
 
