@@ -154,3 +154,9 @@ func (iter *BaseIter[T]) Enumerate() *EnumerateIter[T] {
 func (iter *BaseIter[T]) Transform(op func(T) T) *MapIter[T, T] {
 	return Transform[T](iter, op)
 }
+
+// Exclude is a convenience method for [Exclude], providing this iterator
+// as an argument.
+func (iter *BaseIter[T]) Exclude(fun func(T) bool) *FilterIter[T] {
+	return Exclude[T](iter, fun)
+}

@@ -217,3 +217,9 @@ func TestBaseIteratorEnumerate(t *testing.T) {
 	assert.Equal(t, iterator.Next(), option.Some(iter.Pair[uint, string]{1, "Friend"}))
 	assert.True(t, iterator.Next().IsNone())
 }
+
+func TestBaseIteratorExclude(t *testing.T) {
+	evens := iter.Count().Exclude(filters.IsEven[int])
+	assert.Equal(t, evens.Next().Unwrap(), 1)
+	assert.Equal(t, evens.Next().Unwrap(), 3)
+}

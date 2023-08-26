@@ -64,6 +64,18 @@ func ExampleExclude() {
 	// None
 }
 
+func ExampleExclude_method() {
+	filtered := iter.Lift([]int{0, 1, 0, 2}).Exclude(filters.IsZero[int])
+	fmt.Println(filtered.Next())
+	fmt.Println(filtered.Next())
+	fmt.Println(filtered.Next())
+
+	// Output:
+	// Some(1)
+	// Some(2)
+	// None
+}
+
 func TestFilter(t *testing.T) {
 	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
 	assert.Equal(t, evens.Next().Unwrap(), 0)
