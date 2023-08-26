@@ -1,5 +1,5 @@
 // This package contains functions intended for use with [iter.Fold] and
-// [iter.Map].
+// [iter.Map] / [iter.Transform].
 package ops
 
 import (

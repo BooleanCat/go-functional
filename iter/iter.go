@@ -12,18 +12,16 @@ type Iterator[T any] interface {
 	Next() option.Option[T]
 }
 
-// Collect consumes an [Iterator] and returns all remaining items within a
-// slice. It does not protect against infinite Iterators.
+// Collect consumes an [Iterator] and returns all items within a slice. It does
+// not protect against infinite Iterators.
 func Collect[T any](iter Iterator[T]) []T {
-	items := make([]T, 0)
+	values := make([]T, 0)
 
-	for {
-		if value, ok := iter.Next().Value(); ok {
-			items = append(items, value)
-		} else {
-			return items
-		}
+	for value, ok := iter.Next().Value(); ok; value, ok = iter.Next().Value() {
+		values = append(values, value)
 	}
+
+	return values
 }
 
 // Fold consumes an [Iterator] and returns the final result of applying the

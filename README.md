@@ -56,8 +56,8 @@ odds := iter.Count().Drop(1).Filter(filters.IsOdd).Collect()
 ```
 
 ```go
-// All non-empty lines from a file
-lines := iter.Exclude(iter.LinesString(file), filters.IsZero)
+// All lines from a file
+lines := iter.CollectResult(iter.LinesString(file)).Unwrap()
 ```
 
 ```go
