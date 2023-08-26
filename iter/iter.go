@@ -155,9 +155,11 @@ func (iter *BaseIter[T]) Transform(op func(T) T) *MapIter[T, T] {
 	return Transform[T](iter, op)
 }
 
+// Exclude is a convenience method for [Exclude], providing this iterator
+// as an argument.
 func (iter *BaseIter[T]) Exclude(fun func(T) bool) *FilterIter[T] {
 	inverse := func(t T) bool { return !fun(t) }
-	iterator := &FilterIter[T]{iter: iter, fun: inverse}
+	iterator := Filter[T](iter, inverse)
 	iterator.BaseIter = BaseIter[T]{iterator}
 	return iterator
 }
