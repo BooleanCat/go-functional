@@ -1,6 +1,7 @@
 package result_test
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"testing"
@@ -77,6 +78,21 @@ func ExampleResult_UnwrapErr() {
 	err := result.Err[int](errors.New("oops")).UnwrapErr()
 	fmt.Println(err)
 	// Output: oops
+}
+
+func ExampleResult_UnmarshalJSON() {
+	var r result.Result[[]string]
+
+	_ = json.Unmarshal([]byte(`["Ford", "BMW", "Fiat"]`), &r)
+
+	value, err := r.Value()
+
+	fmt.Println(value)
+	fmt.Println(err)
+
+	// Output:
+	// [Ford BMW Fiat]
+	// <nil>
 }
 
 func TestOkStringer(t *testing.T) {
@@ -159,4 +175,16 @@ func TestOkUnwrapErr(t *testing.T) {
 
 	_ = result.Ok(42).UnwrapErr()
 	t.Error("did not panic")
+}
+
+func TestUnmarshalJSON(t *testing.T) {
+	var r result.Result[[]string]
+
+	err := json.Unmarshal([]byte(`["Ford", "BMW", "Fiat"]`), &r)
+	assert.Nil(t, err)
+
+	value, err := r.Value()
+	assert.Nil(t, err)
+
+	assert.SliceEqual(t, value, []string{"Ford", "BMW", "Fiat"})
 }

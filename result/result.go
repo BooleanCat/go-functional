@@ -1,6 +1,9 @@
 package result
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // Result represents failure or success. The [Ok] variant represents success
 // and contains a value. The [Err] variant represent a failure and contains an
@@ -96,4 +99,17 @@ func (r Result[T]) UnwrapErr() error {
 	}
 
 	return r.err
+}
+
+// UnmarshalJSON implements the [json.Unmarshaler] interface.
+// Values will be unmarshaled as [Ok] variants.
+func (r *Result[T]) UnmarshalJSON(data []byte) error {
+	var value T
+
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+
+	*r = Ok(value)
+	return nil
 }
