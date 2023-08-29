@@ -32,3 +32,11 @@ func TestUnmarshalJSON(t *testing.T) {
 
 	assert.SliceEqual(t, value, []string{"Foo", "Bar"})
 }
+
+func TestUnmarshalError(t *testing.T) {
+	var r result.Result[string]
+
+	err := json.Unmarshal([]byte("42"), &r)
+
+	assert.NotNil(t, err)
+}

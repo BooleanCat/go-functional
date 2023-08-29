@@ -14,3 +14,5 @@ func (r *Result[T]) UnmarshalJSON(data []byte) error {
 	*r = Ok(value)
 	return nil
 }
+
+var _ json.Unmarshaler = &Result[struct{}]{}
