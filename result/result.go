@@ -1,6 +1,8 @@
 package result
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Result represents failure or success. The [Ok] variant represents success
 // and contains a value. The [Err] variant represent a failure and contains an
