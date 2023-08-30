@@ -33,6 +33,6 @@ func (o *Option[T]) UnmarshalJSON(data []byte) error {
 }
 
 var (
-	_ json.Unmarshaler = &Option[struct{}]{}
+	_ json.Unmarshaler = new(Option[struct{}])
 	_ json.Marshaler   = Option[struct{}]{}
 )
