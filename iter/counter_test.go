@@ -26,7 +26,3 @@ func TestCount(t *testing.T) {
 	assert.Equal(t, counter.Next().Unwrap(), 1)
 	assert.Equal(t, counter.Next().Unwrap(), 2)
 }
-
-func TestCountGoString(t *testing.T) {
-	assert.Equal(t, fmt.Sprintf("%#v", iter.Count()), "iter.Count()")
-}
