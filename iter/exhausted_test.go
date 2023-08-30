@@ -16,3 +16,7 @@ func ExampleExhausted() {
 func TestExhausted(t *testing.T) {
 	assert.True(t, iter.Exhausted[int]().Next().IsNone())
 }
+
+func TestExhaustedGoString(t *testing.T) {
+	assert.Equal(t, fmt.Sprintf("%#v", iter.Exhausted[int]()), "iter.Exhausted[int]()")
+}

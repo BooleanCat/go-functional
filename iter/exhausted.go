@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // ExhaustedIter iterator, see [Exhausted].
 type ExhaustedIter[T any] struct {
@@ -20,4 +25,14 @@ func (iter *ExhaustedIter[T]) Next() option.Option[T] {
 	return option.None[T]()
 }
 
-var _ Iterator[struct{}] = new(ExhaustedIter[struct{}])
+func (iter ExhaustedIter[T]) GoString() string {
+	var zero [0]T
+	yieldedType := reflect.TypeOf(zero).Elem()
+
+	return fmt.Sprintf("iter.Exhausted[%s]()", yieldedType)
+}
+
+var (
+	_ Iterator[struct{}] = new(ExhaustedIter[struct{}])
+	_ fmt.GoStringer     = ExhaustedIter[int]{}
+)
