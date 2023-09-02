@@ -17,8 +17,8 @@ func ExampleEnumerate() {
 	fmt.Println(iterator.Next())
 
 	// Output:
-	// Some({0 Hello})
-	// Some({1 Friend})
+	// Some((0, Hello))
+	// Some((1, Friend))
 	// None
 }
 
@@ -29,8 +29,8 @@ func ExampleEnumerate_method() {
 	fmt.Println(iterator.Next())
 
 	// Output:
-	// Some({0 Hello})
-	// Some({1 Friend})
+	// Some((0, Hello))
+	// Some((1, Friend))
 	// None
 }
 
