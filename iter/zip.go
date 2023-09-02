@@ -24,7 +24,7 @@ func (p Pair[T, U]) String() string {
 		two = val.String()
 	}
 
-	return fmt.Sprintf("(%s,%s)", one, two)
+	return fmt.Sprintf("(%s, %s)", one, two)
 }
 
 // ZipIter iterator, see [Zip].
