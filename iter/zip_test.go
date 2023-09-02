@@ -18,6 +18,17 @@ func ExampleZip() {
 	// Output: [{0 1} {2 3} {4 5}]
 }
 
+func TestPairStringer(t *testing.T) {
+	foo := map[string]interface{}{
+		"text": "Random Text",
+	}
+	pair1 := iter.Pair[string, interface{}]{One: "1", Two: foo}
+	pair2 := iter.Pair[int, interface{}]{One: 2, Two: pair1}
+
+	assert.Equal(t, pair1.String(), "(1,map[text:Random Text])")
+	assert.Equal(t, pair2.String(), "(2,(1,map[text:Random Text]))")
+}
+
 func TestZip(t *testing.T) {
 	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
 	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
