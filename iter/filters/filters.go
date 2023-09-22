@@ -2,6 +2,8 @@
 package filters
 
 import (
+	"cmp"
+
 	"github.com/BooleanCat/go-functional/constraints"
 	"github.com/BooleanCat/go-functional/iter"
 )
@@ -26,7 +28,7 @@ func IsOdd[T constraints.Integer](integer T) bool {
 
 // GreaterThan returns a function that returns true when a value is greater
 // than a threshold.
-func GreaterThan[T constraints.Ordered](t T) func(T) bool {
+func GreaterThan[T cmp.Ordered](t T) func(T) bool {
 	return func(s T) bool {
 		return s > t
 	}
@@ -34,7 +36,7 @@ func GreaterThan[T constraints.Ordered](t T) func(T) bool {
 
 // GreaterThanEqual returns a function that returns true when a value is
 // greater than or equal to a threshold.
-func GreaterThanEqual[T constraints.Ordered](t T) func(T) bool {
+func GreaterThanEqual[T cmp.Ordered](t T) func(T) bool {
 	return func(s T) bool {
 		return s >= t
 	}
@@ -42,7 +44,7 @@ func GreaterThanEqual[T constraints.Ordered](t T) func(T) bool {
 
 // LessThan returns a function that returns true when a value is less than a
 // threshold.
-func LessThan[T constraints.Ordered](t T) func(T) bool {
+func LessThan[T cmp.Ordered](t T) func(T) bool {
 	return func(s T) bool {
 		return s < t
 	}
@@ -50,7 +52,7 @@ func LessThan[T constraints.Ordered](t T) func(T) bool {
 
 // LessThanEqual returns a function that returns true when a value is less than
 // or equal to a threshold.
-func LessThanEqual[T constraints.Ordered](t T) func(T) bool {
+func LessThanEqual[T cmp.Ordered](t T) func(T) bool {
 	return func(s T) bool {
 		return s <= t
 	}
