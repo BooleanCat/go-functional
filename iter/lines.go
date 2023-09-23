@@ -51,17 +51,30 @@ func (iter *LinesIter) Next() option.Option[result.Result[[]byte]] {
 
 var _ Iterator[result.Result[[]byte]] = new(LinesIter)
 
-// LinesString instantiates a [*LinesIter] with results converted to a string
-// via a [*MapIter]. See [Lines] for more information.
-func LinesString(r io.Reader) *MapIter[result.Result[[]byte], result.Result[string]] {
-	iter := Lines(r)
-	transform := func(line result.Result[[]byte]) result.Result[string] {
-		if v, err := line.Value(); err != nil {
-			return result.Err[string](err)
+type LinesStringIter struct {
+	BaseIter[result.Result[string]]
+	iter *LinesIter
+}
+
+// Next implements the [Iterator] interface.
+func (iter *LinesStringIter) Next() option.Option[result.Result[string]] {
+	if value, ok := iter.iter.Next().Value(); !ok {
+		return option.None[result.Result[string]]()
+	} else {
+		if b, err := value.Value(); err != nil {
+			return option.Some(result.Err[string](err))
 		} else {
-			return result.Ok(string(v))
+			return option.Some(result.Ok(string(b)))
 		}
 	}
-
-	return Map[result.Result[[]byte]](iter, transform)
 }
+
+// LinesString instantiates a [*LinesStringIter] that behaves like a
+// [*LinesIter] except that it yields strings. See [LinesIter].
+func LinesString(r io.Reader) *LinesStringIter {
+	iter := &LinesStringIter{iter: Lines(r)}
+	iter.BaseIter = BaseIter[result.Result[string]]{iter}
+	return iter
+}
+
+var _ Iterator[result.Result[string]] = new(LinesStringIter)
