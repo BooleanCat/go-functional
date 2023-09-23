@@ -78,6 +78,20 @@ func TestLinesFailureLater(t *testing.T) {
 	assert.True(t, lines.Next().Unwrap().IsErr())
 }
 
+func TestLinesCollectResults(t *testing.T) {
+	file, err := os.Open("fixtures/lines.txt")
+	assert.Nil(t, err)
+	defer file.Close()
+
+	lines := iter.Lines(file).CollectResults().Unwrap()
+	assert.Equal(t, len(lines), 5)
+	assert.SliceEqual[byte](t, lines[0], []byte("This is"))
+	assert.SliceEqual[byte](t, lines[1], []byte("a file"))
+	assert.SliceEqual[byte](t, lines[2], []byte("with"))
+	assert.SliceEqual[byte](t, lines[3], []byte("a trailing newline"))
+	assert.Empty[byte](t, lines[4])
+}
+
 func TestLinesString(t *testing.T) {
 	file, err := os.Open("fixtures/lines.txt")
 	assert.Nil(t, err)
@@ -126,4 +140,17 @@ func TestLinesStringFailureLater(t *testing.T) {
 	reader.ReadReturns(0, errors.New("oops"))
 
 	assert.True(t, lines.Next().Unwrap().IsErr())
+}
+
+func TestLinesStringCollectResults(t *testing.T) {
+	file, err := os.Open("fixtures/lines.txt")
+	assert.Nil(t, err)
+	defer file.Close()
+
+	lines := iter.LinesString(file).CollectResults()
+	assert.SliceEqual[string](
+		t,
+		lines.Unwrap(),
+		[]string{"This is", "a file", "with", "a trailing newline", ""},
+	)
 }

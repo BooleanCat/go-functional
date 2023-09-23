@@ -49,6 +49,12 @@ func (iter *LinesIter) Next() option.Option[result.Result[[]byte]] {
 	return option.Some(result.Ok(bytes.TrimRight(content, "\r\n")))
 }
 
+// CollectResults is a convenience method for [CollectResults], providing this
+// iterator as an argument.
+func (iter *LinesIter) CollectResults() result.Result[[][]byte] {
+	return CollectResults[[]byte](iter)
+}
+
 var _ Iterator[result.Result[[]byte]] = new(LinesIter)
 
 type LinesStringIter struct {
@@ -67,6 +73,12 @@ func (iter *LinesStringIter) Next() option.Option[result.Result[string]] {
 			return option.Some(result.Ok(string(b)))
 		}
 	}
+}
+
+// CollectResults is a convenience method for [CollectResults], providing this
+// iterator as an argument.
+func (iter *LinesStringIter) CollectResults() result.Result[[]string] {
+	return CollectResults[string](iter)
 }
 
 // LinesString instantiates a [*LinesStringIter] that behaves like a
