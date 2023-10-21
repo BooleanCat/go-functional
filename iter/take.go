@@ -27,7 +27,7 @@ func (iter *TakeIter[T]) Next() option.Option[T] {
 	if next.IsNone() {
 		iter.limit = 0
 	} else {
-		iter.limit -= 1
+		iter.limit--
 	}
 
 	return next

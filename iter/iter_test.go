@@ -115,7 +115,7 @@ func TestFold(t *testing.T) {
 func TestToChannel(t *testing.T) {
 	expected := 0
 	for number := range iter.ToChannel[int](iter.Lift([]int{1, 2, 3, 4})) {
-		expected += 1
+		expected++
 		assert.Equal(t, number, expected)
 	}
 }
@@ -205,7 +205,7 @@ func TestBaseIteratorChain(t *testing.T) {
 func TestBaseIteratorToChannel(t *testing.T) {
 	expected := 0
 	for number := range iter.Lift([]int{1, 2, 3, 4}).ToChannel() {
-		expected += 1
+		expected++
 		assert.Equal(t, number, expected)
 	}
 }
