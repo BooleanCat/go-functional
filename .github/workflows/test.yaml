@@ -15,8 +15,7 @@ jobs:
         with: { version: "latest" }
       - run: make cov
       - uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        env: { CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}" }
   test:
     strategy:
       matrix:
@@ -26,6 +25,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v4
-        with:
-          go-version: ${{ matrix.go-version }}
+        with: { go-version: "${{ matrix.go-version }}" }
       - run: make test

@@ -3,22 +3,20 @@ package result_test
 import (
 	"encoding/json"
 	"fmt"
+	"testing"
+
 	"github.com/BooleanCat/go-functional/internal/assert"
 	"github.com/BooleanCat/go-functional/result"
-	"testing"
 )
 
 func ExampleResult_UnmarshalJSON() {
-	var r result.Result[[]string]
+	var words result.Result[[]string]
 
-	_ = json.Unmarshal([]byte(`["Foo", "Bar"]`), &r)
-
-	value, _ := r.Value()
-
-	fmt.Println(value)
+	_ = json.Unmarshal([]byte(`["Foo", "Bar"]`), &words)
+	fmt.Println(words)
 
 	// Output:
-	// [Foo Bar]
+	// Ok([Foo Bar])
 }
 
 func TestUnmarshalJSON(t *testing.T) {
