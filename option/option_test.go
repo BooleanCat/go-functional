@@ -72,6 +72,12 @@ func ExampleOption_Value() {
 	// true
 }
 
+func ExampleOption_Expect() {
+	fmt.Println(option.Some(4).Expect("oops"))
+
+	// Output: 4
+}
+
 func TestSomeStringer(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("%s", option.Some("foo")), "Some(foo)") //nolint:gosimple
 	assert.Equal(t, fmt.Sprintf("%s", option.Some(42)), "Some(42)")     //nolint:gosimple
@@ -138,4 +144,17 @@ func TestNoneValue(t *testing.T) {
 	value, ok := option.None[int]().Value()
 	assert.Equal(t, value, 0)
 	assert.False(t, ok)
+}
+
+func TestSomeExpect(t *testing.T) {
+	assert.Equal(t, option.Some(42).Expect("oops"), 42)
+}
+
+func TestNoneExpect(t *testing.T) {
+	defer func() {
+		assert.Equal(t, fmt.Sprint(recover()), "oops")
+	}()
+
+	option.None[int]().Expect("oops")
+	t.Error("did not panic")
 }

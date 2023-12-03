@@ -79,6 +79,12 @@ func ExampleResult_UnwrapErr() {
 	// Output: oops
 }
 
+func ExampleResult_Expect() {
+	fmt.Println(result.Ok(4).Expect("oops"))
+
+	// Output: 4
+}
+
 func TestOkStringer(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("%s", result.Ok(42)), "Ok(42)") //nolint:gosimple
 }
@@ -158,5 +164,18 @@ func TestOkUnwrapErr(t *testing.T) {
 	}()
 
 	_ = result.Ok(42).UnwrapErr()
+	t.Error("did not panic")
+}
+
+func TestOkExpect(t *testing.T) {
+	assert.Equal(t, result.Ok(42).Expect("oops"), 42)
+}
+
+func TestErrExpect(t *testing.T) {
+	defer func() {
+		assert.Equal(t, fmt.Sprintf("%v", recover()), "oops")
+	}()
+
+	_ = result.Err[int](errors.New("oops")).Expect("oops")
 	t.Error("did not panic")
 }

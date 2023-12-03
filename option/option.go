@@ -86,3 +86,13 @@ func (o Option[T]) IsNone() bool {
 func (o Option[T]) Value() (T, bool) {
 	return o.value, o.present
 }
+
+// Expect returns the underlying value for a [Some] variant, or panics with the
+// provided message for a [None] variant.
+func (o Option[T]) Expect(message string) T {
+	if o.present {
+		return o.value
+	}
+
+	panic(message)
+}

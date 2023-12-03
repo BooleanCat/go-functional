@@ -97,3 +97,13 @@ func (r Result[T]) UnwrapErr() error {
 
 	return r.err
 }
+
+// Expect returns the underlying value of an [Ok] variant, or panics with the
+// provided message if called on an [Err] variant.
+func (r Result[T]) Expect(message string) T {
+	if r.err == nil {
+		return r.value
+	}
+
+	panic(message)
+}
