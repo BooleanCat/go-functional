@@ -1,6 +1,10 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // CountIter iterator, see [Count].
 type CountIter struct {
@@ -23,4 +27,10 @@ func (c *CountIter) Next() option.Option[int] {
 	return option.Some(c.index - 1)
 }
 
+// String implements the [fmt.Stringer] interface
+func (c CountIter) String() string {
+	return "Iterator<Count>"
+}
+
+var _ fmt.Stringer = new(CountIter)
 var _ Iterator[int] = new(CountIter)
