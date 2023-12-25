@@ -23,7 +23,7 @@ func ExampleCount() {
 func ExampleCountIter_String() {
 	counter := iter.Count()
 	fmt.Println(counter)
-	fmt.Printf("%s\n", iter.Count())
+	fmt.Printf("%s\n", iter.CountIter{})
 
 	// Output:
 	// Iterator<Count>
@@ -40,4 +40,5 @@ func TestCount(t *testing.T) {
 func TestCount_String(t *testing.T) {
 	counter := iter.Count()
 	assert.Equal(t, counter.String(), "Iterator<Count>")
+	assert.Equal(t, iter.CountIter{}.String(), "Iterator<Count>")
 }

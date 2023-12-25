@@ -28,7 +28,7 @@ func (c *CountIter) Next() option.Option[int] {
 }
 
 // String implements the [fmt.Stringer] interface
-func (c *CountIter) String() string {
+func (c CountIter) String() string {
 	return "Iterator<Count>"
 }
 
