@@ -19,6 +19,11 @@ func ExampleChain_method() {
 	// Output: [1 2 3 4 0 9]
 }
 
+func ExampleChainIter_String() {
+	fmt.Println(iter.Chain[int]())
+	// Output: Iterator<Chain, type=int>
+}
+
 func TestChainMultiple(t *testing.T) {
 	items := iter.Chain[int](iter.Lift([]int{1, 2}), iter.Lift([]int{3, 4}))
 	assert.Equal(t, items.Next().Unwrap(), 1)
@@ -48,4 +53,8 @@ func TestChainExhausted(t *testing.T) {
 	assert.True(t, iter.Next().IsNone())
 	assert.Equal(t, delegate1.NextCallCount(), 1)
 	assert.Equal(t, delegate2.NextCallCount(), 1)
+}
+
+func TestChainString(t *testing.T) {
+	assert.Equal(t, iter.Chain[int]().String(), "Iterator<Chain, type=int>")
 }
