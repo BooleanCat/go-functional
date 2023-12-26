@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // MapIter iterator, see [Map].
 type MapIter[T, U any] struct {
@@ -47,4 +52,13 @@ func (iter *MapIter[T, U]) Next() option.Option[U] {
 	return option.Some(iter.fun(value))
 }
 
-var _ Iterator[struct{}] = new(MapIter[struct{}, struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter MapIter[T, U]) String() string {
+	var instanceOfU U
+	return fmt.Sprintf("Iterator<Map, type=%s>", reflect.TypeOf(instanceOfU))
+}
+
+var (
+	_ fmt.Stringer       = new(MapIter[struct{}, struct{}])
+	_ Iterator[struct{}] = new(MapIter[struct{}, struct{}])
+)

@@ -2,6 +2,7 @@ package iter_test
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/internal/assert"
@@ -24,6 +25,11 @@ func ExampleTransform() {
 
 	fmt.Println(numbers)
 	// Output: [2 3 4]
+}
+
+func ExampleMapIter_String() {
+	fmt.Println(iter.Map[int, string](iter.Count(), strconv.Itoa))
+	// Output: Iterator<Map, type=string>
 }
 
 func ExampleTransform_method() {
@@ -60,4 +66,12 @@ func TestTransform(t *testing.T) {
 	numbers := iter.Transform[int](iter.Count(), addTwo).Take(3).Collect()
 
 	assert.SliceEqual[int](t, numbers, []int{2, 3, 4})
+}
+
+func TestMapIter_String(t *testing.T) {
+	assert.Equal(
+		t,
+		iter.Map[int, string](iter.Count(), strconv.Itoa).String(),
+		"Iterator<Map, type=string>",
+	)
 }
