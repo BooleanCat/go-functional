@@ -32,5 +32,7 @@ func (c CountIter) String() string {
 	return "Iterator<Count>"
 }
 
-var _ fmt.Stringer = new(CountIter)
-var _ Iterator[int] = new(CountIter)
+var (
+	_ fmt.Stringer  = new(CountIter)
+	_ Iterator[int] = new(CountIter)
+)
