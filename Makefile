@@ -1,4 +1,5 @@
 .phony: test check lint
+.DEFAULT_GOAL := test
 
 check: lint
 	@go vet ./...
