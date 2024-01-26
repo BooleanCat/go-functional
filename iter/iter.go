@@ -160,3 +160,9 @@ func (iter *BaseIter[T]) Transform(op func(T) T) *MapIter[T, T] {
 func (iter *BaseIter[T]) Exclude(fun func(T) bool) *FilterIter[T] {
 	return Exclude[T](iter, fun)
 }
+
+// Tee is a convenience method for [Tee], providing this iterator as an
+// argument.
+func (iter *BaseIter[T]) Tee() *TeeIters[T] {
+	return Tee[T](iter)
+}
