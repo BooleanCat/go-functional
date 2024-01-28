@@ -17,6 +17,11 @@ func ExampleRepeat() {
 	// Some(42)
 }
 
+func ExampleRepeatIter_String() {
+	fmt.Println(iter.Repeat[int](42))
+	// Output: Iterator<Repeat, type=int>
+}
+
 func TestRepeat(t *testing.T) {
 	numbers := iter.Repeat[int](42)
 	assert.Equal(t, numbers.Next().Unwrap(), 42)
@@ -26,6 +31,6 @@ func TestRepeat(t *testing.T) {
 
 func TestRepeatIter_String(t *testing.T) {
 	repeat := iter.Repeat[int](42)
-	assert.Equal(t, fmt.Sprintf("%s", repeat), "Iterator<Map, type=int>")  //nolint:gosimple
-	assert.Equal(t, fmt.Sprintf("%s", *repeat), "Iterator<Map, type=int>") //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", repeat), "Iterator<Repeat, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *repeat), "Iterator<Repeat, type=int>") //nolint:gosimple
 }

@@ -30,7 +30,7 @@ func (iter *RepeatIter[T]) Next() option.Option[T] {
 // String implements the [fmt.Stringer] interface
 func (iter RepeatIter[T]) String() string {
 	var instanceOfT T
-	return fmt.Sprintf("Iterator<Map, type=%s>", reflect.TypeOf(instanceOfT))
+	return fmt.Sprintf("Iterator<Repeat, type=%s>", reflect.TypeOf(instanceOfT))
 }
 
 var (

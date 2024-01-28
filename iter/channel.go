@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // ChannelIter iterator, see [FromChannel].
 type ChannelIter[T any] struct {
@@ -27,4 +32,13 @@ func (iter *ChannelIter[T]) Next() option.Option[T] {
 	return option.Some(value)
 }
 
-var _ Iterator[struct{}] = new(ChannelIter[struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter ChannelIter[T]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<Channel, type=%s>", reflect.TypeOf(instanceOfT))
+}
+
+var (
+	_ fmt.Stringer       = new(ChannelIter[struct{}])
+	_ Iterator[struct{}] = new(ChannelIter[struct{}])
+)

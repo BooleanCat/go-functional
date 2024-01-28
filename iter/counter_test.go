@@ -21,13 +21,8 @@ func ExampleCount() {
 }
 
 func ExampleCountIter_String() {
-	counter := iter.Count()
-	fmt.Println(counter)
-	fmt.Printf("%s\n", iter.CountIter{})
-
-	// Output:
-	// Iterator<Count>
-	// Iterator<Count>
+	fmt.Println(iter.Count())
+	// Output: Iterator<Count>
 }
 
 func TestCount(t *testing.T) {

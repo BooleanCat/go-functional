@@ -21,6 +21,14 @@ func ExampleFromChannel() {
 	// Output: [1 2]
 }
 
+func ExampleChannelIter_String() {
+	ch := make(chan int, 2)
+	close(ch)
+
+	fmt.Println(iter.FromChannel(ch))
+	// Output: Iterator<Channel, type=int>
+}
+
 func TestFromChannel(t *testing.T) {
 	ch := make(chan int)
 
@@ -43,4 +51,13 @@ func TestFromChannelEmpty(t *testing.T) {
 	ch := make(chan int)
 	close(ch)
 	assert.True(t, iter.FromChannel(ch).Next().IsNone())
+}
+
+func TestFromChannel_String(t *testing.T) {
+	ch := make(chan int)
+	close(ch)
+	numbers := iter.FromChannel(ch)
+
+	assert.Equal(t, fmt.Sprintf("%s", numbers), "Iterator<Channel, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *numbers), "Iterator<Channel, type=int>") //nolint:gosimple
 }
