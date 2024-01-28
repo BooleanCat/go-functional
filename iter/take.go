@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // TakeIter iterator, see [Take].
 type TakeIter[T any] struct {
@@ -33,4 +38,13 @@ func (iter *TakeIter[T]) Next() option.Option[T] {
 	return next
 }
 
-var _ Iterator[struct{}] = new(TakeIter[struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter TakeIter[T]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<Take, type=%s>", reflect.TypeOf(instanceOfT))
+}
+
+var (
+	_ Iterator[int]      = new(TakeIter[int])
+	_ Iterator[struct{}] = new(TakeIter[struct{}])
+)

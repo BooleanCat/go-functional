@@ -22,6 +22,11 @@ func ExampleRunes_slice() {
 	// Output: 世界
 }
 
+func ExampleRunesIter_String() {
+	fmt.Println(iter.Runes("Hello, 世界!"))
+	// Output: Iterator<Runes>
+}
+
 func TestRunes(t *testing.T) {
 	runes := iter.Runes("Hello, 世界!").Collect()
 	assert.SliceEqual[rune](t, runes, []rune{'H', 'e', 'l', 'l', 'o', ',', ' ', '世', '界', '!'})
@@ -40,4 +45,10 @@ func TestRunesEmpty(t *testing.T) {
 func TestRunesEmptySlice(t *testing.T) {
 	runes := iter.Runes([]rune{}).Collect()
 	assert.Empty[rune](t, runes)
+}
+
+func TestRunesIter_String(t *testing.T) {
+	runes := iter.Runes("Hello, 世界!")
+	assert.Equal(t, fmt.Sprintf("%s", runes), "Iterator<Runes>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *runes), "Iterator<Runes>") //nolint:gosimple
 }

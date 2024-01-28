@@ -18,6 +18,14 @@ func ExampleZip() {
 	// Output:[(0, 1) (2, 3) (4, 5)]
 }
 
+func ExampleZipIter_String() {
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
+
+	fmt.Println(iter.Zip[int, int](evens, odds))
+	// Output: Iterator<Zip, type=Pair<int, int>>
+}
+
 func TestPairStringer(t *testing.T) {
 	foo := map[string]interface{}{
 		"text": "Random Text",
@@ -73,4 +81,14 @@ func TestZipSecondExhaustedDelegate(t *testing.T) {
 	assert.True(t, zipped.Next().IsNone())
 	assert.True(t, zipped.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
+}
+
+func TestZipString(t *testing.T) {
+	evens := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	odds := iter.Filter[int](iter.Count(), filters.IsOdd[int])
+	zipped := iter.Zip[int, int](evens, odds)
+	expected := "Iterator<Zip, type=Pair<int, int>>"
+
+	assert.Equal(t, fmt.Sprintf("%s", zipped), expected)  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *zipped), expected) //nolint:gosimple
 }

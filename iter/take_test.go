@@ -31,6 +31,11 @@ func ExampleTake_method() {
 	// None
 }
 
+func ExampleTakeIter_String() {
+	fmt.Println(iter.Take[int](iter.Count(), 2))
+	// Output: Iterator<Take, type=int>
+}
+
 func TestTakeIter(t *testing.T) {
 	iter := iter.Take[int](iter.Count(), 2)
 	assert.Equal(t, iter.Next().Unwrap(), 0)
@@ -50,4 +55,10 @@ func TestTakeExhausted(t *testing.T) {
 	assert.True(t, iter.Next().IsNone())
 	assert.True(t, iter.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
+}
+
+func TestTakeString(t *testing.T) {
+	numbers := iter.Take[int](iter.Count(), 2)
+	assert.Equal(t, fmt.Sprintf("%s", numbers), "Iterator<Take, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *numbers), "Iterator<Take, type=int>") //nolint:gosimple
 }

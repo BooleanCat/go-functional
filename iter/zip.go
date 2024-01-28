@@ -2,6 +2,7 @@ package iter
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/BooleanCat/go-functional/option"
 )
@@ -61,4 +62,17 @@ func (iter *ZipIter[T, U]) Next() option.Option[Pair[T, U]] {
 	return option.Some(Pair[T, U]{v1, v2})
 }
 
-var _ Iterator[Pair[struct{}, struct{}]] = new(ZipIter[struct{}, struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter ZipIter[T, U]) String() string {
+	var (
+		instanceOfT T
+		instanceOfU U
+	)
+
+	return fmt.Sprintf("Iterator<Zip, type=Pair<%s, %s>>", reflect.TypeOf(instanceOfT), reflect.TypeOf(instanceOfU))
+}
+
+var (
+	_ fmt.Stringer                       = new(ZipIter[int, int])
+	_ Iterator[Pair[struct{}, struct{}]] = new(ZipIter[struct{}, struct{}])
+)
