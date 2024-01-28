@@ -34,6 +34,11 @@ func ExampleEnumerate_method() {
 	// None
 }
 
+func ExampleEnumerateIter_String() {
+	fmt.Println(iter.Enumerate[string](iter.Exhausted[string]()))
+	// Output: Iterator<Enumerate, type=Pair<uint, string>>
+}
+
 func TestEnumerate(t *testing.T) {
 	iterator := iter.Enumerate[string](iter.Lift([]string{"Hello", "Friend"}))
 
@@ -58,4 +63,12 @@ func TestEnumerateExhausted(t *testing.T) {
 	assert.True(t, iterator.Next().IsNone())
 	assert.True(t, iterator.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 2)
+}
+
+func TestEnumerateIter_String(t *testing.T) {
+	enumerate := iter.Enumerate[int](iter.Lift([]int{1, 2}))
+	expected := "Iterator<Enumerate, type=Pair<uint, int>>"
+
+	assert.Equal(t, fmt.Sprintf("%s", enumerate), expected)  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *enumerate), expected) //nolint:gosimple
 }

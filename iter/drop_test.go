@@ -22,6 +22,11 @@ func ExampleDrop_method() {
 	// Output: 2
 }
 
+func ExampleDropIter_String() {
+	fmt.Println(iter.Drop[int](iter.Count(), 2))
+	// Output: Iterator<Drop, type=int>
+}
+
 func TestDrop(t *testing.T) {
 	counter := iter.Drop[int](iter.Count(), 2)
 	assert.Equal(t, counter.Next().Unwrap(), 2)
@@ -48,4 +53,10 @@ func TestDropExhaustedLater(t *testing.T) {
 	assert.True(t, iterator.Next().IsNone())
 	assert.True(t, iterator.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 3)
+}
+
+func TestDropIter_String(t *testing.T) {
+	drop := iter.Drop[int](iter.Count(), 2)
+	assert.Equal(t, fmt.Sprintf("%s", drop), "Iterator<Drop, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *drop), "Iterator<Drop, type=int>") //nolint:gosimple
 }

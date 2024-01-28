@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // DropIter iterator, see [Drop].
 type DropIter[T any] struct {
@@ -45,6 +50,12 @@ func (iter *DropIter[T]) delegateNext() option.Option[T] {
 	}
 
 	return next
+}
+
+// String implements the [fmt.Stringer] interface
+func (iter DropIter[T]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<Drop, type=%s>", reflect.TypeOf(instanceOfT))
 }
 
 var _ Iterator[struct{}] = new(DropIter[struct{}])

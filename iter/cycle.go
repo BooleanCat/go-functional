@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // CycleIter iterator, see [Cycle].
 type CycleIter[T any] struct {
@@ -50,4 +55,13 @@ func (iter *CycleIter[T]) Next() option.Option[T] {
 	return option.Some(next)
 }
 
-var _ Iterator[struct{}] = new(CycleIter[struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter CycleIter[T]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<Cycle, type=%s>", reflect.TypeOf(instanceOfT))
+}
+
+var (
+	_ fmt.Stringer       = new(CycleIter[struct{}])
+	_ Iterator[struct{}] = new(CycleIter[struct{}])
+)

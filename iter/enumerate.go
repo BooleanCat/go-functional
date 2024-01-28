@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // EnumerateIter iterator, see [Enumerate].
 type EnumerateIter[T any] struct {
@@ -33,4 +38,13 @@ func (iter *EnumerateIter[T]) Next() option.Option[Pair[uint, T]] {
 	return option.Some(next)
 }
 
-var _ Iterator[Pair[uint, struct{}]] = new(EnumerateIter[struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter EnumerateIter[T]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<Enumerate, type=Pair<uint, %s>>", reflect.TypeOf(instanceOfT))
+}
+
+var (
+	_ fmt.Stringer                   = new(EnumerateIter[struct{}])
+	_ Iterator[Pair[uint, struct{}]] = new(EnumerateIter[struct{}])
+)

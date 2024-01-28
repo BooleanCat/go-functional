@@ -15,6 +15,11 @@ func ExampleCycle() {
 	// Output: [1 2 1 2 1]
 }
 
+func ExampleCycleIter_String() {
+	fmt.Println(iter.Cycle[int](iter.Lift([]int{1, 2})))
+	// Output: Iterator<Cycle, type=int>
+}
+
 func TestCycleIter(t *testing.T) {
 	items := iter.Cycle[int](iter.Lift([]int{1, 2, 3})).Take(2).Collect()
 	assert.SliceEqual(t, items, []int{1, 2})
@@ -37,4 +42,10 @@ func TestCycleExhausted(t *testing.T) {
 	assert.True(t, ones.Next().IsNone())
 	assert.True(t, ones.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
+}
+
+func TestCycleIter_String(t *testing.T) {
+	cycle := iter.Cycle[int](iter.Lift([]int{1, 2}))
+	assert.Equal(t, fmt.Sprintf("%s", cycle), "Iterator<Cycle, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *cycle), "Iterator<Cycle, type=int>") //nolint:gosimple
 }
