@@ -22,12 +22,22 @@ func ExampleLinesString() {
 	// Output: [hello there]
 }
 
+func ExampleLinesStringIter_String() {
+	fmt.Println(iter.LinesString(bytes.NewBufferString("hello\nthere")))
+	// Output: Iterator<LinesString, type=Result<string>>
+}
+
 func ExampleLines() {
 	lines := iter.Lines(bytes.NewBufferString("hello\nthere"))
 	unwrapped := iter.Map[result.Result[[]byte]](lines, ops.UnwrapResult[[]byte])
 
 	fmt.Println(unwrapped.Collect())
 	// Output: [[104 101 108 108 111] [116 104 101 114 101]]
+}
+
+func ExampleLinesIter_String() {
+	fmt.Println(iter.Lines(bytes.NewBufferString("hello\nthere")))
+	// Output: Iterator<Lines, type=Result<[]byte>>
 }
 
 func TestLines(t *testing.T) {
@@ -92,6 +102,14 @@ func TestLinesCollectResults(t *testing.T) {
 	assert.Empty[byte](t, lines[4])
 }
 
+func TestLinesIter_String(t *testing.T) {
+	lines := iter.Lines(new(bytes.Buffer))
+	expected := "Iterator<Lines, type=Result<[]byte>>"
+
+	assert.Equal(t, fmt.Sprintf("%s", lines), expected)  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *lines), expected) //nolint:gosimple
+}
+
 func TestLinesString(t *testing.T) {
 	file, err := os.Open("fixtures/lines.txt")
 	assert.Nil(t, err)
@@ -153,4 +171,12 @@ func TestLinesStringCollectResults(t *testing.T) {
 		lines.Unwrap(),
 		[]string{"This is", "a file", "with", "a trailing newline", ""},
 	)
+}
+
+func TestLinesStringIter_String(t *testing.T) {
+	lines := iter.LinesString(new(bytes.Buffer))
+	expected := "Iterator<LinesString, type=Result<string>>"
+
+	assert.Equal(t, fmt.Sprintf("%s", lines), expected)  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *lines), expected) //nolint:gosimple
 }
