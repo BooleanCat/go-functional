@@ -39,6 +39,6 @@ func TestCount(t *testing.T) {
 
 func TestCount_String(t *testing.T) {
 	counter := iter.Count()
-	assert.Equal(t, counter.String(), "Iterator<Count>")
-	assert.Equal(t, iter.CountIter{}.String(), "Iterator<Count>")
+	assert.Equal(t, fmt.Sprintf("%s", counter), "Iterator<Count>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *counter), "Iterator<Count>") //nolint:gosimple
 }

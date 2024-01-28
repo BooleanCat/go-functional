@@ -56,5 +56,7 @@ func TestChainExhausted(t *testing.T) {
 }
 
 func TestChainString(t *testing.T) {
-	assert.Equal(t, iter.Chain[int]().String(), "Iterator<Chain, type=int>")
+	exhausted := iter.Chain[int]()
+	assert.Equal(t, fmt.Sprintf("%s", exhausted), "Iterator<Chain, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *exhausted), "Iterator<Chain, type=int>") //nolint:gosimple
 }

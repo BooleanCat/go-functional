@@ -69,9 +69,7 @@ func TestTransform(t *testing.T) {
 }
 
 func TestMapIter_String(t *testing.T) {
-	assert.Equal(
-		t,
-		iter.Map[int, string](iter.Count(), strconv.Itoa).String(),
-		"Iterator<Map, type=string>",
-	)
+	numbers := iter.Map[int, string](iter.Count(), strconv.Itoa)
+	assert.Equal(t, fmt.Sprintf("%s", numbers), "Iterator<Map, type=string>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *numbers), "Iterator<Map, type=string>") //nolint:gosimple
 }
