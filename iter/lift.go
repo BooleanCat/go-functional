@@ -2,7 +2,9 @@ package iter
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"reflect"
 
 	"github.com/BooleanCat/go-functional/option"
 )
@@ -33,7 +35,16 @@ func (iter *LiftIter[T]) Next() option.Option[T] {
 	return option.Some(iter.items[iter.index-1])
 }
 
-var _ Iterator[struct{}] = new(LiftIter[struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter LiftIter[T]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<Lift, type=%s>", reflect.TypeOf(instanceOfT))
+}
+
+var (
+	_ fmt.Stringer       = new(LiftIter[struct{}])
+	_ Iterator[struct{}] = new(LiftIter[struct{}])
+)
 
 // LiftHashMapIter iterator, see [LiftHashMap].
 type LiftHashMapIter[T comparable, U any] struct {
@@ -106,7 +117,18 @@ func (iter *LiftHashMapIter[T, U]) Next() option.Option[Pair[T, U]] {
 	return option.Some(pair)
 }
 
+// String implements the [fmt.Stringer] interface
+func (iter LiftHashMapIter[T, U]) String() string {
+	var (
+		instanceOfT T
+		instanceOfU U
+	)
+
+	return fmt.Sprintf("Iterator<LiftHashMap, type=Pair<%s, %s>>", reflect.TypeOf(instanceOfT), reflect.TypeOf(instanceOfU))
+}
+
 var (
+	_ fmt.Stringer                       = new(LiftHashMapIter[struct{}, struct{}])
 	_ Iterator[Pair[struct{}, struct{}]] = new(LiftHashMapIter[struct{}, struct{}])
 	_ io.Closer                          = new(LiftHashMapIter[struct{}, struct{}])
 )
@@ -159,7 +181,14 @@ func (iter *LiftHashMapKeysIter[T, U]) Next() option.Option[T] {
 	return next
 }
 
+// String implements the [fmt.Stringer] interface
+func (iter LiftHashMapKeysIter[T, U]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<LiftHashMapKeys, type=%s>", reflect.TypeOf(instanceOfT))
+}
+
 var (
+	_ fmt.Stringer       = new(LiftHashMapKeysIter[struct{}, struct{}])
 	_ Iterator[struct{}] = new(LiftHashMapKeysIter[struct{}, struct{}])
 	_ io.Closer          = new(LiftHashMapKeysIter[struct{}, struct{}])
 )
@@ -212,7 +241,14 @@ func (iter *LiftHashMapValuesIter[T, U]) Next() option.Option[U] {
 	return next
 }
 
+// String implements the [fmt.Stringer] interface
+func (iter LiftHashMapValuesIter[T, U]) String() string {
+	var instanceOfU U
+	return fmt.Sprintf("Iterator<LiftHashMapValues, type=%s>", reflect.TypeOf(instanceOfU))
+}
+
 var (
+	_ fmt.Stringer       = new(LiftHashMapValuesIter[struct{}, struct{}])
 	_ Iterator[struct{}] = new(LiftHashMapValuesIter[struct{}, struct{}])
 	_ io.Closer          = new(LiftHashMapValuesIter[struct{}, struct{}])
 )

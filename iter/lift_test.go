@@ -16,6 +16,59 @@ func ExampleLift() {
 	// Output: [4 6 4]
 }
 
+func ExampleLiftIter_String() {
+	fmt.Println(iter.Lift([]int{1, 2, 3}))
+	// Output: Iterator<Lift, type=int>
+}
+
+func ExampleLiftHashMap() {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	items := iter.LiftHashMap(pokemon).Collect()
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].One < items[j].One
+	})
+
+	fmt.Println(items)
+	// Output: [(name, pikachu) (type, electric)]
+}
+
+func ExampleLiftHashMapIter_String() {
+	fmt.Println(iter.LiftHashMap(make(map[string]string)))
+	// Output: Iterator<LiftHashMap, type=Pair<string, string>>
+}
+
+func ExampleLiftHashMapKeys() {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	keys := iter.LiftHashMapKeys(pokemon).Collect()
+	sort.Strings(keys)
+
+	fmt.Println(keys)
+	// Output: [name type]
+}
+
+func ExampleLiftHashMapKeysIter_String() {
+	fmt.Println(iter.LiftHashMapKeys(make(map[string]int)))
+	// Output: Iterator<LiftHashMapKeys, type=string>
+}
+
+func ExampleLiftHashMapValues() {
+	pokemon := make(map[string]string)
+	pokemon["name"] = "pikachu"
+	pokemon["type"] = "electric"
+
+	values := iter.LiftHashMapValues(pokemon).Collect()
+	sort.Strings(values)
+
+	fmt.Println(values)
+	// Output: [electric pikachu]
+}
+
 func TestLift(t *testing.T) {
 	items := iter.Lift([]int{1, 2})
 	assert.Equal(t, items.Next().Unwrap(), 1)
@@ -25,6 +78,12 @@ func TestLift(t *testing.T) {
 
 func TestLiftEmpty(t *testing.T) {
 	assert.True(t, iter.Lift([]int{}).Next().IsNone())
+}
+
+func TestLift_String(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2})
+	assert.Equal(t, fmt.Sprintf("%s", numbers), "Iterator<Lift, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *numbers), "Iterator<Lift, type=int>") //nolint:gosimple
 }
 
 func TestLiftHashMap(t *testing.T) {
@@ -69,6 +128,14 @@ func TestLiftHashMapCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMap(pokemon)
 	defer items.Close()
 	items.Collect()
+}
+
+func TestLiftHashMap_String(t *testing.T) {
+	pokemon := iter.LiftHashMap(make(map[string]string))
+	expected := "Iterator<LiftHashMap, type=Pair<string, string>>"
+
+	assert.Equal(t, fmt.Sprintf("%s", pokemon), expected)  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *pokemon), expected) //nolint:gosimple
 }
 
 func TestLiftHashMapKeys(t *testing.T) {
@@ -120,6 +187,14 @@ func TestLiftHashMapKeysCloseAfterExhaustedSafe(t *testing.T) {
 	items.Collect()
 }
 
+func TestLiftHashMapKeys_String(t *testing.T) {
+	keys := iter.LiftHashMapKeys(make(map[string]int))
+	expected := "Iterator<LiftHashMapKeys, type=string>"
+
+	assert.Equal(t, fmt.Sprintf("%s", keys), expected)  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *keys), expected) //nolint:gosimple
+}
+
 func TestLiftHashMapValues(t *testing.T) {
 	pokemon := make(map[string]string)
 	pokemon["name"] = "pikachu"
@@ -167,4 +242,12 @@ func TestLiftHashMapValuesCloseAfterExhaustedSafe(t *testing.T) {
 	items := iter.LiftHashMapValues(pokemon)
 	defer items.Close()
 	items.Collect()
+}
+
+func TestLiftHashMapValues_String(t *testing.T) {
+	values := iter.LiftHashMapValues(make(map[string]int))
+	expected := "Iterator<LiftHashMapValues, type=int>"
+
+	assert.Equal(t, fmt.Sprintf("%s", values), expected)  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *values), expected) //nolint:gosimple
 }
