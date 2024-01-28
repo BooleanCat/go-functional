@@ -35,6 +35,11 @@ func ExampleFilter_method() {
 	// None
 }
 
+func ExampleFilterIter_String() {
+	fmt.Println(iter.Filter[int](iter.Exhausted[int](), filters.IsZero[int]))
+	// Output: Iterator<Filter, type=int>
+}
+
 func ExampleFilterMap() {
 	selectAndTripleOdds := func(x int) option.Option[int] {
 		if x%2 == 0 {
@@ -50,6 +55,27 @@ func ExampleFilterMap() {
 
 	fmt.Println(triples.Collect())
 	// Output: [3 9 15]
+}
+
+func ExampleFilterMap_method() {
+	selectAndTripleOdds := func(x int) option.Option[int] {
+		if x%2 == 0 {
+			return option.None[int]()
+		}
+		return option.Some(x * 3)
+	}
+
+	triples := iter.Count().Take(6).FilterMap(selectAndTripleOdds)
+
+	fmt.Println(triples.Collect())
+	// Output: [3 9 15]
+}
+
+func ExampleFilterMapIter_String() {
+	fmt.Println(iter.FilterMap[int](iter.Exhausted[int](), func(_ int) option.Option[int] {
+		return option.Some(42)
+	}))
+	// Output: Iterator<FilterMap, type=int>
 }
 
 func ExampleExclude() {
@@ -94,6 +120,12 @@ func TestFilterExhausted(t *testing.T) {
 	assert.True(t, ones.Next().IsNone())
 	assert.True(t, ones.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
+}
+
+func TestFilter_String(t *testing.T) {
+	filter := iter.Filter[int](iter.Count(), filters.IsEven[int])
+	assert.Equal(t, fmt.Sprintf("%s", filter), "Iterator<Filter, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *filter), "Iterator<Filter, type=int>") //nolint:gosimple
 }
 
 func TestExclude(t *testing.T) {
@@ -152,6 +184,16 @@ func TestFilterMapExhausted(t *testing.T) {
 	assert.True(t, ones.Next().IsNone())
 	assert.True(t, ones.Next().IsNone())
 	assert.Equal(t, delegate.NextCallCount(), 1)
+}
+
+func TestFilterMap_String(t *testing.T) {
+	filterMap := iter.FilterMap[int](
+		iter.Lift([]int{1, 2, 3, 4, 5, 6}),
+		selectEvenAndDouble,
+	)
+
+	assert.Equal(t, fmt.Sprintf("%s", filterMap), "Iterator<FilterMap, type=int>")  //nolint:gosimple
+	assert.Equal(t, fmt.Sprintf("%s", *filterMap), "Iterator<FilterMap, type=int>") //nolint:gosimple
 }
 
 func selectEvenAndDouble(x int) option.Option[int] {

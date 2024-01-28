@@ -223,3 +223,9 @@ func TestBaseIteratorExclude(t *testing.T) {
 	assert.Equal(t, evens.Next().Unwrap(), 1)
 	assert.Equal(t, evens.Next().Unwrap(), 3)
 }
+
+func TestBaseIteratorFilterMap(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5, 6}).FilterMap(selectEvenAndDouble)
+
+	assert.SliceEqual(t, numbers.Collect(), []int{4, 8, 12})
+}

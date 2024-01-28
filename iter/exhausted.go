@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // ExhaustedIter iterator, see [Exhausted].
 type ExhaustedIter[T any] struct {
@@ -20,4 +25,13 @@ func (iter *ExhaustedIter[T]) Next() option.Option[T] {
 	return option.None[T]()
 }
 
-var _ Iterator[struct{}] = new(ExhaustedIter[struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter ExhaustedIter[T]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<Exhausted, type=%s>", reflect.TypeOf(instanceOfT))
+}
+
+var (
+	_ fmt.Stringer       = new(ExhaustedIter[struct{}])
+	_ Iterator[struct{}] = new(ExhaustedIter[struct{}])
+)

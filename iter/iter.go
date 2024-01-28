@@ -160,3 +160,9 @@ func (iter *BaseIter[T]) Transform(op func(T) T) *MapIter[T, T] {
 func (iter *BaseIter[T]) Exclude(fun func(T) bool) *FilterIter[T] {
 	return Exclude[T](iter, fun)
 }
+
+// FilterMap is a convenience method for [FilterMap], providing this iterator
+// as an argument.
+func (iter *BaseIter[T]) FilterMap(fun func(T) option.Option[T]) *FilterMapIter[T, T] {
+	return FilterMap[T, T](iter, fun)
+}

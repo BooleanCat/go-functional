@@ -1,6 +1,11 @@
 package iter
 
-import "github.com/BooleanCat/go-functional/option"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/BooleanCat/go-functional/option"
+)
 
 // FilterIter iterator, see [Filter].
 type FilterIter[T any] struct {
@@ -37,7 +42,16 @@ func (iter *FilterIter[T]) Next() option.Option[T] {
 	}
 }
 
-var _ Iterator[struct{}] = new(FilterIter[struct{}])
+// String implements the [fmt.Stringer] interface
+func (iter FilterIter[T]) String() string {
+	var instanceOfT T
+	return fmt.Sprintf("Iterator<Filter, type=%s>", reflect.TypeOf(instanceOfT))
+}
+
+var (
+	_ fmt.Stringer       = new(FilterIter[struct{}])
+	_ Iterator[struct{}] = new(FilterIter[struct{}])
+)
 
 // Exclude instantiates a [*FilterIter] that selectively yields only results
 // that cause the provided function to return `false`.
@@ -74,6 +88,12 @@ func (iter *FilterMapIter[T, U]) Next() option.Option[U] {
 			return result
 		}
 	}
+}
+
+// String implements the [fmt.Stringer] interface
+func (iter FilterMapIter[T, U]) String() string {
+	var instanceOfU U
+	return fmt.Sprintf("Iterator<FilterMap, type=%s>", reflect.TypeOf(instanceOfU))
 }
 
 var _ Iterator[struct{}] = new(FilterMapIter[struct{}, struct{}])
