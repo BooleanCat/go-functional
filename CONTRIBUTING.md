@@ -22,14 +22,14 @@ issue if your query doesn't naturally fit into an existing template.
 This project is a zero-dependency project - which means that consumers using
 this project's packages must only incur one dependency: go-functional.
 
-Development dependencies are OK as they will not be included as depdendencies to
+Development dependencies are OK as they will not be included as dependencies to
 end-users (such as `golangci-lint`).
 
 ## Commit hygiene
 
 - Commits should contain only a single change
-- Commit messages must use imperitive language (e.g. `Add iter.Fold collection
-  function`)
+- Commit messages must use imperative language (e.g. `Add iter.Fold collection
+function`)
 - Commit messages must explain what is changed, not how it is changed
 - The first line of a commit message should be a terse description of the change
   containing 72 characters or fewer
@@ -49,7 +49,7 @@ Code is linted using `golangci-lint`. The linter may be run using
 ### Bug fixes
 
 Bug reports are appreciated ahead of bug fixes as early reporting allows the
-community to be aware of any issues ahead of a fix being submitted.  If you
+community to be aware of any issues ahead of a fix being submitted. If you
 intend to fix a bug after reporting, that is greatly appreciated - just make
 sure to mention you intend to work on it on the issue report so the maintainers
 are aware and leave you the chance to make a contribution.

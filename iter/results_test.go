@@ -25,7 +25,7 @@ func TestCollectResults(t *testing.T) {
 	assert.SliceEqual[string](t, words.Unwrap(), []string{"hello", "there"})
 }
 
-func TestCollectResultsEmtpty(t *testing.T) {
+func TestCollectResultsEmpty(t *testing.T) {
 	words := iter.CollectResults[string](iter.Exhausted[result.Result[string]]())
 	assert.Empty[string](t, words.Unwrap())
 }
