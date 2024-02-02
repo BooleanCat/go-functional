@@ -42,4 +42,7 @@ jobs:
         with:
           go-version: "1.22.0-rc.2"
           cache: false
-      - run: make test-v2
+      - run: |
+          go work init .
+          go work use v2
+          make test-v2
