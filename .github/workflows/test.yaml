@@ -31,3 +31,15 @@ jobs:
           go-version: "${{ matrix.go-version }}"
           cache: false
       - run: make test
+  test-v2:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.0-rc.2"
+          cache: false
+      - run: make test-v2
