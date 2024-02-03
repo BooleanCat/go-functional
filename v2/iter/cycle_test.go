@@ -40,6 +40,6 @@ func TestCycle(t *testing.T) {
 }
 
 func TestCycleEmpty(t *testing.T) {
-	numbers := iter.Count().Take(0).Cycle().Take(5).Collect()
+	numbers := iter.Exhausted[int]().Cycle().Collect()
 	assert.Empty[int](t, numbers)
 }

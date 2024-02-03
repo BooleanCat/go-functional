@@ -34,7 +34,7 @@ func TestTake(t *testing.T) {
 }
 
 func TestTakeEmpty(t *testing.T) {
-	numbers := iter.Lift([]int{}).Take(2).Collect()
+	numbers := iter.Exhausted[int]().Take(2).Collect()
 	assert.Empty[int](t, numbers)
 }
 

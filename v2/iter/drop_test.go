@@ -34,7 +34,7 @@ func TestDrop(t *testing.T) {
 }
 
 func TestDropEmpty(t *testing.T) {
-	numbers := iter.Lift([]int{}).Drop(1).Collect()
+	numbers := iter.Exhausted[int]().Drop(1).Collect()
 	assert.Empty[int](t, numbers)
 }
 
@@ -43,7 +43,7 @@ func TestDropZero(t *testing.T) {
 	assert.SliceEqual(t, []int{1, 2}, numbers)
 }
 
-func TestDropAll(t *testing.T) {
+func TestDropNegative(t *testing.T) {
 	numbers := iter.Lift([]int{1, 2}).Drop(-2).Collect()
 	assert.SliceEqual(t, []int{1, 2}, numbers)
 }
