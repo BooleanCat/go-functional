@@ -26,6 +26,7 @@ func Cycle[V any](delegate Iterator[V]) Iterator[V] {
 			items = append(items, v)
 		}
 
+		stop()
 		if len(items) == 0 {
 			return
 		}
