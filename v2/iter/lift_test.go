@@ -60,3 +60,39 @@ func TestLiftHashMapEmpty(t *testing.T) {
 		t.Error("expected no iteration")
 	}
 }
+
+func ExampleLiftChannel() {
+	ch := make(chan int, 2)
+
+	go func() {
+		ch <- 1
+		ch <- 2
+		close(ch)
+	}()
+
+	fmt.Println(iter.LiftChannel(ch).Collect())
+	// Output: [1 2]
+}
+
+func TestLiftChannel(t *testing.T) {
+	ch := make(chan int, 2)
+
+	go func() {
+		ch <- 1
+		ch <- 2
+		close(ch)
+	}()
+
+	numbers := iter.LiftChannel(ch).Collect()
+	assert.SliceEqual(t, []int{1, 2}, numbers)
+}
+
+func TestLiftChannelEmpty(t *testing.T) {
+	ch := make(chan int)
+
+	close(ch)
+
+	for _ = range iter.LiftChannel(ch) {
+		t.Error("expected no iteration")
+	}
+}

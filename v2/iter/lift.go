@@ -23,3 +23,14 @@ func LiftHashMap[K comparable, V any](hashmap map[K]V) Iterator[Pair[K, V]] {
 		}
 	}))
 }
+
+// LiftChannel yields all items in the provided channel.
+func LiftChannel[V any](channel <-chan V) Iterator[V] {
+	return Iterator[V](iter.Seq[V](func(yield func(V) bool) {
+		for item := range channel {
+			if !yield(item) {
+				return
+			}
+		}
+	}))
+}
