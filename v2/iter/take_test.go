@@ -37,3 +37,13 @@ func TestTakeEmpty(t *testing.T) {
 	numbers := iter.Lift([]int{}).Take(2).Collect()
 	assert.Empty[int](t, numbers)
 }
+
+func TestTakeZero(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2}).Take(0).Collect()
+	assert.Empty[int](t, numbers)
+}
+
+func TestTakeNegative(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2}).Take(-2).Collect()
+	assert.Empty[int](t, numbers)
+}
