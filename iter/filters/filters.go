@@ -14,12 +14,12 @@ func IsZero[T comparable](t T) bool {
 	return t == u
 }
 
-// IsEven returns true when the provided integer is even
+// IsEven returns true when the provided integer is even.
 func IsEven[T constraints.Integer](integer T) bool {
 	return integer%2 == 0
 }
 
-// IsOdd returns true when the provided integer is odd
+// IsOdd returns true when the provided integer is odd.
 func IsOdd[T constraints.Integer](integer T) bool {
 	return integer%2 != 0
 }
