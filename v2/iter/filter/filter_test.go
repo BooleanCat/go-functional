@@ -41,3 +41,47 @@ func TestIsOdd(t *testing.T) {
 	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Exclude(filter.IsOdd).Collect()
 	assert.SliceEqual(t, []int{2, 4}, numbers)
 }
+
+func ExampleGreaterThan() {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.GreaterThan(2))
+	fmt.Println(numbers.Collect())
+	// Output: [3 4 5]
+}
+
+func TestGreaterThan(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.GreaterThan(2)).Collect()
+	assert.SliceEqual(t, []int{3, 4, 5}, numbers)
+}
+
+func ExampleLessThan() {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.LessThan(3))
+	fmt.Println(numbers.Collect())
+	// Output: [1 2]
+}
+
+func TestLessThan(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.LessThan(3)).Collect()
+	assert.SliceEqual(t, []int{1, 2}, numbers)
+}
+
+func ExampleGreaterThanEqual() {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.GreaterThanEqual(3))
+	fmt.Println(numbers.Collect())
+	// Output: [3 4 5]
+}
+
+func TestGreaterThanEqual(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.GreaterThanEqual(3)).Collect()
+	assert.SliceEqual(t, []int{3, 4, 5}, numbers)
+}
+
+func ExampleLessThanEqual() {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.LessThanEqual(3))
+	fmt.Println(numbers.Collect())
+	// Output: [1 2 3]
+}
+
+func TestLessThanEqual(t *testing.T) {
+	numbers := iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.LessThanEqual(3)).Collect()
+	assert.SliceEqual(t, []int{1, 2, 3}, numbers)
+}
