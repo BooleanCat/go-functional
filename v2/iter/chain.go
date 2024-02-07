@@ -10,8 +10,7 @@ func Chain[V any](iterators ...Iterator[V]) Iterator[V] {
 			defer stop()
 
 			for {
-				v, ok := next()
-				if !ok || !yield(v) {
+				if v, ok := next(); !ok || !yield(v) {
 					stop()
 					break
 				}

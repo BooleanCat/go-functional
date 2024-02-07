@@ -10,15 +10,13 @@ func Drop[V any](delegate Iterator[V], count int) Iterator[V] {
 		defer stop()
 
 		for ; count > 0; count-- {
-			_, ok := next()
-			if !ok {
+			if _, ok := next(); !ok {
 				return
 			}
 		}
 
 		for {
-			v, ok := next()
-			if !ok || !yield(v) {
+			if v, ok := next(); !ok || !yield(v) {
 				return
 			}
 		}
