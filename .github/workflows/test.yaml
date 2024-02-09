@@ -1,7 +1,7 @@
 name: test
 on:
-  push: { branches: [main] }
-  pull_request: {}
+  push: { branches: [v2] }
+  pull_request: { branches: [v2] }
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -12,26 +12,16 @@ jobs:
           go-version: "1.22"
           cache: false
       - run: make check
-        env: { SKIP_LINT: true }
-      - uses: golangci/golangci-lint-action@v3
-        with: { version: "latest" }
+        env:
+          SKIP_LINT: true
+          GOEXPERIMENT: rangefunc
+      # - uses: golangci/golangci-lint-action@v3
+      #   with: { version: "latest" }
       - run: make cov
+        env: { GOEXPERIMENT: rangefunc }
       - uses: codecov/codecov-action@v4
         env: { CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}" }
   test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        go-version: ["1.21", "1.22"]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "${{ matrix.go-version }}"
-          cache: false
-      - run: make test
-  test-v2:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -42,7 +32,5 @@ jobs:
         with:
           go-version: "1.22"
           cache: false
-      - run: |
-          go work init .
-          go work use v2
-          make test-v2
+      - run: make test
+        env: { GOEXPERIMENT: rangefunc }

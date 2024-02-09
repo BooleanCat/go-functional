@@ -13,11 +13,6 @@ endif
 test:
 	go test -race -v ./...
 
-test-v2: export GOEXPERIMENT = rangefunc
-test-v2:
-	go vet ./v2/...
-	go test -v -race ./v2/...
-
 cov: SHELL:=/bin/bash
 cov:
 	go test -race -coverprofile=coverage.txt -covermode=atomic $$( go list ./... | grep -v internal )
