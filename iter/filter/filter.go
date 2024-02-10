@@ -21,6 +21,14 @@ func IsEqual[T comparable](value T) func(T) bool {
 	}
 }
 
+// NotEqual returns a function that returns true when the provided value is not
+// equal to some value.
+func NotEqual[T comparable](value T) func(T) bool {
+	return func(candidate T) bool {
+		return candidate != value
+	}
+}
+
 // IsZero returns true when the provided value is the zero value for its type.
 func IsZero[T comparable](value T) bool {
 	var zero T

@@ -10,9 +10,7 @@ import (
 )
 
 func ExampleFilter() {
-	isEven := func(n int) bool { return n%2 == 0 }
-
-	for number := range iter.Filter(iter.Lift([]int{1, 2, 3, 4, 5}), isEven) {
+	for number := range iter.Filter(iter.Lift([]int{1, 2, 3, 4, 5}), filter.IsEven) {
 		fmt.Println(number)
 	}
 
@@ -46,6 +44,28 @@ func TestFilterTerminateEarly(t *testing.T) {
 	stop()
 }
 
+func ExampleExclude() {
+	for number := range iter.Exclude(iter.Lift([]int{1, 2, 3, 4, 5}), filter.IsEven) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 3
+	// 5
+}
+
+func ExampleExclude_method() {
+	for number := range iter.Lift([]int{1, 2, 3, 4, 5}).Exclude(filter.IsEven) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 3
+	// 5
+}
+
 func ExampleFilter2() {
 	isOne := func(n int, _ string) bool { return n == 1 }
 	numbers := map[int]string{1: "one", 2: "two", 3: "three"}
@@ -54,8 +74,7 @@ func ExampleFilter2() {
 		fmt.Println(key, value)
 	}
 
-	// Output:
-	// 1 one
+	// Output: 1 one
 }
 
 func ExampleFilter2_method() {
@@ -66,8 +85,7 @@ func ExampleFilter2_method() {
 		fmt.Println(key, value)
 	}
 
-	// Output:
-	// 1 one
+	// Output: 1 one
 }
 
 func TestFilter2Empty(t *testing.T) {
@@ -85,5 +103,42 @@ func TestFilter2TerminateEarly(t *testing.T) {
 		1: "one",
 		2: "two",
 	}), func(int, string) bool { return true })))
+	stop()
+}
+
+func ExampleExclude2() {
+	isOne := func(n int, _ string) bool { return n == 1 }
+	numbers := map[int]string{1: "one", 3: "three"}
+
+	for key, value := range iter.Exclude2(iter.LiftHashMap(numbers), isOne) {
+		fmt.Println(key, value)
+	}
+
+	// Output: 3 three
+}
+
+func ExampleExclude2_method() {
+	isOne := func(n int, _ string) bool { return n == 1 }
+	numbers := map[int]string{1: "one", 3: "three"}
+
+	for key, value := range iter.LiftHashMap(numbers).Exclude2(isOne) {
+		fmt.Println(key, value)
+	}
+
+	// Output: 3 three
+}
+
+func TestExclude2Empty(t *testing.T) {
+	t.Parallel()
+
+	for _, _ = range iter.Exclude2(iter.LiftHashMap(map[int]string{}), func(int, string) bool { return true }) {
+		t.Error("unexpected")
+	}
+}
+
+func TestExclude2TerminateEarly(t *testing.T) {
+	t.Parallel()
+
+	_, stop := it.Pull2(it.Seq2[int, string](iter.Exclude2(iter.LiftHashMap(map[int]string{}), func(int, string) bool { return true })))
 	stop()
 }
