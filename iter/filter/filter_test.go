@@ -22,6 +22,11 @@ func ExampleIsEqual() {
 	// Output: [2]
 }
 
+func ExampleNotEqual() {
+	fmt.Println(iter.Lift([]int{1, 2, 3, 4}).Filter(filter.NotEqual(2)).Collect())
+	// Output: [1 3 4]
+}
+
 func ExampleIsZero() {
 	fmt.Println(iter.Lift([]int{0, 1, 2, 3}).Filter(filter.IsZero).Collect())
 	// Output: [0]
