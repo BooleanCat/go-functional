@@ -2,3 +2,5 @@ coverage.txt
 .vscode/
 go.work
 .envrc
+go.work
+go.work.sum

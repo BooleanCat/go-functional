@@ -1,0 +1,16 @@
+name: dagger
+on:
+  push: { branches: [v2] }
+  pull_request: { branches: [v2] }
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dagger/dagger-for-github@v5
+        with:
+          verb: run
+          workdir: ci
+          args: go run main.go
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+          version: "0.9.9"
