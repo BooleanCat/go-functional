@@ -31,6 +31,12 @@ func Zip[V, W any](left Iterator[V], right Iterator[W]) Iterator2[V, W] {
 	}))
 }
 
+// Unzip returns two [Iterator]s from a single [Iterator2].
+//
+// Each returned [Iterator] yields the left and right values from the original
+// [Iterator2], respectively.
+//
+// It is safe to concurrently pull from the returned [Iterator]s.
 func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 	mutex := sync.Mutex{}
 
