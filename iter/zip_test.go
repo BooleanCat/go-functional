@@ -124,3 +124,10 @@ func TestUnzipTerminateEarly(t *testing.T) {
 	_, stop = it.Pull(it.Seq[string](strings))
 	stop()
 }
+
+func TestUnzipMethod(t *testing.T) {
+	keys, values := iter.LiftHashMap(map[int]string{1: "one"}).Unzip()
+
+	assert.SliceEqual[int](t, keys.Collect(), []int{1})
+	assert.SliceEqual[string](t, values.Collect(), []string{"one"})
+}
