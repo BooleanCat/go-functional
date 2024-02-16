@@ -15,4 +15,4 @@ test:
 
 cov: SHELL:=/bin/bash
 cov:
-	go test -race -coverprofile=coverage.txt -covermode=atomic $$( go list ./... | grep -v internal )
+	go test -race -coverprofile=coverage.txt -covermode=atomic $$( go list ./... | grep -v assert )

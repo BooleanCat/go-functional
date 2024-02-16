@@ -2,6 +2,30 @@ package assert
 
 import "testing"
 
+func True(t *testing.T, value bool) {
+	t.Helper()
+
+	if !value {
+		t.Error("expected true")
+	}
+}
+
+func False(t *testing.T, value bool) {
+	t.Helper()
+
+	if value {
+		t.Error("expected false")
+	}
+}
+
+func Equal[T comparable](t *testing.T, a, b T) {
+	t.Helper()
+
+	if a != b {
+		t.Errorf("expected `%v` to equal `%v`", a, b)
+	}
+}
+
 func SliceEqual[T comparable](t *testing.T, a, b []T) {
 	t.Helper()
 
