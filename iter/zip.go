@@ -37,6 +37,10 @@ func Zip[V, W any](left Iterator[V], right Iterator[W]) Iterator2[V, W] {
 // [Iterator2], respectively.
 //
 // It is safe to concurrently pull from the returned [Iterator]s.
+//
+// Both returned [Iterator]s must be stopped, the underlying [Iterator2] is
+// stopped when both are stopped. It is safe to stop one of the returned
+// [Iterator]s immediately and continue pulling from the other.
 func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 	mutex := sync.Mutex{}
 
@@ -44,7 +48,17 @@ func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 
 	queue := fifo.New[V, W]()
 
+	done := sync.WaitGroup{}
+	done.Add(2)
+
+	go func() {
+		done.Wait()
+		stop()
+	}()
+
 	return Iterator[V](iter.Seq[V](func(yield func(V) bool) {
+			defer done.Done()
+
 			for {
 				mutex.Lock()
 				left, ok := queue.DequeueLeft()
@@ -52,7 +66,6 @@ func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 					v, w, ok := next()
 
 					if !ok {
-						stop()
 						mutex.Unlock()
 						return
 					}
@@ -65,13 +78,12 @@ func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 				mutex.Unlock()
 
 				if !yield(left) {
-					mutex.Lock()
-					stop()
-					mutex.Unlock()
 					return
 				}
 			}
 		})), Iterator[W](iter.Seq[W](func(yield func(W) bool) {
+			defer done.Done()
+
 			for {
 				mutex.Lock()
 				right, ok := queue.DequeueRight()
@@ -79,7 +91,6 @@ func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 					v, w, ok := next()
 
 					if !ok {
-						stop()
 						mutex.Unlock()
 						return
 					}
@@ -92,9 +103,6 @@ func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 				mutex.Unlock()
 
 				if !yield(right) {
-					mutex.Lock()
-					stop()
-					mutex.Unlock()
 					return
 				}
 			}

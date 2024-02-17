@@ -125,6 +125,28 @@ func TestUnzipTerminateEarly(t *testing.T) {
 	stop()
 }
 
+func TestUnzipTerminateLeftEarly(t *testing.T) {
+	t.Parallel()
+
+	numbers, strings := iter.Unzip(iter.LiftHashMap(map[int]string{1: "one", 2: "two"}))
+
+	_, stop := it.Pull(it.Seq[int](numbers))
+	stop()
+
+	assert.EqualElements[string](t, strings.Collect(), []string{"one", "two"})
+}
+
+func TestUnzipTerminateRightEarly(t *testing.T) {
+	t.Parallel()
+
+	numbers, strings := iter.Unzip(iter.LiftHashMap(map[int]string{1: "one", 2: "two"}))
+
+	_, stop := it.Pull(it.Seq[string](strings))
+	stop()
+
+	assert.EqualElements[int](t, numbers.Collect(), []int{1, 2})
+}
+
 func TestUnzipMethod(t *testing.T) {
 	keys, values := iter.LiftHashMap(map[int]string{1: "one"}).Unzip()
 
