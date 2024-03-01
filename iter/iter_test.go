@@ -8,6 +8,7 @@ import (
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	"github.com/BooleanCat/go-functional/v2/iter"
+	"github.com/BooleanCat/go-functional/v2/iter/op"
 )
 
 func ExampleCollect() {
@@ -155,10 +156,7 @@ func TestForEach2Empty(t *testing.T) {
 }
 
 func ExampleReduce() {
-	fmt.Println(iter.Reduce(iter.Lift([]int{1, 2, 3}), func(a, b int) int {
-		return a + b
-	}, 0))
-
+	fmt.Println(iter.Reduce(iter.Lift([]int{1, 2, 3}), op.Add, 0))
 	// Output: 6
 }
 
