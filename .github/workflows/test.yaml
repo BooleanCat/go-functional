@@ -13,7 +13,7 @@ jobs:
           cache: false
       - run: make check
         env: { SKIP_LINT: true }
-      - uses: golangci/golangci-lint-action@v4
+      - uses: golangci/golangci-lint-action@v5
         with: { version: "latest" }
       - run: make cov
       - uses: codecov/codecov-action@v4
