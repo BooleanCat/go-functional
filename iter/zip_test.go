@@ -66,8 +66,8 @@ func TestUnzip(t *testing.T) {
 
 	numbers, strings := iter.Unzip(zipped)
 
-	assert.SliceEqual[int](t, numbers.Collect(), []int{1, 2, 3})
-	assert.SliceEqual[string](t, strings.Collect(), []string{"one", "two", "three"})
+	assert.SliceEqual(t, numbers.Collect(), []int{1, 2, 3})
+	assert.SliceEqual(t, strings.Collect(), []string{"one", "two", "three"})
 }
 
 func TestUnzipRace(t *testing.T) {
@@ -133,7 +133,7 @@ func TestUnzipTerminateLeftEarly(t *testing.T) {
 	_, stop := it.Pull(it.Seq[int](numbers))
 	stop()
 
-	assert.EqualElements[string](t, strings.Collect(), []string{"one", "two"})
+	assert.EqualElements(t, strings.Collect(), []string{"one", "two"})
 }
 
 func TestUnzipTerminateRightEarly(t *testing.T) {
@@ -144,12 +144,12 @@ func TestUnzipTerminateRightEarly(t *testing.T) {
 	_, stop := it.Pull(it.Seq[string](strings))
 	stop()
 
-	assert.EqualElements[int](t, numbers.Collect(), []int{1, 2})
+	assert.EqualElements(t, numbers.Collect(), []int{1, 2})
 }
 
 func TestUnzipMethod(t *testing.T) {
 	keys, values := iter.LiftHashMap(map[int]string{1: "one"}).Unzip()
 
-	assert.SliceEqual[int](t, keys.Collect(), []int{1})
-	assert.SliceEqual[string](t, values.Collect(), []string{"one"})
+	assert.SliceEqual(t, keys.Collect(), []int{1})
+	assert.SliceEqual(t, values.Collect(), []string{"one"})
 }

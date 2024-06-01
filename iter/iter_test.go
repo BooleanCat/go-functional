@@ -77,7 +77,7 @@ func TestLiftHashMap(t *testing.T) {
 		return values[i].key < values[j].key
 	})
 
-	assert.SliceEqual[keyValuePair[int, string]](t, values, []keyValuePair[int, string]{
+	assert.SliceEqual(t, values, []keyValuePair[int, string]{
 		{1, "one"},
 		{2, "two"},
 		{3, "three"},
