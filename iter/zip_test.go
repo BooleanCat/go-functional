@@ -13,7 +13,7 @@ import (
 )
 
 func ExampleZip() {
-	for left, right := range iter.Zip(iter.Iterator[int](slices.Values([]int{1, 2, 3})), iter.Iterator[string](slices.Values([]string{"one", "two", "three"}))) {
+	for left, right := range iter.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]string{"one", "two", "three"})) {
 		fmt.Println(left, right)
 	}
 
@@ -26,7 +26,7 @@ func ExampleZip() {
 func TestZipEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _, _ = range iter.Zip(iter.Iterator[int](slices.Values([]int{})), iter.Iterator[string](slices.Values([]string{}))) {
+	for _, _ = range iter.Zip(slices.Values([]int{}), slices.Values([]string{})) {
 		t.Error("unexpected")
 	}
 }
@@ -34,12 +34,12 @@ func TestZipEmpty(t *testing.T) {
 func TestZipTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull2(it.Seq2[int, string](iter.Zip(iter.Iterator[int](slices.Values([]int{1, 2})), iter.Iterator[string](slices.Values([]string{"one", "two"})))))
+	_, stop := it.Pull2(iter.Zip(slices.Values([]int{1, 2}), slices.Values([]string{"one", "two"})))
 	stop()
 }
 
 func ExampleUnzip() {
-	keys, values := iter.Unzip(iter.LiftHashMap(map[int]string{1: "one", 2: "two"}))
+	keys, values := iter.Unzip(it.Seq2[int, string](iter.LiftHashMap(map[int]string{1: "one", 2: "two"})))
 
 	for key := range keys {
 		fmt.Println(key)
@@ -63,12 +63,12 @@ func ExampleUnzip_method() {
 }
 
 func TestUnzip(t *testing.T) {
-	zipped := iter.Zip(iter.Iterator[int](slices.Values([]int{1, 2, 3})), iter.Iterator[string](slices.Values([]string{"one", "two", "three"})))
+	zipped := iter.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]string{"one", "two", "three"}))
 
 	numbers, strings := iter.Unzip(zipped)
 
-	assert.SliceEqual(t, numbers.Collect(), []int{1, 2, 3})
-	assert.SliceEqual(t, strings.Collect(), []string{"one", "two", "three"})
+	assert.SliceEqual(t, slices.Collect(numbers), []int{1, 2, 3})
+	assert.SliceEqual(t, slices.Collect(strings), []string{"one", "two", "three"})
 }
 
 func TestUnzipRace(t *testing.T) {
@@ -82,7 +82,7 @@ func TestUnzipRace(t *testing.T) {
 		strings = append(strings, strconv.Itoa(i))
 	}
 
-	zipped := iter.Zip(iter.Iterator[int](slices.Values(numbers)), iter.Iterator[string](slices.Values(strings)))
+	zipped := iter.Zip(slices.Values(numbers), slices.Values(strings))
 
 	numbersIter, stringsIter := iter.Unzip(zipped)
 
@@ -115,37 +115,37 @@ func TestUnzipRace(t *testing.T) {
 func TestUnzipTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	zipped := iter.Zip(iter.Iterator[int](slices.Values([]int{1, 2})), iter.Iterator[string](slices.Values([]string{"one", "two"})))
+	zipped := iter.Zip(slices.Values([]int{1, 2}), slices.Values([]string{"one", "two"}))
 
 	numbers, strings := iter.Unzip(zipped)
 
-	_, stop := it.Pull(it.Seq[int](numbers))
+	_, stop := it.Pull(numbers)
 	stop()
 
-	_, stop = it.Pull(it.Seq[string](strings))
+	_, stop = it.Pull(strings)
 	stop()
 }
 
 func TestUnzipTerminateLeftEarly(t *testing.T) {
 	t.Parallel()
 
-	numbers, strings := iter.Unzip(iter.LiftHashMap(map[int]string{1: "one", 2: "two"}))
+	numbers, strings := iter.Unzip(it.Seq2[int, string](iter.LiftHashMap(map[int]string{1: "one", 2: "two"})))
 
-	_, stop := it.Pull(it.Seq[int](numbers))
+	_, stop := it.Pull(numbers)
 	stop()
 
-	assert.EqualElements(t, strings.Collect(), []string{"one", "two"})
+	assert.EqualElements(t, slices.Collect(strings), []string{"one", "two"})
 }
 
 func TestUnzipTerminateRightEarly(t *testing.T) {
 	t.Parallel()
 
-	numbers, strings := iter.Unzip(iter.LiftHashMap(map[int]string{1: "one", 2: "two"}))
+	numbers, strings := iter.Unzip(it.Seq2[int, string](iter.LiftHashMap(map[int]string{1: "one", 2: "two"})))
 
-	_, stop := it.Pull(it.Seq[string](strings))
+	_, stop := it.Pull(strings)
 	stop()
 
-	assert.EqualElements(t, numbers.Collect(), []int{1, 2})
+	assert.EqualElements(t, slices.Collect(numbers), []int{1, 2})
 }
 
 func TestUnzipMethod(t *testing.T) {

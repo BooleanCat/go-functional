@@ -8,12 +8,12 @@ import (
 )
 
 // Zip yields pairs of values from two iterators.
-func Zip[V, W any](left Iterator[V], right Iterator[W]) Iterator2[V, W] {
-	return Iterator2[V, W](iter.Seq2[V, W](func(yield func(V, W) bool) {
-		left, stop := iter.Pull(iter.Seq[V](left))
+func Zip[V, W any](left iter.Seq[V], right iter.Seq[W]) iter.Seq2[V, W] {
+	return iter.Seq2[V, W](func(yield func(V, W) bool) {
+		left, stop := iter.Pull(left)
 		defer stop()
 
-		right, stop := iter.Pull(iter.Seq[W](right))
+		right, stop := iter.Pull(right)
 		defer stop()
 
 		for {
@@ -28,7 +28,7 @@ func Zip[V, W any](left Iterator[V], right Iterator[W]) Iterator2[V, W] {
 				return
 			}
 		}
-	}))
+	})
 }
 
 // Unzip returns two [Iterator]s from a single [Iterator2].
@@ -41,10 +41,10 @@ func Zip[V, W any](left Iterator[V], right Iterator[W]) Iterator2[V, W] {
 // Both returned [Iterator]s must be stopped, the underlying [Iterator2] is
 // stopped when both are stopped. It is safe to stop one of the returned
 // [Iterator]s immediately and continue pulling from the other.
-func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
+func Unzip[V, W any](delegate iter.Seq2[V, W]) (iter.Seq[V], iter.Seq[W]) {
 	mutex := sync.Mutex{}
 
-	next, stop := iter.Pull2(iter.Seq2[V, W](delegate))
+	next, stop := iter.Pull2(delegate)
 
 	queue := fifo.New[V, W]()
 
@@ -56,7 +56,7 @@ func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 		stop()
 	}()
 
-	return Iterator[V](iter.Seq[V](func(yield func(V) bool) {
+	return iter.Seq[V](func(yield func(V) bool) {
 			defer done.Done()
 
 			for {
@@ -81,7 +81,7 @@ func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 					return
 				}
 			}
-		})), Iterator[W](iter.Seq[W](func(yield func(W) bool) {
+		}), iter.Seq[W](func(yield func(W) bool) {
 			defer done.Done()
 
 			for {
@@ -106,10 +106,11 @@ func Unzip[V, W any](delegate Iterator2[V, W]) (Iterator[V], Iterator[W]) {
 					return
 				}
 			}
-		}))
+		})
 }
 
 // Unzip is a convenience method for chaining [Unzip] on [Iterator2]s.
-func (iter Iterator2[V, W]) Unzip() (Iterator[V], Iterator[W]) {
-	return Unzip[V, W](iter)
+func (iterator Iterator2[V, W]) Unzip() (Iterator[V], Iterator[W]) {
+	left, right := Unzip[V, W](iter.Seq2[V, W](iterator))
+	return Iterator[V](left), Iterator[W](right)
 }
