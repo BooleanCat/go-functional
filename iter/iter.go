@@ -35,32 +35,32 @@ func LiftHashMap[K comparable, V any](m map[K]V) Iterator2[K, V] {
 }
 
 // ForEach consumes an iterator and applies a function to each value yielded.
-func ForEach[V any](iter Iterator[V], fn func(V)) {
+func ForEach[V any](iter iter.Seq[V], fn func(V)) {
 	for item := range iter {
 		fn(item)
 	}
 }
 
 // ForEach is a convenience method for chaining [ForEach] on [Iterator]s.
-func (iter Iterator[V]) ForEach(fn func(V)) {
-	ForEach[V](iter, fn)
+func (iterator Iterator[V]) ForEach(fn func(V)) {
+	ForEach(iter.Seq[V](iterator), fn)
 }
 
 // ForEach2 consumes an iterator and applies a function to each pair of values.
-func ForEach2[V, W any](iter Iterator2[V, W], fn func(V, W)) {
+func ForEach2[V, W any](iter iter.Seq2[V, W], fn func(V, W)) {
 	for v, w := range iter {
 		fn(v, w)
 	}
 }
 
 // ForEach2 is a convenience method for chaining [ForEach2] on [Iterator2]s.
-func (iter Iterator2[V, W]) ForEach2(fn func(V, W)) {
-	ForEach2[V, W](iter, fn)
+func (iterator Iterator2[V, W]) ForEach2(fn func(V, W)) {
+	ForEach2(iter.Seq2[V, W](iterator), fn)
 }
 
 // Reduce consumes an iterator and applies a function to each value yielded,
 // accumulating a single result.
-func Reduce[V any, R any](iter Iterator[V], fn func(R, V) R, initial R) R {
+func Reduce[V any, R any](iter iter.Seq[V], fn func(R, V) R, initial R) R {
 	result := initial
 
 	for item := range iter {
@@ -72,7 +72,7 @@ func Reduce[V any, R any](iter Iterator[V], fn func(R, V) R, initial R) R {
 
 // Reduce2 consumes an iterator and applies a function to each pair of values,
 // accumulating a single result.
-func Reduce2[V, W any, R any](iter Iterator2[V, W], fn func(R, V, W) R, initial R) R {
+func Reduce2[V, W any, R any](iter iter.Seq2[V, W], fn func(R, V, W) R, initial R) R {
 	result := initial
 
 	for v, w := range iter {
