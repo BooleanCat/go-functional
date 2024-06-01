@@ -26,6 +26,6 @@ func ExampleCount() {
 func TestCountTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull(it.Seq[int](iter.Count()))
+	_, stop := it.Pull(iter.Count())
 	stop()
 }
