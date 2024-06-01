@@ -10,7 +10,7 @@ import (
 )
 
 func ExampleDrop() {
-	for value := range iter.Drop(iter.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})), 2) {
+	for value := range iter.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2) {
 		fmt.Println(value)
 	}
 
@@ -34,14 +34,14 @@ func ExampleDrop_method() {
 func TestDropTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull(it.Seq[int](iter.Drop(iter.Iterator[int](slices.Values([]int{1, 2, 3})), 2)))
+	_, stop := it.Pull(iter.Drop(slices.Values([]int{1, 2, 3}), 2))
 	stop()
 }
 
 func TestDropEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _ = range iter.Drop(iter.Iterator[int](slices.Values([]int{})), 2) {
+	for _ = range iter.Drop(slices.Values([]int{}), 2) {
 		t.Error("unexpected")
 	}
 }

@@ -4,8 +4,8 @@ import "iter"
 
 // Drop yields all values from a delegate [Iterator] except the first `count`
 // values.
-func Drop[V any](delegate Iterator[V], count int) Iterator[V] {
-	return Iterator[V](iter.Seq[V](func(yield func(V) bool) {
+func Drop[V any](delegate iter.Seq[V], count int) iter.Seq[V] {
+	return func(yield func(V) bool) {
 		for value := range delegate {
 			if count > 0 {
 				count--
@@ -16,10 +16,10 @@ func Drop[V any](delegate Iterator[V], count int) Iterator[V] {
 				return
 			}
 		}
-	}))
+	}
 }
 
 // Drop is a convenience method for chaining [Drop] on [Iterator]s.
-func (iter Iterator[V]) Drop(count int) Iterator[V] {
-	return Drop[V](iter, count)
+func (iterator Iterator[V]) Drop(count int) Iterator[V] {
+	return Iterator[V](Drop[V](iter.Seq[V](iterator), count))
 }

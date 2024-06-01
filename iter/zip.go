@@ -9,7 +9,7 @@ import (
 
 // Zip yields pairs of values from two iterators.
 func Zip[V, W any](left iter.Seq[V], right iter.Seq[W]) iter.Seq2[V, W] {
-	return iter.Seq2[V, W](func(yield func(V, W) bool) {
+	return func(yield func(V, W) bool) {
 		left, stop := iter.Pull(left)
 		defer stop()
 
@@ -28,7 +28,7 @@ func Zip[V, W any](left iter.Seq[V], right iter.Seq[W]) iter.Seq2[V, W] {
 				return
 			}
 		}
-	})
+	}
 }
 
 // Unzip returns two [Iterator]s from a single [Iterator2].
@@ -56,7 +56,7 @@ func Unzip[V, W any](delegate iter.Seq2[V, W]) (iter.Seq[V], iter.Seq[W]) {
 		stop()
 	}()
 
-	return iter.Seq[V](func(yield func(V) bool) {
+	return func(yield func(V) bool) {
 			defer done.Done()
 
 			for {
@@ -81,7 +81,7 @@ func Unzip[V, W any](delegate iter.Seq2[V, W]) (iter.Seq[V], iter.Seq[W]) {
 					return
 				}
 			}
-		}), iter.Seq[W](func(yield func(W) bool) {
+		}, func(yield func(W) bool) {
 			defer done.Done()
 
 			for {
@@ -106,7 +106,7 @@ func Unzip[V, W any](delegate iter.Seq2[V, W]) (iter.Seq[V], iter.Seq[W]) {
 					return
 				}
 			}
-		})
+		}
 }
 
 // Unzip is a convenience method for chaining [Unzip] on [Iterator2]s.

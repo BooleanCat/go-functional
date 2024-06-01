@@ -3,8 +3,8 @@ package iter
 import "iter"
 
 // Take yields the first `limit` values from a delegate [Iterator].
-func Take[V any](delegate Iterator[V], limit int) Iterator[V] {
-	return Iterator[V](iter.Seq[V](func(yield func(V) bool) {
+func Take[V any](delegate iter.Seq[V], limit int) iter.Seq[V] {
+	return func(yield func(V) bool) {
 		if limit <= 0 {
 			return
 		}
@@ -19,10 +19,10 @@ func Take[V any](delegate Iterator[V], limit int) Iterator[V] {
 				return
 			}
 		}
-	}))
+	}
 }
 
 // Take is a convenience method for chaining [Take] on [Iterator]s.
-func (iter Iterator[V]) Take(limit int) Iterator[V] {
-	return Take[V](iter, limit)
+func (iterator Iterator[V]) Take(limit int) Iterator[V] {
+	return Iterator[V](Take[V](iter.Seq[V](iterator), limit))
 }

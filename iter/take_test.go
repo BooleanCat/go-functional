@@ -10,7 +10,7 @@ import (
 )
 
 func ExampleTake() {
-	for number := range iter.Take(iter.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})), 3) {
+	for number := range iter.Take(slices.Values([]int{1, 2, 3, 4, 5}), 3) {
 		fmt.Println(number)
 	}
 
@@ -34,14 +34,14 @@ func ExampleTake_method() {
 func TestTakeTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull(it.Seq[int](iter.Take(iter.Iterator[int](slices.Values([]int{1, 2, 3})), 2)))
+	_, stop := it.Pull(iter.Take(slices.Values([]int{1, 2, 3}), 2))
 	stop()
 }
 
 func TestTakeZero(t *testing.T) {
 	t.Parallel()
 
-	for _ = range iter.Take(iter.Iterator[int](slices.Values([]int{1, 2, 3})), 0) {
+	for _ = range iter.Take(slices.Values([]int{1, 2, 3}), 0) {
 		t.Error("unexpected")
 	}
 }
