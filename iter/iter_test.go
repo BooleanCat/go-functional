@@ -6,51 +6,15 @@ import (
 	"sort"
 	"testing"
 
+	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	"github.com/BooleanCat/go-functional/v2/iter"
 	"github.com/BooleanCat/go-functional/v2/iter/op"
 )
 
-func ExampleCollect() {
-	fmt.Println(iter.Collect(iter.Lift([]int{1, 2, 3})))
-	// Output: [1 2 3]
-}
-
 func ExampleCollect_method() {
-	fmt.Println(iter.Lift([]int{1, 2, 3}).Collect())
+	fmt.Println(iter.Iterator[int](slices.Values([]int{1, 2, 3})).Collect())
 	// Output: [1 2 3]
-}
-
-func TestCollectEmpty(t *testing.T) {
-	t.Parallel()
-
-	assert.Empty[int](t, iter.Collect(iter.Lift([]int{})))
-}
-
-func ExampleLift() {
-	for number := range iter.Lift([]int{1, 2, 3}) {
-		fmt.Println(number)
-	}
-
-	// Output:
-	// 1
-	// 2
-	// 3
-}
-
-func TestLiftEmpty(t *testing.T) {
-	t.Parallel()
-
-	for number := range iter.Lift([]int{}) {
-		t.Error("unexpected", number)
-	}
-}
-
-func TestLiftTerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := it.Pull(it.Seq[int](iter.Lift([]int{1, 2, 3})))
-	stop()
 }
 
 func ExampleLiftHashMap() {
@@ -100,7 +64,7 @@ func TestLiftHashMapTerminateEarly(t *testing.T) {
 }
 
 func ExampleForEach() {
-	iter.ForEach(iter.Lift([]int{1, 2, 3}), func(number int) {
+	iter.ForEach(iter.Iterator[int](slices.Values([]int{1, 2, 3})), func(number int) {
 		fmt.Println(number)
 	})
 	// Output:
@@ -110,7 +74,7 @@ func ExampleForEach() {
 }
 
 func ExampleForEach_method() {
-	iter.Lift([]int{1, 2, 3}).ForEach(func(number int) {
+	iter.Iterator[int](slices.Values([]int{1, 2, 3})).ForEach(func(number int) {
 		fmt.Println(number)
 	})
 	// Output:
@@ -122,13 +86,13 @@ func ExampleForEach_method() {
 func TestForEachEmpty(t *testing.T) {
 	t.Parallel()
 
-	iter.ForEach(iter.Lift([]int{}), func(int) {
+	iter.ForEach(iter.Iterator[int](slices.Values([]int{})), func(int) {
 		t.Error("unexpected")
 	})
 }
 
 func ExampleForEach2() {
-	iter.ForEach2(iter.Lift([]int{1, 2, 3}).Enumerate(), func(index int, number int) {
+	iter.ForEach2(iter.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate(), func(index int, number int) {
 		fmt.Println(index, number)
 	})
 	// Output:
@@ -138,7 +102,7 @@ func ExampleForEach2() {
 }
 
 func ExampleForEach2_method() {
-	iter.Lift([]int{1, 2, 3}).Enumerate().ForEach2(func(index int, number int) {
+	iter.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate().ForEach2(func(index int, number int) {
 		fmt.Println(index, number)
 	})
 	// Output:
@@ -150,24 +114,24 @@ func ExampleForEach2_method() {
 func TestForEach2Empty(t *testing.T) {
 	t.Parallel()
 
-	iter.ForEach2(iter.Lift([]int{}).Enumerate(), func(int, int) {
+	iter.ForEach2(iter.Iterator[int](slices.Values([]int{})).Enumerate(), func(int, int) {
 		t.Error("unexpected")
 	})
 }
 
 func ExampleReduce() {
-	fmt.Println(iter.Reduce(iter.Lift([]int{1, 2, 3}), op.Add, 0))
+	fmt.Println(iter.Reduce(iter.Iterator[int](slices.Values([]int{1, 2, 3})), op.Add, 0))
 	// Output: 6
 }
 
 func TestReduceEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, iter.Reduce(iter.Lift([]int{}), func(int, int) int { return 0 }, 0), 0)
+	assert.Equal(t, iter.Reduce(iter.Iterator[int](slices.Values([]int{})), func(int, int) int { return 0 }, 0), 0)
 }
 
 func ExampleReduce2() {
-	fmt.Println(iter.Reduce2(iter.Lift([]int{1, 2, 3}).Enumerate(), func(i, a, b int) int {
+	fmt.Println(iter.Reduce2(iter.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate(), func(i, a, b int) int {
 		return i + 1
 	}, 0))
 

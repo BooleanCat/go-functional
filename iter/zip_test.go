@@ -7,12 +7,13 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	"github.com/BooleanCat/go-functional/v2/iter"
 )
 
 func ExampleZip() {
-	for left, right := range iter.Zip(iter.Lift([]int{1, 2, 3}), iter.Lift([]string{"one", "two", "three"})) {
+	for left, right := range iter.Zip(iter.Iterator[int](slices.Values([]int{1, 2, 3})), iter.Iterator[string](slices.Values([]string{"one", "two", "three"}))) {
 		fmt.Println(left, right)
 	}
 
@@ -25,7 +26,7 @@ func ExampleZip() {
 func TestZipEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _, _ = range iter.Zip(iter.Lift([]int{}), iter.Lift([]string{})) {
+	for _, _ = range iter.Zip(iter.Iterator[int](slices.Values([]int{})), iter.Iterator[string](slices.Values([]string{}))) {
 		t.Error("unexpected")
 	}
 }
@@ -33,7 +34,7 @@ func TestZipEmpty(t *testing.T) {
 func TestZipTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull2(it.Seq2[int, string](iter.Zip(iter.Lift([]int{1, 2}), iter.Lift([]string{"one", "two"}))))
+	_, stop := it.Pull2(it.Seq2[int, string](iter.Zip(iter.Iterator[int](slices.Values([]int{1, 2})), iter.Iterator[string](slices.Values([]string{"one", "two"})))))
 	stop()
 }
 
@@ -62,7 +63,7 @@ func ExampleUnzip_method() {
 }
 
 func TestUnzip(t *testing.T) {
-	zipped := iter.Zip(iter.Lift([]int{1, 2, 3}), iter.Lift([]string{"one", "two", "three"}))
+	zipped := iter.Zip(iter.Iterator[int](slices.Values([]int{1, 2, 3})), iter.Iterator[string](slices.Values([]string{"one", "two", "three"})))
 
 	numbers, strings := iter.Unzip(zipped)
 
@@ -81,7 +82,7 @@ func TestUnzipRace(t *testing.T) {
 		strings = append(strings, strconv.Itoa(i))
 	}
 
-	zipped := iter.Zip(iter.Lift(numbers), iter.Lift(strings))
+	zipped := iter.Zip(iter.Iterator[int](slices.Values(numbers)), iter.Iterator[string](slices.Values(strings)))
 
 	numbersIter, stringsIter := iter.Unzip(zipped)
 
@@ -114,7 +115,7 @@ func TestUnzipRace(t *testing.T) {
 func TestUnzipTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	zipped := iter.Zip(iter.Lift([]int{1, 2}), iter.Lift([]string{"one", "two"}))
+	zipped := iter.Zip(iter.Iterator[int](slices.Values([]int{1, 2})), iter.Iterator[string](slices.Values([]string{"one", "two"})))
 
 	numbers, strings := iter.Unzip(zipped)
 

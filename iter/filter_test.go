@@ -5,12 +5,13 @@ import (
 	it "iter"
 	"testing"
 
+	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/iter"
 	"github.com/BooleanCat/go-functional/v2/iter/filter"
 )
 
 func ExampleFilter() {
-	for number := range iter.Filter(iter.Lift([]int{1, 2, 3, 4, 5}), filter.IsEven) {
+	for number := range iter.Filter(iter.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})), filter.IsEven) {
 		fmt.Println(number)
 	}
 
@@ -20,7 +21,7 @@ func ExampleFilter() {
 }
 
 func ExampleFilter_method() {
-	for number := range iter.Lift([]int{1, 2, 3, 4, 5}).Filter(filter.IsEven) {
+	for number := range iter.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Filter(filter.IsEven) {
 		fmt.Println(number)
 	}
 
@@ -32,7 +33,7 @@ func ExampleFilter_method() {
 func TestFilterEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _ = range iter.Filter(iter.Lift([]int{}), filter.IsEven) {
+	for _ = range iter.Filter(iter.Iterator[int](slices.Values([]int{})), filter.IsEven) {
 		t.Error("unexpected")
 	}
 }
@@ -40,12 +41,12 @@ func TestFilterEmpty(t *testing.T) {
 func TestFilterTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull(it.Seq[int](iter.Filter(iter.Lift([]int{1, 2, 3}), filter.IsEven)))
+	_, stop := it.Pull(it.Seq[int](iter.Filter(iter.Iterator[int](slices.Values([]int{1, 2, 3})), filter.IsEven)))
 	stop()
 }
 
 func ExampleExclude() {
-	for number := range iter.Exclude(iter.Lift([]int{1, 2, 3, 4, 5}), filter.IsEven) {
+	for number := range iter.Exclude(iter.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})), filter.IsEven) {
 		fmt.Println(number)
 	}
 
@@ -56,7 +57,7 @@ func ExampleExclude() {
 }
 
 func ExampleExclude_method() {
-	for number := range iter.Lift([]int{1, 2, 3, 4, 5}).Exclude(filter.IsEven) {
+	for number := range iter.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Exclude(filter.IsEven) {
 		fmt.Println(number)
 	}
 

@@ -5,11 +5,12 @@ import (
 	it "iter"
 	"testing"
 
+	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/iter"
 )
 
 func ExampleDrop() {
-	for value := range iter.Drop(iter.Lift([]int{1, 2, 3, 4, 5}), 2) {
+	for value := range iter.Drop(iter.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})), 2) {
 		fmt.Println(value)
 	}
 
@@ -20,7 +21,7 @@ func ExampleDrop() {
 }
 
 func ExampleDrop_method() {
-	for value := range iter.Lift([]int{1, 2, 3, 4, 5}).Drop(2) {
+	for value := range iter.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Drop(2) {
 		fmt.Println(value)
 	}
 
@@ -33,14 +34,14 @@ func ExampleDrop_method() {
 func TestDropTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull(it.Seq[int](iter.Drop(iter.Lift([]int{1, 2, 3}), 2)))
+	_, stop := it.Pull(it.Seq[int](iter.Drop(iter.Iterator[int](slices.Values([]int{1, 2, 3})), 2)))
 	stop()
 }
 
 func TestDropEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _ = range iter.Drop(iter.Lift([]int{}), 2) {
+	for _ = range iter.Drop(iter.Iterator[int](slices.Values([]int{})), 2) {
 		t.Error("unexpected")
 	}
 }
