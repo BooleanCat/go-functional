@@ -10,7 +10,7 @@ import (
 )
 
 func ExampleEnumerate() {
-	for index, value := range iter.Enumerate(iter.Iterator[int](slices.Values([]int{1, 2, 3}))) {
+	for index, value := range iter.Enumerate(slices.Values([]int{1, 2, 3})) {
 		fmt.Println(index, value)
 	}
 
@@ -34,6 +34,6 @@ func ExampleEnumerate_method() {
 func TestEnumerateTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull2(it.Seq2[int, int](iter.Enumerate(iter.Iterator[int](slices.Values([]int{1, 2})))))
+	_, stop := it.Pull2(iter.Enumerate(slices.Values([]int{1, 2})))
 	stop()
 }
