@@ -51,6 +51,16 @@ func LessThan[T cmp.Ordered](threshold T) func(T) bool {
 	}
 }
 
+// Passthrough returns a function that returns true for any value.
+func Passthrough[V any](value V) bool {
+	return true
+}
+
+// Passthrough2 returns a function that returns true for any pair of values.
+func Passthrough2[V any, W any](value1 V, value2 W) bool {
+	return true
+}
+
 // Not returns a function that inverts the result of the provided function.
 func Not[T any](fn func(T) bool) func(T) bool {
 	return func(value T) bool {
