@@ -3,6 +3,7 @@ package filter_test
 import (
 	"fmt"
 
+	"github.com/BooleanCat/go-functional/v2/future/maps"
 	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/iter"
 	"github.com/BooleanCat/go-functional/v2/iter/filter"
@@ -41,6 +42,20 @@ func ExampleGreaterThan() {
 func ExampleLessThan() {
 	fmt.Println(iter.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.LessThan(3)).Collect())
 	// Output: [1 2]
+}
+
+func ExamplePassthrough() {
+	fmt.Println(iter.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.Passthrough).Collect())
+	// Output: [1 2 3 4]
+
+}
+
+func ExamplePassthrough2() {
+	numbers := maps.Collect(iter.Filter2(maps.All(map[int]string{1: "two"}), filter.Passthrough2))
+
+	fmt.Println(numbers[1])
+	// Output: two
+
 }
 
 func ExampleNot() {

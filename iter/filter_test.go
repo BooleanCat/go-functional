@@ -92,18 +92,13 @@ func ExampleFilter2_method() {
 func TestFilter2Empty(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, len(maps.Collect(iter.Filter2(maps.All(map[int]string{}), func(int, string) bool {
-		return true
-	}))), 0)
+	assert.Equal(t, len(maps.Collect(iter.Filter2(maps.All(map[int]string{}), filter.Passthrough2))), 0)
 }
 
 func TestFilter2TerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull2(iter.Filter2(maps.All(map[int]string{
-		1: "one",
-		2: "two",
-	}), func(int, string) bool { return true }))
+	_, stop := it.Pull2(iter.Filter2(maps.All(map[int]string{1: "one", 2: "two"}), filter.Passthrough2))
 	stop()
 }
 
@@ -132,14 +127,12 @@ func ExampleExclude2_method() {
 func TestExclude2Empty(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, len(maps.Collect(iter.Exclude2(maps.All(map[int]string{}), func(int, string) bool {
-		return true
-	}))), 0)
+	assert.Equal(t, len(maps.Collect(iter.Exclude2(maps.All(map[int]string{}), filter.Passthrough2))), 0)
 }
 
 func TestExclude2TerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull2(iter.Exclude2(maps.All(map[int]string{}), func(int, string) bool { return true }))
+	_, stop := it.Pull2(iter.Exclude2(maps.All(map[int]string{}), filter.Passthrough2))
 	stop()
 }
