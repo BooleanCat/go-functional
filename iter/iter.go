@@ -21,19 +21,6 @@ func (iterator Iterator[V]) Collect() []V {
 	return slices.Collect(iter.Seq[V](iterator))
 }
 
-// LiftHashMap yields all key-value pairs from a map.
-//
-// The order of iteration is non-deterministic.
-func LiftHashMap[K comparable, V any](m map[K]V) Iterator2[K, V] {
-	return Iterator2[K, V](iter.Seq2[K, V](func(yield func(K, V) bool) {
-		for key, value := range m {
-			if !yield(key, value) {
-				return
-			}
-		}
-	}))
-}
-
 // ForEach consumes an iterator and applies a function to each value yielded.
 func ForEach[V any](iter iter.Seq[V], fn func(V)) {
 	for item := range iter {

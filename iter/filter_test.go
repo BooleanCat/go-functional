@@ -5,6 +5,7 @@ import (
 	it "iter"
 	"testing"
 
+	"github.com/BooleanCat/go-functional/v2/future/maps"
 	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/iter"
 	"github.com/BooleanCat/go-functional/v2/iter/filter"
@@ -71,7 +72,7 @@ func ExampleFilter2() {
 	isOne := func(n int, _ string) bool { return n == 1 }
 	numbers := map[int]string{1: "one", 2: "two", 3: "three"}
 
-	for key, value := range iter.Filter2(it.Seq2[int, string](iter.LiftHashMap(numbers)), isOne) {
+	for key, value := range iter.Filter2(maps.All(numbers), isOne) {
 		fmt.Println(key, value)
 	}
 
@@ -82,7 +83,7 @@ func ExampleFilter2_method() {
 	isOne := func(n int, _ string) bool { return n == 1 }
 	numbers := map[int]string{1: "one", 2: "two", 3: "three"}
 
-	for key, value := range iter.LiftHashMap(numbers).Filter2(isOne) {
+	for key, value := range iter.Iterator2[int, string](maps.All(numbers)).Filter2(isOne) {
 		fmt.Println(key, value)
 	}
 
@@ -92,7 +93,7 @@ func ExampleFilter2_method() {
 func TestFilter2Empty(t *testing.T) {
 	t.Parallel()
 
-	for _, _ = range iter.Filter2(it.Seq2[int, string](iter.LiftHashMap(map[int]string{})), func(int, string) bool { return true }) {
+	for _, _ = range iter.Filter2(maps.All(map[int]string{}), func(int, string) bool { return true }) {
 		t.Error("unexpected")
 	}
 }
@@ -100,10 +101,10 @@ func TestFilter2Empty(t *testing.T) {
 func TestFilter2TerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull2(iter.Filter2(it.Seq2[int, string](iter.LiftHashMap(map[int]string{
+	_, stop := it.Pull2(iter.Filter2(maps.All(map[int]string{
 		1: "one",
 		2: "two",
-	})), func(int, string) bool { return true }))
+	}), func(int, string) bool { return true }))
 	stop()
 }
 
@@ -111,7 +112,7 @@ func ExampleExclude2() {
 	isOne := func(n int, _ string) bool { return n == 1 }
 	numbers := map[int]string{1: "one", 3: "three"}
 
-	for key, value := range iter.Exclude2(it.Seq2[int, string](iter.LiftHashMap(numbers)), isOne) {
+	for key, value := range iter.Exclude2(maps.All(numbers), isOne) {
 		fmt.Println(key, value)
 	}
 
@@ -122,7 +123,7 @@ func ExampleExclude2_method() {
 	isOne := func(n int, _ string) bool { return n == 1 }
 	numbers := map[int]string{1: "one", 3: "three"}
 
-	for key, value := range iter.LiftHashMap(numbers).Exclude2(isOne) {
+	for key, value := range iter.Iterator2[int, string](maps.All(numbers)).Exclude2(isOne) {
 		fmt.Println(key, value)
 	}
 
@@ -132,7 +133,7 @@ func ExampleExclude2_method() {
 func TestExclude2Empty(t *testing.T) {
 	t.Parallel()
 
-	for _, _ = range iter.Exclude2(it.Seq2[int, string](iter.LiftHashMap(map[int]string{})), func(int, string) bool { return true }) {
+	for _, _ = range iter.Exclude2(maps.All(map[int]string{}), func(int, string) bool { return true }) {
 		t.Error("unexpected")
 	}
 }
@@ -140,6 +141,6 @@ func TestExclude2Empty(t *testing.T) {
 func TestExclude2TerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull2(iter.Exclude2(it.Seq2[int, string](iter.LiftHashMap(map[int]string{})), func(int, string) bool { return true }))
+	_, stop := it.Pull2(iter.Exclude2(maps.All(map[int]string{}), func(int, string) bool { return true }))
 	stop()
 }

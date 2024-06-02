@@ -7,6 +7,7 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/BooleanCat/go-functional/v2/future/maps"
 	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	"github.com/BooleanCat/go-functional/v2/iter"
@@ -39,7 +40,7 @@ func TestZipTerminateEarly(t *testing.T) {
 }
 
 func ExampleUnzip() {
-	keys, values := iter.Unzip(it.Seq2[int, string](iter.LiftHashMap(map[int]string{1: "one", 2: "two"})))
+	keys, values := iter.Unzip(maps.All(map[int]string{1: "one", 2: "two"}))
 
 	for key := range keys {
 		fmt.Println(key)
@@ -51,7 +52,7 @@ func ExampleUnzip() {
 }
 
 func ExampleUnzip_method() {
-	keys, values := iter.LiftHashMap(map[int]string{1: "one", 2: "two"}).Unzip()
+	keys, values := iter.Iterator2[int, string](maps.All(map[int]string{1: "one", 2: "two"})).Unzip()
 
 	for key := range keys {
 		fmt.Println(key)
@@ -129,7 +130,7 @@ func TestUnzipTerminateEarly(t *testing.T) {
 func TestUnzipTerminateLeftEarly(t *testing.T) {
 	t.Parallel()
 
-	numbers, strings := iter.Unzip(it.Seq2[int, string](iter.LiftHashMap(map[int]string{1: "one", 2: "two"})))
+	numbers, strings := iter.Unzip(maps.All(map[int]string{1: "one", 2: "two"}))
 
 	_, stop := it.Pull(numbers)
 	stop()
@@ -140,7 +141,7 @@ func TestUnzipTerminateLeftEarly(t *testing.T) {
 func TestUnzipTerminateRightEarly(t *testing.T) {
 	t.Parallel()
 
-	numbers, strings := iter.Unzip(it.Seq2[int, string](iter.LiftHashMap(map[int]string{1: "one", 2: "two"})))
+	numbers, strings := iter.Unzip(maps.All(map[int]string{1: "one", 2: "two"}))
 
 	_, stop := it.Pull(strings)
 	stop()
@@ -149,7 +150,7 @@ func TestUnzipTerminateRightEarly(t *testing.T) {
 }
 
 func TestUnzipMethod(t *testing.T) {
-	keys, values := iter.LiftHashMap(map[int]string{1: "one"}).Unzip()
+	keys, values := iter.Iterator2[int, string](maps.All(map[int]string{1: "one"})).Unzip()
 
 	assert.SliceEqual(t, keys.Collect(), []int{1})
 	assert.SliceEqual(t, values.Collect(), []string{"one"})

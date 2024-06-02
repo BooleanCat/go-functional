@@ -2,8 +2,6 @@ package iter_test
 
 import (
 	"fmt"
-	it "iter"
-	"sort"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/future/slices"
@@ -15,52 +13,6 @@ import (
 func ExampleCollect_method() {
 	fmt.Println(iter.Iterator[int](slices.Values([]int{1, 2, 3})).Collect())
 	// Output: [1 2 3]
-}
-
-func ExampleLiftHashMap() {
-	for key, value := range iter.LiftHashMap(map[int]string{1: "one", 2: "two", 3: "three"}) {
-		fmt.Println(key, value)
-	}
-}
-
-type keyValuePair[K comparable, V any] struct {
-	key   K
-	value V
-}
-
-func TestLiftHashMap(t *testing.T) {
-	t.Parallel()
-
-	values := make([]keyValuePair[int, string], 0, 3)
-
-	for key, value := range iter.LiftHashMap(map[int]string{1: "one", 2: "two", 3: "three"}) {
-		values = append(values, keyValuePair[int, string]{key, value})
-	}
-
-	sort.Slice(values, func(i, j int) bool {
-		return values[i].key < values[j].key
-	})
-
-	assert.SliceEqual(t, values, []keyValuePair[int, string]{
-		{1, "one"},
-		{2, "two"},
-		{3, "three"},
-	})
-}
-
-func TestLiftHashMapEmpty(t *testing.T) {
-	t.Parallel()
-
-	for _, _ = range iter.LiftHashMap(map[int]string{}) {
-		t.Error("unexpected")
-	}
-}
-
-func TestLiftHashMapTerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := it.Pull2(it.Seq2[int, string](iter.LiftHashMap(map[int]string{1: "one", 2: "two", 3: "three"})))
-	stop()
 }
 
 func ExampleForEach() {
