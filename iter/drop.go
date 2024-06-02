@@ -21,5 +21,5 @@ func Drop[V any](delegate iter.Seq[V], count int) iter.Seq[V] {
 
 // Drop is a convenience method for chaining [Drop] on [Iterator]s.
 func (iterator Iterator[V]) Drop(count int) Iterator[V] {
-	return Iterator[V](Drop[V](iter.Seq[V](iterator), count))
+	return Iterator[V](Drop(iter.Seq[V](iterator), count))
 }

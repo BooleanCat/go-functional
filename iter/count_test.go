@@ -9,7 +9,7 @@ import (
 )
 
 func ExampleCount() {
-	for i := range iter.Count() {
+	for i := range iter.Count[int]() {
 		if i >= 3 {
 			break
 		}
@@ -26,6 +26,6 @@ func ExampleCount() {
 func TestCountTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull(iter.Count())
+	_, stop := it.Pull(iter.Count[int]())
 	stop()
 }
