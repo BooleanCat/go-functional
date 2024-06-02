@@ -50,7 +50,7 @@ func TestTakeZero(t *testing.T) {
 func TestTakeEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Empty[int](t, slices.Collect(iter.Take(slices.Values([]int{}), 2)))
+	assert.Empty[int](t, slices.Collect(iter.Take(iter.Exhausted[int](), 2)))
 }
 
 func ExampleTake2() {
@@ -92,7 +92,7 @@ func TestTake2Zero(t *testing.T) {
 func TestTake2Empty(t *testing.T) {
 	t.Parallel()
 
-	numbers := maps.Collect(iter.Take2(maps.All(map[int]string{}), 2))
+	numbers := maps.Collect(iter.Take2(iter.Exhausted2[int, int](), 2))
 	assert.Equal(t, len(numbers), 0)
 }
 

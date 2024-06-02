@@ -35,7 +35,7 @@ func ExampleFilter_method() {
 func TestFilterEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Empty[int](t, slices.Collect(iter.Filter(slices.Values([]int{}), filter.IsEven)))
+	assert.Empty[int](t, slices.Collect(iter.Filter(iter.Exhausted[int](), filter.IsEven)))
 }
 
 func TestFilterTerminateEarly(t *testing.T) {
@@ -92,7 +92,7 @@ func ExampleFilter2_method() {
 func TestFilter2Empty(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, len(maps.Collect(iter.Filter2(maps.All(map[int]string{}), filter.Passthrough2))), 0)
+	assert.Equal(t, len(maps.Collect(iter.Filter2(iter.Exhausted2[int, int](), filter.Passthrough2))), 0)
 }
 
 func TestFilter2TerminateEarly(t *testing.T) {
@@ -127,12 +127,12 @@ func ExampleExclude2_method() {
 func TestExclude2Empty(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, len(maps.Collect(iter.Exclude2(maps.All(map[int]string{}), filter.Passthrough2))), 0)
+	assert.Equal(t, len(maps.Collect(iter.Exclude2(iter.Exhausted2[int, int](), filter.Passthrough2))), 0)
 }
 
 func TestExclude2TerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull2(iter.Exclude2(maps.All(map[int]string{}), filter.Passthrough2))
+	_, stop := it.Pull2(iter.Exclude2(iter.Exhausted2[int, int](), filter.Passthrough2))
 	stop()
 }

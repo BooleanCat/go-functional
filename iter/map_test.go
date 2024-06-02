@@ -27,7 +27,7 @@ func ExampleMap() {
 func TestMapEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Empty[int](t, slices.Collect(iter.Map(slices.Values([]int{}), func(int) int { return 0 })))
+	assert.Empty[int](t, slices.Collect(iter.Map(iter.Exhausted[int](), func(int) int { return 0 })))
 }
 
 func TestMapTerminateEarly(t *testing.T) {
@@ -55,7 +55,7 @@ func TestMap2Empty(t *testing.T) {
 
 	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
 
-	assert.Equal(t, len(maps.Collect(iter.Map2(maps.All(map[int]int{}), doubleBoth))), 0)
+	assert.Equal(t, len(maps.Collect(iter.Map2(iter.Exhausted2[int, int](), doubleBoth))), 0)
 }
 
 func TestMap2TerminateEarly(t *testing.T) {

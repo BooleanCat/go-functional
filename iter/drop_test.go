@@ -44,7 +44,7 @@ func TestDropTerminateEarly(t *testing.T) {
 func TestDropEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Empty[int](t, slices.Collect(iter.Drop(slices.Values([]int{}), 2)))
+	assert.Empty[int](t, slices.Collect(iter.Drop(iter.Exhausted[int](), 2)))
 }
 
 func ExampleDrop2() {
@@ -79,7 +79,7 @@ func TestDrop2(t *testing.T) {
 func TestDrop2Empty(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, len(maps.Collect(iter.Drop2(maps.All(map[int]string{}), 1))), 0)
+	assert.Equal(t, len(maps.Collect(iter.Drop2(iter.Exhausted2[int, int](), 1))), 0)
 }
 
 func TestDrop2Zero(t *testing.T) {
