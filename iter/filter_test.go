@@ -82,7 +82,7 @@ func ExampleFilter2_method() {
 	isOne := func(n int, _ string) bool { return n == 1 }
 	numbers := map[int]string{1: "one", 2: "two", 3: "three"}
 
-	for key, value := range iter.Iterator2[int, string](maps.All(numbers)).Filter2(isOne) {
+	for key, value := range iter.Iterator2[int, string](maps.All(numbers)).Filter(isOne) {
 		fmt.Println(key, value)
 	}
 
@@ -117,7 +117,7 @@ func ExampleExclude2_method() {
 	isOne := func(n int, _ string) bool { return n == 1 }
 	numbers := map[int]string{1: "one", 3: "three"}
 
-	for key, value := range iter.Iterator2[int, string](maps.All(numbers)).Exclude2(isOne) {
+	for key, value := range iter.Iterator2[int, string](maps.All(numbers)).Exclude(isOne) {
 		fmt.Println(key, value)
 	}
 

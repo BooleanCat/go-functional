@@ -54,7 +54,7 @@ func ExampleForEach2() {
 }
 
 func ExampleForEach2_method() {
-	iter.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate().ForEach2(func(index int, number int) {
+	iter.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate().ForEach(func(index int, number int) {
 		fmt.Println(index, number)
 	})
 	// Output:

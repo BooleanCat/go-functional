@@ -40,8 +40,8 @@ func ForEach2[V, W any](iter iter.Seq2[V, W], fn func(V, W)) {
 	}
 }
 
-// ForEach2 is a convenience method for chaining [ForEach2] on [Iterator2]s.
-func (iterator Iterator2[V, W]) ForEach2(fn func(V, W)) {
+// ForEach is a convenience method for chaining [ForEach] on [Iterator2]s.
+func (iterator Iterator2[V, W]) ForEach(fn func(V, W)) {
 	ForEach2(iter.Seq2[V, W](iterator), fn)
 }
 

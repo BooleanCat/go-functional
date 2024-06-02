@@ -24,5 +24,5 @@ func Take[V any](delegate iter.Seq[V], limit int) iter.Seq[V] {
 
 // Take is a convenience method for chaining [Take] on [Iterator]s.
 func (iterator Iterator[V]) Take(limit int) Iterator[V] {
-	return Iterator[V](Take[V](iter.Seq[V](iterator), limit))
+	return Iterator[V](Take(iter.Seq[V](iterator), limit))
 }

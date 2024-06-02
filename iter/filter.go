@@ -69,12 +69,12 @@ func Exclude2[V, W any](delegate iter.Seq2[V, W], predicate func(V, W) bool) ite
 	}
 }
 
-// Filter2 is a convenience method for chaining [Filter2] on [Iterator2]s.
-func (iterator Iterator2[V, W]) Filter2(predicate func(V, W) bool) Iterator2[V, W] {
+// Filter is a convenience method for chaining [Filter] on [Iterator2]s.
+func (iterator Iterator2[V, W]) Filter(predicate func(V, W) bool) Iterator2[V, W] {
 	return Iterator2[V, W](Filter2[V, W](iter.Seq2[V, W](iterator), predicate))
 }
 
-// Exclude2 is a convenience method for chaining [Exclude2] on [Iterator2]s.
-func (iterator Iterator2[V, W]) Exclude2(predicate func(V, W) bool) Iterator2[V, W] {
+// Exclude is a convenience method for chaining [Exclude] on [Iterator2]s.
+func (iterator Iterator2[V, W]) Exclude(predicate func(V, W) bool) Iterator2[V, W] {
 	return Iterator2[V, W](Exclude2[V, W](iter.Seq2[V, W](iterator), predicate))
 }
