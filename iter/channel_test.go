@@ -48,7 +48,6 @@ func TestFromChannelEmpty(t *testing.T) {
 	close(channel)
 
 	assert.Empty[int](t, slices.Collect(iter.FromChannel(channel)))
-
 }
 
 func ExampleToChannel() {
