@@ -44,9 +44,7 @@ func TestAll(t *testing.T) {
 func TestAllEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _, _ = range maps.All(map[int]string{}) {
-		t.Error("unexpected")
-	}
+	assert.Equal(t, len(maps.Collect(maps.All(map[int]string{}))), 0)
 }
 
 func TestAllTerminateEarly(t *testing.T) {
@@ -54,4 +52,20 @@ func TestAllTerminateEarly(t *testing.T) {
 
 	_, stop := iter.Pull2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}))
 	stop()
+}
+
+func ExampleCollect() {
+	numbers := maps.Collect(maps.All(map[int]string{1: "one", 2: "two"}))
+
+	fmt.Println(numbers[0])
+	fmt.Println(numbers[1])
+	// Output
+	// one
+	// two
+}
+
+func TestCollectEmpty(t *testing.T) {
+	t.Parallel()
+
+	assert.Equal(t, len(maps.Collect(maps.All(map[int]string{}))), 0)
 }

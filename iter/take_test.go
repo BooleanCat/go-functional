@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/future/slices"
+	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	"github.com/BooleanCat/go-functional/v2/iter"
 )
 
@@ -41,7 +42,11 @@ func TestTakeTerminateEarly(t *testing.T) {
 func TestTakeZero(t *testing.T) {
 	t.Parallel()
 
-	for _ = range iter.Take(slices.Values([]int{1, 2, 3}), 0) {
-		t.Error("unexpected")
-	}
+	assert.Empty[int](t, slices.Collect(iter.Take(slices.Values([]int{1, 2, 3}), 0)))
+}
+
+func TestTakeEmpty(t *testing.T) {
+	t.Parallel()
+
+	assert.Empty[int](t, slices.Collect(iter.Take(slices.Values([]int{}), 2)))
 }

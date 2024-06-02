@@ -27,9 +27,7 @@ func ExampleZip() {
 func TestZipEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _, _ = range iter.Zip(slices.Values([]int{}), slices.Values([]string{})) {
-		t.Error("unexpected")
-	}
+	assert.Equal(t, len(maps.Collect(iter.Zip(slices.Values([]int{}), slices.Values([]string{})))), 0)
 }
 
 func TestZipTerminateEarly(t *testing.T) {

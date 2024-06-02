@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/future/slices"
+	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	"github.com/BooleanCat/go-functional/v2/iter"
 )
 
@@ -25,9 +26,7 @@ func ExampleMap() {
 func TestMapEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _ = range iter.Map(slices.Values([]int{}), func(int) int { return 0 }) {
-		t.Error("unexpected")
-	}
+	assert.Empty[int](t, slices.Collect(iter.Map(slices.Values([]int{}), func(int) int { return 0 })))
 }
 
 func TestMapTerminateEarly(t *testing.T) {

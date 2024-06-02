@@ -16,3 +16,14 @@ func All[Map ~map[K]V, K comparable, V any](m Map) iter.Seq2[K, V] {
 		}
 	}
 }
+
+// Collect collects key-value pairs from seq into a new map and returns it.
+func Collect[K comparable, V any](seq iter.Seq2[K, V]) map[K]V {
+	m := make(map[K]V)
+
+	for key, value := range seq {
+		m[key] = value
+	}
+
+	return m
+}

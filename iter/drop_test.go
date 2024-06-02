@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/future/slices"
+	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	"github.com/BooleanCat/go-functional/v2/iter"
 )
 
@@ -41,7 +42,5 @@ func TestDropTerminateEarly(t *testing.T) {
 func TestDropEmpty(t *testing.T) {
 	t.Parallel()
 
-	for _ = range iter.Drop(slices.Values([]int{}), 2) {
-		t.Error("unexpected")
-	}
+	assert.Empty[int](t, slices.Collect(iter.Drop(slices.Values([]int{}), 2)))
 }
