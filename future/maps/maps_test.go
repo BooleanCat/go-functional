@@ -64,6 +64,15 @@ func ExampleCollect() {
 	// two
 }
 
+func TestCollect(t *testing.T) {
+	t.Parallel()
+
+	numbers := maps.Collect(maps.All(map[int]string{1: "one", 2: "two"}))
+
+	assert.Equal(t, numbers[1], "one")
+	assert.Equal(t, numbers[2], "two")
+}
+
 func TestCollectEmpty(t *testing.T) {
 	t.Parallel()
 
