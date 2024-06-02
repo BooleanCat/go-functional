@@ -5,6 +5,7 @@ import (
 	it "iter"
 	"testing"
 
+	"github.com/BooleanCat/go-functional/v2/future/maps"
 	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	"github.com/BooleanCat/go-functional/v2/iter"
@@ -33,5 +34,35 @@ func TestMapTerminateEarly(t *testing.T) {
 	t.Parallel()
 
 	_, stop := it.Pull(iter.Map(slices.Values([]int{1, 2, 3}), func(int) int { return 0 }))
+	stop()
+}
+
+func ExampleMap2() {
+	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
+
+	for left, right := range iter.Map2(iter.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{2, 3, 4})), doubleBoth) {
+		fmt.Println(left, right)
+	}
+
+	// Output:
+	// 2 4
+	// 4 6
+	// 6 8
+}
+
+func TestMap2Empty(t *testing.T) {
+	t.Parallel()
+
+	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
+
+	assert.Equal(t, len(maps.Collect(iter.Map2(maps.All(map[int]int{}), doubleBoth))), 0)
+}
+
+func TestMap2TerminateEarly(t *testing.T) {
+	t.Parallel()
+
+	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
+
+	_, stop := it.Pull2(iter.Map2(maps.All(map[int]int{1: 2}), doubleBoth))
 	stop()
 }
