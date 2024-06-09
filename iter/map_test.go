@@ -2,19 +2,19 @@ package iter_test
 
 import (
 	"fmt"
-	it "iter"
+	"iter"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/future/maps"
 	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
-	"github.com/BooleanCat/go-functional/v2/iter"
+	fn "github.com/BooleanCat/go-functional/v2/iter"
 )
 
 func ExampleMap() {
 	double := func(n int) int { return n * 2 }
 
-	for number := range iter.Map(slices.Values([]int{1, 2, 3}), double) {
+	for number := range fn.Map(slices.Values([]int{1, 2, 3}), double) {
 		fmt.Println(number)
 	}
 
@@ -27,20 +27,20 @@ func ExampleMap() {
 func TestMapEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Empty[int](t, slices.Collect(iter.Map(iter.Exhausted[int](), func(int) int { return 0 })))
+	assert.Empty[int](t, slices.Collect(fn.Map(fn.Exhausted[int](), func(int) int { return 0 })))
 }
 
 func TestMapTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := it.Pull(iter.Map(slices.Values([]int{1, 2, 3}), func(int) int { return 0 }))
+	_, stop := iter.Pull(fn.Map(slices.Values([]int{1, 2, 3}), func(int) int { return 0 }))
 	stop()
 }
 
 func ExampleMap2() {
 	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
 
-	for left, right := range iter.Map2(iter.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{2, 3, 4})), doubleBoth) {
+	for left, right := range fn.Map2(fn.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{2, 3, 4})), doubleBoth) {
 		fmt.Println(left, right)
 	}
 
@@ -55,7 +55,7 @@ func TestMap2Empty(t *testing.T) {
 
 	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
 
-	assert.Equal(t, len(maps.Collect(iter.Map2(iter.Exhausted2[int, int](), doubleBoth))), 0)
+	assert.Equal(t, len(maps.Collect(fn.Map2(fn.Exhausted2[int, int](), doubleBoth))), 0)
 }
 
 func TestMap2TerminateEarly(t *testing.T) {
@@ -63,6 +63,6 @@ func TestMap2TerminateEarly(t *testing.T) {
 
 	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
 
-	_, stop := it.Pull2(iter.Map2(maps.All(map[int]int{1: 2}), doubleBoth))
+	_, stop := iter.Pull2(fn.Map2(maps.All(map[int]int{1: 2}), doubleBoth))
 	stop()
 }
