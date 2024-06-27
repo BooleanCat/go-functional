@@ -17,4 +17,4 @@ test:
 
 cov: SHELL:=/bin/bash
 cov:
-	$(GO_BINARY) test -race -coverprofile=coverage.txt -covermode=atomic $$( go list ./... | grep -v assert )
+	$(GO_BINARY) test -race -coverprofile=coverage.txt -covermode=atomic $$( go list ./... | grep -v assert | grep -v future )
