@@ -1,3 +1,5 @@
+//go:build go1.23
+
 package slices_test
 
 import (

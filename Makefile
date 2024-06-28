@@ -18,3 +18,7 @@ test:
 cov: SHELL:=/bin/bash
 cov:
 	$(GO_BINARY) test -race -coverprofile=coverage.txt -covermode=atomic $$( go list ./... | grep -v assert | grep -v future )
+
+compare_files:
+	@./compare_file.bash ./future/slices/slices_test.go ./future/slices/slices_1.22_test.go
+	@./compare_file.bash ./future/maps/maps_test.go ./future/slices/maps_1.23_test.go
