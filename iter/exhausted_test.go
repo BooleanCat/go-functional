@@ -2,9 +2,9 @@ package iter_test
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 
-	"github.com/BooleanCat/go-functional/v2/future/maps"
-	"github.com/BooleanCat/go-functional/v2/future/slices"
 	fn "github.com/BooleanCat/go-functional/v2/iter"
 )
 

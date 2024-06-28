@@ -2,8 +2,8 @@ package op_test
 
 import (
 	"fmt"
+	"slices"
 
-	"github.com/BooleanCat/go-functional/v2/future/slices"
 	fn "github.com/BooleanCat/go-functional/v2/iter"
 	"github.com/BooleanCat/go-functional/v2/iter/op"
 )

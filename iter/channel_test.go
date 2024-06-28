@@ -3,9 +3,9 @@ package iter_test
 import (
 	"fmt"
 	"iter"
+	"slices"
 	"testing"
 
-	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	fn "github.com/BooleanCat/go-functional/v2/iter"
 )

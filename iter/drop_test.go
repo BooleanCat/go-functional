@@ -3,11 +3,10 @@ package iter_test
 import (
 	"fmt"
 	"iter"
-	sl "slices"
+	"maps"
+	"slices"
 	"testing"
 
-	"github.com/BooleanCat/go-functional/v2/future/maps"
-	"github.com/BooleanCat/go-functional/v2/future/slices"
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	fn "github.com/BooleanCat/go-functional/v2/iter"
 )
@@ -72,7 +71,7 @@ func TestDrop2(t *testing.T) {
 	assert.Equal(t, len(numbers), 2)
 
 	for key := range numbers {
-		assert.True(t, sl.Contains(keys, key))
+		assert.True(t, slices.Contains(keys, key))
 	}
 }
 

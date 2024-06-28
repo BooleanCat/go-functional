@@ -2,8 +2,7 @@ package iter
 
 import (
 	"iter"
-
-	"github.com/BooleanCat/go-functional/v2/future/slices"
+	"slices"
 )
 
 type (
