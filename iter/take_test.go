@@ -33,17 +33,32 @@ func ExampleTake_method() {
 	// 3
 }
 
-func TestTakeTerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := iter.Pull(fn.Take(slices.Values([]int{1, 2, 3}), 2))
-	stop()
-}
-
 func TestTakeZero(t *testing.T) {
 	t.Parallel()
 
 	assert.Empty[int](t, slices.Collect(fn.Take(slices.Values([]int{1, 2, 3}), 0)))
+}
+
+func TestTakeMoreThanAvailable(t *testing.T) {
+	t.Parallel()
+
+	numbers := slices.Collect(fn.Take(slices.Values([]int{1, 2, 3}), 5))
+	assert.SliceEqual(t, []int{1, 2, 3}, numbers)
+}
+
+func TestTakeYieldFalse(t *testing.T) {
+	t.Parallel()
+
+	seq := fn.Take(slices.Values([]int{1, 2, 3, 4, 5}), 3)
+
+	values := []int{}
+	seq(func(v int) bool {
+		values = append(values, v)
+		return false
+	})
+
+	expected := []int{1}
+	assert.SliceEqual(t, expected, values)
 }
 
 func TestTakeEmpty(t *testing.T) {
@@ -95,9 +110,23 @@ func TestTake2Empty(t *testing.T) {
 	assert.Equal(t, len(numbers), 0)
 }
 
-func TestTake2TerminateEarly(t *testing.T) {
+func TestTake2MoreThanAvailable(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull2(fn.Take2(maps.All(map[int]string{1: "one", 2: "two"}), 1))
-	stop()
+	numbers := maps.Collect(fn.Take2(maps.All(map[int]string{1: "one", 2: "two"}), 3))
+	assert.Equal(t, len(numbers), 2)
+}
+
+func TestTake2YieldFalse(t *testing.T) {
+	t.Parallel()
+
+	seq := fn.Take2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 2)
+
+	values := make(map[int]string)
+	seq(func(k int, v string) bool {
+		values[k] = v
+		return false
+	})
+
+	assert.Equal(t, len(values), 1)
 }
