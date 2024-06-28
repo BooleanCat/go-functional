@@ -46,6 +46,13 @@ func TestTakeZero(t *testing.T) {
 	assert.Empty[int](t, slices.Collect(fn.Take(slices.Values([]int{1, 2, 3}), 0)))
 }
 
+func TestTakeMoreThanAvailable(t *testing.T) {
+	t.Parallel()
+
+	numbers := slices.Collect(fn.Take(slices.Values([]int{1, 2, 3}), 5))
+	assert.SliceEqual(t, []int{1, 2, 3}, numbers)
+}
+
 func TestTakeEmpty(t *testing.T) {
 	t.Parallel()
 
@@ -93,6 +100,13 @@ func TestTake2Empty(t *testing.T) {
 
 	numbers := maps.Collect(fn.Take2(fn.Exhausted2[int, int](), 2))
 	assert.Equal(t, len(numbers), 0)
+}
+
+func TestTake2MoreThanAvailable(t *testing.T) {
+	t.Parallel()
+
+	numbers := maps.Collect(fn.Take2(maps.All(map[int]string{1: "one", 2: "two"}), 3))
+	assert.Equal(t, len(numbers), 2)
 }
 
 func TestTake2TerminateEarly(t *testing.T) {
