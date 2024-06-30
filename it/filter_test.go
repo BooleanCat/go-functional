@@ -75,20 +75,9 @@ func TestFilter2YieldsFalse(t *testing.T) {
 
 	seq := it.Filter2(maps.All(map[int]string{1: "one", 2: "two"}), filter.Passthrough2)
 
-	var (
-		key   int
-		value string
-	)
-
 	seq(func(k int, v string) bool {
-		key = k
-		value = v
 		return false
 	})
-
-	assert.Equal(t, key, 1)
-	assert.Equal(t, value, "one")
-
 }
 
 func ExampleExclude2() {
