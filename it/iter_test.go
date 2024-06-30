@@ -64,3 +64,33 @@ func ExampleReduce2() {
 
 	// Output: 3
 }
+
+func ExampleMax() {
+	max, ok := it.Max(slices.Values([]int{1, 2, 3}))
+	fmt.Println(max, ok)
+
+	// Output: 3 true
+}
+
+func TestMaxEmpty(t *testing.T) {
+	t.Parallel()
+
+	max, ok := it.Max(it.Exhausted[int]())
+	assert.Equal(t, max, 0)
+	assert.False(t, ok)
+}
+
+func ExampleMin() {
+	min, ok := it.Min(slices.Values([]int{4, 2, 1, 3}))
+	fmt.Println(min, ok)
+
+	// Output: 1 true
+}
+
+func TestMinEmpty(t *testing.T) {
+	t.Parallel()
+
+	min, ok := it.Min(it.Exhausted[int]())
+	assert.Equal(t, min, 0)
+	assert.False(t, ok)
+}
