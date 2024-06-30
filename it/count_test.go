@@ -1,15 +1,15 @@
-package iter_test
+package it_test
 
 import (
 	"fmt"
 	"iter"
 	"testing"
 
-	fn "github.com/BooleanCat/go-functional/v2/iter"
+	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleCount() {
-	for i := range fn.Count[int]() {
+	for i := range it.Count[int]() {
 		if i >= 3 {
 			break
 		}
@@ -26,6 +26,6 @@ func ExampleCount() {
 func TestCountTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull(fn.Count[int]())
+	_, stop := iter.Pull(it.Count[int]())
 	stop()
 }

@@ -1,4 +1,4 @@
-package iter_test
+package it_test
 
 import (
 	"fmt"
@@ -6,11 +6,11 @@ import (
 	"slices"
 	"testing"
 
-	fn "github.com/BooleanCat/go-functional/v2/iter"
+	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleRepeat() {
-	numbers := slices.Collect(fn.Take(fn.Repeat(42), 2))
+	numbers := slices.Collect(it.Take(it.Repeat(42), 2))
 
 	fmt.Println(numbers)
 	// Output: [42 42]
@@ -19,12 +19,12 @@ func ExampleRepeat() {
 func TestRepeatTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull(fn.Repeat(42))
+	_, stop := iter.Pull(it.Repeat(42))
 	stop()
 }
 
 func ExampleRepeat2() {
-	numbers := fn.Take2(fn.Repeat2(42, "Life"), 2)
+	numbers := it.Take2(it.Repeat2(42, "Life"), 2)
 
 	for v, w := range numbers {
 		fmt.Println(v, w)
@@ -38,6 +38,6 @@ func ExampleRepeat2() {
 func TestRepeat2TerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull2(fn.Repeat2(42, "Life"))
+	_, stop := iter.Pull2(it.Repeat2(42, "Life"))
 	stop()
 }

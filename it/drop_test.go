@@ -1,4 +1,4 @@
-package iter_test
+package it_test
 
 import (
 	"fmt"
@@ -8,11 +8,11 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
-	fn "github.com/BooleanCat/go-functional/v2/iter"
+	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleDrop() {
-	for value := range fn.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2) {
+	for value := range it.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2) {
 		fmt.Println(value)
 	}
 
@@ -23,7 +23,7 @@ func ExampleDrop() {
 }
 
 func ExampleDrop_method() {
-	for value := range fn.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Drop(2) {
+	for value := range it.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Drop(2) {
 		fmt.Println(value)
 	}
 
@@ -36,7 +36,7 @@ func ExampleDrop_method() {
 func TestDropYieldFalse(t *testing.T) {
 	t.Parallel()
 
-	numbers := fn.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2)
+	numbers := it.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2)
 	var a int
 	numbers(func(value int) bool {
 		a = value
@@ -48,18 +48,18 @@ func TestDropYieldFalse(t *testing.T) {
 func TestDropEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Empty[int](t, slices.Collect(fn.Drop(fn.Exhausted[int](), 2)))
+	assert.Empty[int](t, slices.Collect(it.Drop(it.Exhausted[int](), 2)))
 }
 
 func ExampleDrop2() {
-	numbers := maps.Collect(fn.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 1))
+	numbers := maps.Collect(it.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 1))
 
 	fmt.Println(len(numbers))
 	// Output: 2
 }
 
 func ExampleDrop2_method() {
-	numbers := fn.Iterator2[int, string](maps.All(map[int]string{1: "one", 2: "two", 3: "three"})).Drop(1)
+	numbers := it.Iterator2[int, string](maps.All(map[int]string{1: "one", 2: "two", 3: "three"})).Drop(1)
 
 	fmt.Println(len(maps.Collect(iter.Seq2[int, string](numbers))))
 	// Output: 2
@@ -71,7 +71,7 @@ func TestDrop2(t *testing.T) {
 	keys := []int{1, 2, 3}
 	values := []string{"one", "two", "three"}
 
-	numbers := maps.Collect(fn.Drop2(fn.Zip(slices.Values(keys), slices.Values(values)), 1))
+	numbers := maps.Collect(it.Drop2(it.Zip(slices.Values(keys), slices.Values(values)), 1))
 
 	assert.Equal(t, len(numbers), 2)
 
@@ -83,13 +83,13 @@ func TestDrop2(t *testing.T) {
 func TestDrop2Empty(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, len(maps.Collect(fn.Drop2(fn.Exhausted2[int, int](), 1))), 0)
+	assert.Equal(t, len(maps.Collect(it.Drop2(it.Exhausted2[int, int](), 1))), 0)
 }
 
 func TestDrop2Zero(t *testing.T) {
 	t.Parallel()
 
-	numbers := maps.Collect(fn.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 0))
+	numbers := maps.Collect(it.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 0))
 
 	assert.Equal(t, len(numbers), 3)
 }
@@ -97,8 +97,8 @@ func TestDrop2Zero(t *testing.T) {
 func TestDrop2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	numbersZipped := fn.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
-	numbers := fn.Drop2(numbersZipped, 2)
+	numbersZipped := it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
+	numbers := it.Drop2(numbersZipped, 2)
 	var a, b int
 	numbers(func(v, w int) bool {
 		a, b = v, w

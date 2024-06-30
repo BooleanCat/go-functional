@@ -1,4 +1,4 @@
-package iter_test
+package it_test
 
 import (
 	"fmt"
@@ -6,11 +6,11 @@ import (
 	"slices"
 	"testing"
 
-	fn "github.com/BooleanCat/go-functional/v2/iter"
+	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleEnumerate() {
-	for index, value := range fn.Enumerate(slices.Values([]int{1, 2, 3})) {
+	for index, value := range it.Enumerate(slices.Values([]int{1, 2, 3})) {
 		fmt.Println(index, value)
 	}
 
@@ -21,7 +21,7 @@ func ExampleEnumerate() {
 }
 
 func ExampleEnumerate_method() {
-	for index, value := range fn.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate() {
+	for index, value := range it.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate() {
 		fmt.Println(index, value)
 	}
 
@@ -34,6 +34,6 @@ func ExampleEnumerate_method() {
 func TestEnumerateTerminateEarly(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull2(fn.Enumerate(slices.Values([]int{1, 2})))
+	_, stop := iter.Pull2(it.Enumerate(slices.Values([]int{1, 2})))
 	stop()
 }

@@ -1,4 +1,4 @@
-package iter_test
+package it_test
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
-	fn "github.com/BooleanCat/go-functional/v2/iter"
+	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleFromChannel() {
@@ -18,7 +18,7 @@ func ExampleFromChannel() {
 		items <- 2
 	}()
 
-	for number := range fn.FromChannel(items) {
+	for number := range it.FromChannel(items) {
 		fmt.Println(number)
 	}
 
@@ -34,7 +34,7 @@ func TestFromChannelYieldFalse(t *testing.T) {
 	defer close(numbersChan)
 
 	numbersChan <- 1
-	numbers := fn.FromChannel(numbersChan)
+	numbers := it.FromChannel(numbersChan)
 
 	var a int
 	numbers(func(value int) bool {
@@ -50,11 +50,11 @@ func TestFromChannelEmpty(t *testing.T) {
 	channel := make(chan int)
 	close(channel)
 
-	assert.Empty[int](t, slices.Collect(fn.FromChannel(channel)))
+	assert.Empty[int](t, slices.Collect(it.FromChannel(channel)))
 }
 
 func ExampleToChannel() {
-	channel := fn.ToChannel(slices.Values([]int{1, 2, 3}))
+	channel := it.ToChannel(slices.Values([]int{1, 2, 3}))
 
 	for number := range channel {
 		fmt.Println(number)
@@ -67,7 +67,7 @@ func ExampleToChannel() {
 }
 
 func ExampleToChannel_method() {
-	channel := fn.Iterator[int](slices.Values([]int{1, 2, 3})).ToChannel()
+	channel := it.Iterator[int](slices.Values([]int{1, 2, 3})).ToChannel()
 
 	for number := range channel {
 		fmt.Println(number)
@@ -82,7 +82,7 @@ func ExampleToChannel_method() {
 func TestToChannelEmpty(t *testing.T) {
 	t.Parallel()
 
-	for range fn.ToChannel(slices.Values([]int{})) {
+	for range it.ToChannel(slices.Values([]int{})) {
 		t.Error("unexpected")
 	}
 }

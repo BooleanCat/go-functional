@@ -1,4 +1,4 @@
-package iter_test
+package it_test
 
 import (
 	"fmt"
@@ -7,13 +7,13 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
-	fn "github.com/BooleanCat/go-functional/v2/iter"
+	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleMap() {
 	double := func(n int) int { return n * 2 }
 
-	for number := range fn.Map(slices.Values([]int{1, 2, 3}), double) {
+	for number := range it.Map(slices.Values([]int{1, 2, 3}), double) {
 		fmt.Println(number)
 	}
 
@@ -26,13 +26,13 @@ func ExampleMap() {
 func TestMapEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Empty[int](t, slices.Collect(fn.Map(fn.Exhausted[int](), func(int) int { return 0 })))
+	assert.Empty[int](t, slices.Collect(it.Map(it.Exhausted[int](), func(int) int { return 0 })))
 }
 
 func TestMapYieldFalse(t *testing.T) {
 	t.Parallel()
 
-	numbers := fn.Map(slices.Values([]int{1, 2, 3, 4, 5}), func(a int) int { return a + 1 })
+	numbers := it.Map(slices.Values([]int{1, 2, 3, 4, 5}), func(a int) int { return a + 1 })
 
 	values := []int{}
 	numbers(func(v int) bool {
@@ -46,7 +46,7 @@ func TestMapYieldFalse(t *testing.T) {
 func ExampleMap2() {
 	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
 
-	for left, right := range fn.Map2(fn.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{2, 3, 4})), doubleBoth) {
+	for left, right := range it.Map2(it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{2, 3, 4})), doubleBoth) {
 		fmt.Println(left, right)
 	}
 
@@ -61,14 +61,14 @@ func TestMap2Empty(t *testing.T) {
 
 	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
 
-	assert.Equal(t, len(maps.Collect(fn.Map2(fn.Exhausted2[int, int](), doubleBoth))), 0)
+	assert.Equal(t, len(maps.Collect(it.Map2(it.Exhausted2[int, int](), doubleBoth))), 0)
 }
 
 func TestMap2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	numberPairs := fn.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
-	numbers := fn.Map2(
+	numberPairs := it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
+	numbers := it.Map2(
 		numberPairs,
 		func(a, b int) (int, int) {
 			return a + 1, b + 2
