@@ -33,11 +33,16 @@ func ExampleDrop_method() {
 	// 5
 }
 
-func TestDropTerminateEarly(t *testing.T) {
+func TestDropYieldFalse(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull(fn.Drop(slices.Values([]int{1, 2, 3}), 2))
-	stop()
+	numbers := fn.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2)
+	var a int
+	numbers(func(value int) bool {
+		a = value
+		return false
+	})
+	assert.Equal(t, a, 3)
 }
 
 func TestDropEmpty(t *testing.T) {
@@ -89,9 +94,16 @@ func TestDrop2Zero(t *testing.T) {
 	assert.Equal(t, len(numbers), 3)
 }
 
-func TestDrop2TerminateEarly(t *testing.T) {
+func TestDrop2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull2(fn.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 1))
-	stop()
+	numbersZipped := fn.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
+	numbers := fn.Drop2(numbersZipped, 2)
+	var a, b int
+	numbers(func(v, w int) bool {
+		a, b = v, w
+		return false
+	})
+	assert.Equal(t, a, 3)
+	assert.Equal(t, b, 5)
 }

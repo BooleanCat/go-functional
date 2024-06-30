@@ -111,18 +111,15 @@ func TestUnzipRace(t *testing.T) {
 	group.Wait()
 }
 
-func TestUnzipTerminateEarly(t *testing.T) {
+func TestUnzipYieldFalse(t *testing.T) {
 	t.Parallel()
 
 	zipped := fn.Zip(slices.Values([]int{1, 2}), slices.Values([]string{"one", "two"}))
 
 	numbers, strings := fn.Unzip(zipped)
 
-	_, stop := iter.Pull(numbers)
-	stop()
-
-	_, stop = iter.Pull(strings)
-	stop()
+	numbers(func(int) bool { return false })
+	strings(func(string) bool { return false })
 }
 
 func TestUnzipTerminateLeftEarly(t *testing.T) {
