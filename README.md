@@ -17,4 +17,4 @@ evens := it.Filter(it.Count(), filter.IsEven)
 numbers := it.Map(it.Count(), strconv.Itoa)
 ```
 
-_[Read the docs.](https://pkg.go.dev/github.com/BooleanCat/go-functional)_ to see the full iterator library.
+_[Read the docs](https://pkg.go.dev/github.com/BooleanCat/go-functional)_ to see the full iterator library.
