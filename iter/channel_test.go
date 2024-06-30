@@ -2,7 +2,6 @@ package iter_test
 
 import (
 	"fmt"
-	"iter"
 	"slices"
 	"testing"
 
@@ -28,17 +27,21 @@ func ExampleFromChannel() {
 	// 2
 }
 
-func TestFromChannelTerminateEarly(t *testing.T) {
+func TestFromChannelYieldFalse(t *testing.T) {
 	t.Parallel()
 
-	channel := make(chan int, 1)
-	defer close(channel)
+	numbersChan := make(chan int, 1)
+	defer close(numbersChan)
 
-	channel <- 1
-	numbers := fn.FromChannel(channel)
+	numbersChan <- 1
+	numbers := fn.FromChannel(numbersChan)
 
-	_, stop := iter.Pull(numbers)
-	stop()
+	var a int
+	numbers(func(value int) bool {
+		a = value
+		return false
+	})
+	assert.Equal(t, a, 1)
 }
 
 func TestFromChannelEmpty(t *testing.T) {

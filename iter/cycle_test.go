@@ -7,6 +7,7 @@ import (
 	"slices"
 	"testing"
 
+	"github.com/BooleanCat/go-functional/v2/internal/assert"
 	fn "github.com/BooleanCat/go-functional/v2/iter"
 )
 
@@ -24,11 +25,16 @@ func ExampleCycle_method() {
 	// Output: [1 2 1 2 1]
 }
 
-func TestCycleTerminateEarly(t *testing.T) {
+func TestCycleYieldFalse(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull(fn.Cycle(slices.Values([]int{1, 2})))
-	stop()
+	numbers := fn.Cycle(slices.Values([]int{1, 2}))
+	var a int
+	numbers(func(value int) bool {
+		a = value
+		return false
+	})
+	assert.Equal(t, a, 1)
 }
 
 func ExampleCycle2() {
@@ -45,9 +51,18 @@ func ExampleCycle2_method() {
 	// Output: map[1:one]
 }
 
-func TestCycle2TerminateEarly(t *testing.T) {
+func TestCycle2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull2(fn.Cycle2(maps.All(map[int]string{1: "one"})))
-	stop()
+	numbers := fn.Cycle2(maps.All(map[int]string{1: "one"}))
+	var (
+		a int
+		b string
+	)
+	numbers(func(key int, value string) bool {
+		a, b = key, value
+		return false
+	})
+	assert.Equal(t, a, 1)
+	assert.Equal(t, b, "one")
 }
