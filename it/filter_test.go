@@ -2,7 +2,6 @@ package it_test
 
 import (
 	"fmt"
-	"iter"
 	"maps"
 	"slices"
 	"testing"
@@ -28,11 +27,19 @@ func TestFilterEmpty(t *testing.T) {
 	assert.Empty[int](t, slices.Collect(it.Filter(it.Exhausted[int](), filter.IsEven)))
 }
 
-func TestFilterTerminateEarly(t *testing.T) {
+func TestFilterYieldsFalse(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull(it.Filter(slices.Values([]int{1, 2, 3}), filter.IsEven))
-	stop()
+	seq := it.Filter(slices.Values([]int{1, 2, 3, 4, 5}), filter.IsEven)
+
+	var value int
+
+	seq(func(v int) bool {
+		value = v
+		return false
+	})
+
+	assert.Equal(t, value, 2)
 }
 
 func ExampleExclude() {
@@ -63,11 +70,25 @@ func TestFilter2Empty(t *testing.T) {
 	assert.Equal(t, len(maps.Collect(it.Filter2(it.Exhausted2[int, int](), filter.Passthrough2))), 0)
 }
 
-func TestFilter2TerminateEarly(t *testing.T) {
+func TestFilter2YieldsFalse(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull2(it.Filter2(maps.All(map[int]string{1: "one", 2: "two"}), filter.Passthrough2))
-	stop()
+	seq := it.Filter2(maps.All(map[int]string{1: "one", 2: "two"}), filter.Passthrough2)
+
+	var (
+		key   int
+		value string
+	)
+
+	seq(func(k int, v string) bool {
+		key = k
+		value = v
+		return false
+	})
+
+	assert.Equal(t, key, 1)
+	assert.Equal(t, value, "one")
+
 }
 
 func ExampleExclude2() {
@@ -85,11 +106,4 @@ func TestExclude2Empty(t *testing.T) {
 	t.Parallel()
 
 	assert.Equal(t, len(maps.Collect(it.Exclude2(it.Exhausted2[int, int](), filter.Passthrough2))), 0)
-}
-
-func TestExclude2TerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := iter.Pull2(it.Exclude2(it.Exhausted2[int, int](), filter.Passthrough2))
-	stop()
 }
