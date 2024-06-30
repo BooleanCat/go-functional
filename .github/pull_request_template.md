@@ -13,8 +13,6 @@ If there is no such issue, consider creating one first. Discussions concerning p
 _Replace the space in each box with "X" to check it off._
 
 - [ ] I have read and understood the CONTRIBUTING guidelines
-- [ ] My code is formatted (`make check`)
-- [ ] I have run tests (`make test`)
 - [ ] All commits in my PR conform to the commit hygiene section
 - [ ] I have added relevant tests
 - [ ] I have not added any dependencies

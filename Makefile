@@ -1,7 +1,9 @@
 .phony: test check lint
 
+GO_BINARY ?= go
+
 check: lint
-	@go vet ./...
+	@$(GO_BINARY) vet ./...
 	@gofmt -l .
 	@test -z "$$( gofmt -l . )"
 
@@ -11,13 +13,8 @@ ifndef SKIP_LINT
 endif
 
 test:
-	go test -race -v ./...
-
-test-v2: export GOEXPERIMENT = rangefunc
-test-v2:
-	go vet ./v2/...
-	go test -v -race ./v2/...
+	$(GO_BINARY) test -race -v ./...
 
 cov: SHELL:=/bin/bash
 cov:
-	go test -race -coverprofile=coverage.txt -covermode=atomic $$( go list ./... | grep -v internal )
+	$(GO_BINARY) test -race -coverprofile=coverage.txt -covermode=atomic $$( $(GO_BINARY) list ./... | grep -v assert )
