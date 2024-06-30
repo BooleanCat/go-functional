@@ -49,18 +49,6 @@ func ExampleUnzip() {
 	}
 }
 
-func ExampleUnzip_method() {
-	keys, values := it.Iterator2[int, string](maps.All(map[int]string{1: "one", 2: "two"})).Unzip()
-
-	for key := range keys {
-		fmt.Println(key)
-	}
-
-	for value := range values {
-		fmt.Println(value)
-	}
-}
-
 func TestUnzip(t *testing.T) {
 	zipped := it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]string{"one", "two", "three"}))
 
@@ -142,11 +130,4 @@ func TestUnzipTerminateRightEarly(t *testing.T) {
 	stop()
 
 	assert.EqualElements(t, slices.Collect(numbers), []int{1, 2})
-}
-
-func TestUnzipMethod(t *testing.T) {
-	keys, values := it.Iterator2[int, string](maps.All(map[int]string{1: "one"})).Unzip()
-
-	assert.SliceEqual(t, keys.Collect(), []int{1})
-	assert.SliceEqual(t, values.Collect(), []string{"one"})
 }

@@ -22,16 +22,6 @@ func ExampleFilter() {
 	// 4
 }
 
-func ExampleFilter_method() {
-	for number := range it.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Filter(filter.IsEven) {
-		fmt.Println(number)
-	}
-
-	// Output:
-	// 2
-	// 4
-}
-
 func TestFilterEmpty(t *testing.T) {
 	t.Parallel()
 
@@ -56,33 +46,11 @@ func ExampleExclude() {
 	// 5
 }
 
-func ExampleExclude_method() {
-	for number := range it.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Exclude(filter.IsEven) {
-		fmt.Println(number)
-	}
-
-	// Output:
-	// 1
-	// 3
-	// 5
-}
-
 func ExampleFilter2() {
 	isOne := func(n int, _ string) bool { return n == 1 }
 	numbers := map[int]string{1: "one", 2: "two", 3: "three"}
 
 	for key, value := range it.Filter2(maps.All(numbers), isOne) {
-		fmt.Println(key, value)
-	}
-
-	// Output: 1 one
-}
-
-func ExampleFilter2_method() {
-	isOne := func(n int, _ string) bool { return n == 1 }
-	numbers := map[int]string{1: "one", 2: "two", 3: "three"}
-
-	for key, value := range it.Iterator2[int, string](maps.All(numbers)).Filter(isOne) {
 		fmt.Println(key, value)
 	}
 
@@ -107,17 +75,6 @@ func ExampleExclude2() {
 	numbers := map[int]string{1: "one", 3: "three"}
 
 	for key, value := range it.Exclude2(maps.All(numbers), isOne) {
-		fmt.Println(key, value)
-	}
-
-	// Output: 3 three
-}
-
-func ExampleExclude2_method() {
-	isOne := func(n int, _ string) bool { return n == 1 }
-	numbers := map[int]string{1: "one", 3: "three"}
-
-	for key, value := range it.Iterator2[int, string](maps.All(numbers)).Exclude(isOne) {
 		fmt.Println(key, value)
 	}
 

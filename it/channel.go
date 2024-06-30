@@ -33,8 +33,3 @@ func ToChannel[V any](seq iter.Seq[V]) <-chan V {
 
 	return channel
 }
-
-// ToChannel is a convenience method for chaining [ToChannel] on [Iterator]s.
-func (iterator Iterator[V]) ToChannel() <-chan V {
-	return ToChannel(iter.Seq[V](iterator))
-}

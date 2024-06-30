@@ -108,9 +108,3 @@ func Unzip[V, W any](delegate iter.Seq2[V, W]) (iter.Seq[V], iter.Seq[W]) {
 			}
 		}
 }
-
-// Unzip is a convenience method for chaining [Unzip] on [Iterator2]s.
-func (iterator Iterator2[V, W]) Unzip() (Iterator[V], Iterator[W]) {
-	left, right := Unzip[V, W](iter.Seq2[V, W](iterator))
-	return Iterator[V](left), Iterator[W](right)
-}

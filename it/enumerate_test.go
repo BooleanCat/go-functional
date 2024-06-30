@@ -20,17 +20,6 @@ func ExampleEnumerate() {
 	// 2 3
 }
 
-func ExampleEnumerate_method() {
-	for index, value := range it.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate() {
-		fmt.Println(index, value)
-	}
-
-	// Output:
-	// 0 1
-	// 1 2
-	// 2 3
-}
-
 func TestEnumerateTerminateEarly(t *testing.T) {
 	t.Parallel()
 

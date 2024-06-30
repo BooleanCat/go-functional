@@ -10,23 +10,8 @@ import (
 	"github.com/BooleanCat/go-functional/v2/it/op"
 )
 
-func ExampleCollect_method() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3})).Collect())
-	// Output: [1 2 3]
-}
-
 func ExampleForEach() {
 	it.ForEach(slices.Values([]int{1, 2, 3}), func(number int) {
-		fmt.Println(number)
-	})
-	// Output:
-	// 1
-	// 2
-	// 3
-}
-
-func ExampleForEach_method() {
-	it.Iterator[int](slices.Values([]int{1, 2, 3})).ForEach(func(number int) {
 		fmt.Println(number)
 	})
 	// Output:
@@ -45,16 +30,6 @@ func TestForEachEmpty(t *testing.T) {
 
 func ExampleForEach2() {
 	it.ForEach2(it.Enumerate(slices.Values([]int{1, 2, 3})), func(index int, number int) {
-		fmt.Println(index, number)
-	})
-	// Output:
-	// 0 1
-	// 1 2
-	// 2 3
-}
-
-func ExampleForEach2_method() {
-	it.Iterator[int](slices.Values([]int{1, 2, 3})).Enumerate().ForEach(func(index int, number int) {
 		fmt.Println(index, number)
 	})
 	// Output:

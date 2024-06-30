@@ -2,7 +2,6 @@ package it_test
 
 import (
 	"fmt"
-	"iter"
 	"maps"
 	"slices"
 	"testing"
@@ -13,13 +12,6 @@ import (
 
 func ExampleCycle() {
 	numbers := slices.Collect(it.Take(it.Cycle(slices.Values([]int{1, 2})), 5))
-
-	fmt.Println(numbers)
-	// Output: [1 2 1 2 1]
-}
-
-func ExampleCycle_method() {
-	numbers := it.Iterator[int](slices.Values([]int{1, 2})).Cycle().Take(5).Collect()
 
 	fmt.Println(numbers)
 	// Output: [1 2 1 2 1]
@@ -41,13 +33,6 @@ func ExampleCycle2() {
 	numbers := maps.Collect(it.Take2(it.Cycle2(maps.All(map[int]string{1: "one"})), 5))
 
 	fmt.Println(numbers)
-	// Output: map[1:one]
-}
-
-func ExampleCycle2_method() {
-	numbers := it.Iterator2[int, string](maps.All(map[int]string{1: "one"})).Cycle().Take(5)
-
-	fmt.Println(maps.Collect(iter.Seq2[int, string](numbers)))
 	// Output: map[1:one]
 }
 

@@ -66,19 +66,6 @@ func ExampleToChannel() {
 	// 3
 }
 
-func ExampleToChannel_method() {
-	channel := it.Iterator[int](slices.Values([]int{1, 2, 3})).ToChannel()
-
-	for number := range channel {
-		fmt.Println(number)
-	}
-
-	// Output:
-	// 1
-	// 2
-	// 3
-}
-
 func TestToChannelEmpty(t *testing.T) {
 	t.Parallel()
 

@@ -18,13 +18,6 @@ func ExampleChain() {
 	// Output: [1 2 3 4]
 }
 
-func ExampleChain_method() {
-	numbers := it.Iterator[int](slices.Values([]int{1, 2})).Chain(slices.Values([]int{3, 4})).Collect()
-
-	fmt.Println(numbers)
-	// Output: [1 2 3 4]
-}
-
 func TestChainEmpty(t *testing.T) {
 	t.Parallel()
 
@@ -54,13 +47,6 @@ func ExampleChain2() {
 	pairs := maps.Collect(it.Chain2(maps.All(map[string]int{"a": 1}), maps.All(map[string]int{"b": 2})))
 
 	fmt.Println(len(pairs))
-	// Output: 2
-}
-
-func ExampleChain2_method() {
-	pairs := it.Iterator2[string, int](maps.All(map[string]int{"a": 1})).Chain(maps.All(map[string]int{"b": 2}))
-
-	fmt.Println(len(maps.Collect(iter.Seq2[string, int](pairs))))
 	// Output: 2
 }
 

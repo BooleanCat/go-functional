@@ -10,65 +10,122 @@ import (
 )
 
 func ExampleIsEven() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.IsEven).Collect())
-	// Output: [2 4]
+	for number := range it.Filter(slices.Values([]int{1, 2, 3, 4}), filter.IsEven) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 2
+	// 4
 }
 
 func ExampleIsOdd() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.IsOdd).Collect())
-	// Output: [1 3]
+	for number := range it.Filter(slices.Values([]int{1, 2, 3, 4}), filter.IsOdd) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 3
 }
 
 func ExampleIsEqual() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.IsEqual(2)).Collect())
-	// Output: [2]
+	for number := range it.Filter(slices.Values([]int{1, 2, 3, 4}), filter.IsEqual(2)) {
+		fmt.Println(number)
+	}
+
+	// Output: 2
 }
 
 func ExampleNotEqual() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.NotEqual(2)).Collect())
-	// Output: [1 3 4]
+	for number := range it.Filter(slices.Values([]int{1, 2, 3, 4}), filter.NotEqual(2)) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 3
+	// 4
 }
 
 func ExampleIsZero() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{0, 1, 2, 3})).Filter(filter.IsZero).Collect())
-	// Output: [0]
+	for number := range it.Filter(slices.Values([]int{0, 1, 2, 3}), filter.IsZero) {
+		fmt.Println(number)
+	}
+
+	// Output: 0
 }
 
 func ExampleGreaterThan() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.GreaterThan(2)).Collect())
-	// Output: [3 4]
+	for number := range it.Filter(slices.Values([]int{1, 2, 3, 4}), filter.GreaterThan(2)) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 3
+	// 4
 }
 
 func ExampleLessThan() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.LessThan(3)).Collect())
-	// Output: [1 2]
+	for number := range it.Filter(slices.Values([]int{1, 2, 3, 4}), filter.LessThan(3)) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 2
 }
 
 func ExamplePassthrough() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.Passthrough).Collect())
-	// Output: [1 2 3 4]
+	for number := range it.Filter(slices.Values([]int{1, 2, 3}), filter.Passthrough) {
+		fmt.Println(number)
+	}
 
+	// Output:
+	// 1
+	// 2
+	// 3
 }
 
 func ExamplePassthrough2() {
-	numbers := maps.Collect(it.Filter2(maps.All(map[int]string{1: "two"}), filter.Passthrough2))
+	for key, value := range it.Filter2(maps.All(map[int]string{1: "two"}), filter.Passthrough2) {
+		fmt.Println(key, value)
+	}
 
-	fmt.Println(numbers[1])
-	// Output: two
-
+	// Output: 1 two
 }
 
 func ExampleNot() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.Not[int](filter.IsEven)).Collect())
-	// Output: [1 3]
+	numbers := slices.Values([]int{1, 2, 3, 4})
+
+	for number := range it.Filter(numbers, filter.Not[int](filter.IsEven)) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 3
 }
 
 func ExampleAnd() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.And(filter.IsOdd, filter.GreaterThan(2))).Collect())
-	// Output: [3]
+	numbers := slices.Values([]int{1, 2, 3, 4})
+
+	for number := range it.Filter(numbers, filter.And(filter.IsOdd, filter.GreaterThan(2))) {
+		fmt.Println(number)
+	}
+
+	// Output: 3
 }
 
 func ExampleOr() {
-	fmt.Println(it.Iterator[int](slices.Values([]int{1, 2, 3, 4})).Filter(filter.Or(filter.IsEven, filter.LessThan(3))).Collect())
-	// Output: [1 2 4]
+	numbers := slices.Values([]int{1, 2, 3, 4})
+
+	for number := range it.Filter(numbers, filter.Or(filter.IsEven, filter.LessThan(3))) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 2
+	// 4
 }

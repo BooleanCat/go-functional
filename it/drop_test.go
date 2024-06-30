@@ -2,7 +2,6 @@ package it_test
 
 import (
 	"fmt"
-	"iter"
 	"maps"
 	"slices"
 	"testing"
@@ -13,17 +12,6 @@ import (
 
 func ExampleDrop() {
 	for value := range it.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2) {
-		fmt.Println(value)
-	}
-
-	// Output:
-	// 3
-	// 4
-	// 5
-}
-
-func ExampleDrop_method() {
-	for value := range it.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Drop(2) {
 		fmt.Println(value)
 	}
 
@@ -55,13 +43,6 @@ func ExampleDrop2() {
 	numbers := maps.Collect(it.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 1))
 
 	fmt.Println(len(numbers))
-	// Output: 2
-}
-
-func ExampleDrop2_method() {
-	numbers := it.Iterator2[int, string](maps.All(map[int]string{1: "one", 2: "two", 3: "three"})).Drop(1)
-
-	fmt.Println(len(maps.Collect(iter.Seq2[int, string](numbers))))
 	// Output: 2
 }
 

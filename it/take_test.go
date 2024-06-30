@@ -2,7 +2,6 @@ package it_test
 
 import (
 	"fmt"
-	"iter"
 	"maps"
 	"slices"
 	"testing"
@@ -13,17 +12,6 @@ import (
 
 func ExampleTake() {
 	for number := range it.Take(slices.Values([]int{1, 2, 3, 4, 5}), 3) {
-		fmt.Println(number)
-	}
-
-	// Output:
-	// 1
-	// 2
-	// 3
-}
-
-func ExampleTake_method() {
-	for number := range it.Iterator[int](slices.Values([]int{1, 2, 3, 4, 5})).Take(3) {
 		fmt.Println(number)
 	}
 
@@ -69,13 +57,6 @@ func TestTakeEmpty(t *testing.T) {
 
 func ExampleTake2() {
 	numbers := maps.Collect(it.Take2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 2))
-
-	fmt.Println(len(numbers))
-	// Output: 2
-}
-
-func ExampleTake2_method() {
-	numbers := maps.Collect(iter.Seq2[int, string](it.Iterator2[int, string](maps.All(map[int]string{1: "one", 2: "two", 3: "three"})).Take(2)))
 
 	fmt.Println(len(numbers))
 	// Output: 2

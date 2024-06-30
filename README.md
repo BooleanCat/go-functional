@@ -7,14 +7,14 @@ A library of iterators for use with `iter.Seq`. Requires Go 1.23+.
 ```go
 // The first 5 natural numbers
 numbers := slices.Collect(
-	it.Take(it.Count(), 5),
+	it.Take(it.Count[int](), 5),
 )
 
 // All even numbers
-evens := it.Filter(it.Count(), filter.IsEven)
+evens := it.Filter(it.Count[int](), filter.IsEven)
 
 // String representations of integers
-numbers := it.Map(it.Count(), strconv.Itoa)
+numbers := it.Map(it.Count[int](), strconv.Itoa)
 ```
 
 _[Read the docs](https://pkg.go.dev/github.com/BooleanCat/go-functional/v2)_ to see the full iterator library.
@@ -24,3 +24,22 @@ _[Read the docs](https://pkg.go.dev/github.com/BooleanCat/go-functional/v2)_ to 
 ```terminal
 go get github.com/BooleanCat/go-functional/v2@latest
 ```
+
+## Iterator Chaining
+
+The iterators in this package were designed to be used with the native
+`iter.Seq` from Go's standard library. In order to facilitate complex
+sequences of iterators, the
+[`itx`](https://github.com/BooleanCat/go-functional/tree/main/it/itx) package
+provides `Iterator` and `Iterator2` as wrappers around `iter.Seq` and
+`iter.Seq2` that allow for chaining operations.
+
+Let's take a look at an example:
+
+```go
+// The first 10 odd integers
+itx.Count[int]().Filter(filter.IsOdd).Take(10).Collect()
+```
+
+Most iterators support chaining. A notable exception is `it.Map` which cannot
+support chaining due to limitations on Go's type system.

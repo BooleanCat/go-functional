@@ -17,8 +17,3 @@ func Enumerate[V any](delegate iter.Seq[V]) iter.Seq2[int, V] {
 		}
 	}
 }
-
-// Enumerate is a convenience method for chaining [Enumerate] on [Iterator]s.
-func (iterator Iterator[V]) Enumerate() Iterator2[int, V] {
-	return Iterator2[int, V](Enumerate[V](iter.Seq[V](iterator)))
-}
