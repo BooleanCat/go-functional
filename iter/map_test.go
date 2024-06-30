@@ -2,7 +2,6 @@ package iter_test
 
 import (
 	"fmt"
-	"iter"
 	"maps"
 	"slices"
 	"testing"
@@ -30,11 +29,18 @@ func TestMapEmpty(t *testing.T) {
 	assert.Empty[int](t, slices.Collect(fn.Map(fn.Exhausted[int](), func(int) int { return 0 })))
 }
 
-func TestMapTerminateEarly(t *testing.T) {
+func TestMapYieldFalse(t *testing.T) {
 	t.Parallel()
 
-	_, stop := iter.Pull(fn.Map(slices.Values([]int{1, 2, 3}), func(int) int { return 0 }))
-	stop()
+	numbers := fn.Map(slices.Values([]int{1, 2, 3, 4, 5}), func(a int) int { return a + 1 })
+
+	values := []int{}
+	numbers(func(v int) bool {
+		values = append(values, v)
+		return false
+	})
+
+	assert.SliceEqual(t, []int{2}, values)
 }
 
 func ExampleMap2() {
@@ -58,11 +64,23 @@ func TestMap2Empty(t *testing.T) {
 	assert.Equal(t, len(maps.Collect(fn.Map2(fn.Exhausted2[int, int](), doubleBoth))), 0)
 }
 
-func TestMap2TerminateEarly(t *testing.T) {
+func TestMap2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
+	numberPairs := fn.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
+	numbers := fn.Map2(
+		numberPairs,
+		func(a, b int) (int, int) {
+			return a + 1, b + 2
+		},
+	)
 
-	_, stop := iter.Pull2(fn.Map2(maps.All(map[int]int{1: 2}), doubleBoth))
-	stop()
+	var a, b int
+	numbers(func(v, w int) bool {
+		a, b = v, w
+		return false
+	})
+
+	assert.Equal(t, a, 2)
+	assert.Equal(t, b, 5)
 }
