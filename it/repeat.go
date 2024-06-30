@@ -1,4 +1,4 @@
-package iter
+package it
 
 import "iter"
 

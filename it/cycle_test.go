@@ -1,4 +1,4 @@
-package iter_test
+package it_test
 
 import (
 	"fmt"
@@ -8,18 +8,18 @@ import (
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
-	fn "github.com/BooleanCat/go-functional/v2/iter"
+	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleCycle() {
-	numbers := slices.Collect(fn.Take(fn.Cycle(slices.Values([]int{1, 2})), 5))
+	numbers := slices.Collect(it.Take(it.Cycle(slices.Values([]int{1, 2})), 5))
 
 	fmt.Println(numbers)
 	// Output: [1 2 1 2 1]
 }
 
 func ExampleCycle_method() {
-	numbers := fn.Iterator[int](slices.Values([]int{1, 2})).Cycle().Take(5).Collect()
+	numbers := it.Iterator[int](slices.Values([]int{1, 2})).Cycle().Take(5).Collect()
 
 	fmt.Println(numbers)
 	// Output: [1 2 1 2 1]
@@ -28,7 +28,7 @@ func ExampleCycle_method() {
 func TestCycleYieldFalse(t *testing.T) {
 	t.Parallel()
 
-	numbers := fn.Cycle(slices.Values([]int{1, 2}))
+	numbers := it.Cycle(slices.Values([]int{1, 2}))
 	var a int
 	numbers(func(value int) bool {
 		a = value
@@ -38,14 +38,14 @@ func TestCycleYieldFalse(t *testing.T) {
 }
 
 func ExampleCycle2() {
-	numbers := maps.Collect(fn.Take2(fn.Cycle2(maps.All(map[int]string{1: "one"})), 5))
+	numbers := maps.Collect(it.Take2(it.Cycle2(maps.All(map[int]string{1: "one"})), 5))
 
 	fmt.Println(numbers)
 	// Output: map[1:one]
 }
 
 func ExampleCycle2_method() {
-	numbers := fn.Iterator2[int, string](maps.All(map[int]string{1: "one"})).Cycle().Take(5)
+	numbers := it.Iterator2[int, string](maps.All(map[int]string{1: "one"})).Cycle().Take(5)
 
 	fmt.Println(maps.Collect(iter.Seq2[int, string](numbers)))
 	// Output: map[1:one]
@@ -54,7 +54,7 @@ func ExampleCycle2_method() {
 func TestCycle2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	numbers := fn.Cycle2(maps.All(map[int]string{1: "one"}))
+	numbers := it.Cycle2(maps.All(map[int]string{1: "one"}))
 	var (
 		a int
 		b string

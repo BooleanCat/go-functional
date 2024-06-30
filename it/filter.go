@@ -1,9 +1,9 @@
-package iter
+package it
 
 import (
 	"iter"
 
-	"github.com/BooleanCat/go-functional/v2/iter/filter"
+	"github.com/BooleanCat/go-functional/v2/it/filter"
 )
 
 // Filter yields values from an iterator that satisfy a predicate.
