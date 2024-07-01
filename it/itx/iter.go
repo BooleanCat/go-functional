@@ -17,6 +17,16 @@ type (
 	Iterator2[V, W any] iter.Seq2[V, W]
 )
 
+// Seq converts an [Iterator] to an [iter.Seq].
+func (iterator Iterator[V]) Seq() iter.Seq[V] {
+	return iter.Seq[V](iterator)
+}
+
+// Seq converts an [Iterator2] to an [iter.Seq2].
+func (iterator Iterator2[V, W]) Seq() iter.Seq2[V, W] {
+	return iter.Seq2[V, W](iterator)
+}
+
 // Collect is a convenience method for chaining [slices.Collect] on
 // [Iterator]s.
 func (iterator Iterator[V]) Collect() []V {
