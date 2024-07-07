@@ -2,6 +2,7 @@ package it
 
 import (
 	"cmp"
+	"errors"
 	"iter"
 )
 
@@ -124,4 +125,20 @@ func Find2[V, W any](iterator func(func(V, W) bool), pred func(V, W) bool) (V, W
 	var zeroV V
 	var zeroW W
 	return zeroV, zeroW, false
+}
+
+// CollectErr consumes an [iter.Seq2] where the right side yields errors and
+// returns a slice of values and all errors joined together.
+func CollectErr[V any](delegate func(func(V, error) bool)) ([]V, error) {
+	var (
+		values []V
+		errs   []error
+	)
+
+	for v, err := range delegate {
+		values = append(values, v)
+		errs = append(errs, err)
+	}
+
+	return values, errors.Join(errs...)
 }

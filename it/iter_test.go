@@ -3,6 +3,7 @@ package it_test
 import (
 	"fmt"
 	"slices"
+	"strings"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
@@ -126,7 +127,17 @@ func ExampleFind2_notFound() {
 	index, value, ok := it.Find2(it.Enumerate(slices.Values([]int{1, 2, 3})), func(i, v int) bool {
 		return i == 4
 	})
-	fmt.Println(index, value, ok)
 
+	fmt.Println(index, value, ok)
 	// Output: 0 0 false
+}
+
+func ExampleCollectErr() {
+	data := strings.NewReader("one\ntwo\nthree\n")
+	lines, err := it.CollectErr(it.LinesString(data))
+	fmt.Println(err)
+	fmt.Println(lines)
+	// Output:
+	// <nil>
+	// [one two three]
 }

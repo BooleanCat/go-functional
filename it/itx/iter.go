@@ -73,3 +73,9 @@ func (iterator Iterator[V]) Find(predicate func(V) bool) (V, bool) {
 func (iterator Iterator2[V, W]) Find(predicate func(V, W) bool) (V, W, bool) {
 	return it.Find2(iterator, predicate)
 }
+
+// CollectErr consumes an [Iterator2] where the right side yields errors and
+// returns a slice of values and all errors yielded joined together.
+func CollectErr[V any](iterator Iterator2[V, error]) ([]V, error) {
+	return it.CollectErr(iter.Seq2[V, error](iterator))
+}
