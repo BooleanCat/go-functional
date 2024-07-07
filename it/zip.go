@@ -108,3 +108,25 @@ func Unzip[V, W any](delegate iter.Seq2[V, W]) (iter.Seq[V], iter.Seq[W]) {
 			}
 		}
 }
+
+// Left is a convenience function that unzips an [iter.Seq2] and returns the
+// left iterator, closing the right iterator.
+func Left[V, W any](delegate iter.Seq2[V, W]) iter.Seq[V] {
+	left, right := Unzip(delegate)
+
+	_, stop := iter.Pull(right)
+	stop()
+
+	return left
+}
+
+// Right is a convenience function that unzips an [iter.Seq2] and returns the
+// right iterator, closing the left iterator
+func Right[V, W any](delegate iter.Seq2[V, W]) iter.Seq[W] {
+	left, right := Unzip(delegate)
+
+	_, stop := iter.Pull(left)
+	stop()
+
+	return right
+}

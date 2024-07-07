@@ -131,3 +131,19 @@ func TestUnzipTerminateRightEarly(t *testing.T) {
 
 	assert.EqualElements(t, slices.Collect(numbers), []int{1, 2})
 }
+
+func ExampleLeft() {
+	for left := range it.Left(maps.All(map[int]string{1: "one"})) {
+		fmt.Println(left)
+	}
+
+	// Output: 1
+}
+
+func ExampleRight() {
+	for right := range it.Right(maps.All(map[int]string{1: "one"})) {
+		fmt.Println(right)
+	}
+
+	// Output: one
+}
