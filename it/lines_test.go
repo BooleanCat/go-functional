@@ -70,6 +70,7 @@ func TestLinesYieldsFalseWithError(t *testing.T) {
 
 func ExampleLinesString() {
 	buffer := strings.NewReader("one\ntwo\nthree\n")
+
 	for line, err := range it.LinesString(buffer) {
 		if err != nil {
 			fmt.Println(err)
