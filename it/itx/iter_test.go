@@ -42,3 +42,17 @@ func ExampleIterator2_ForEach() {
 	// 1 2
 	// 2 3
 }
+
+func ExampleIterator_Find() {
+	fmt.Println(itx.SlicesValues([]int{1, 2, 3}).Find(func(number int) bool {
+		return number == 2
+	}))
+	// Output: 2 true
+}
+
+func ExampleIterator2_Find() {
+	fmt.Println(itx.SlicesValues([]int{1, 2, 3}).Enumerate().Find(func(index int, number int) bool {
+		return index == 1
+	}))
+	// Output: 1 2 true
+}

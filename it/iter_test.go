@@ -94,3 +94,39 @@ func TestMinEmpty(t *testing.T) {
 	assert.Equal(t, min, 0)
 	assert.False(t, ok)
 }
+
+func ExampleFind() {
+	found, ok := it.Find(slices.Values([]int{1, 2, 3}), func(i int) bool {
+		return i == 2
+	})
+	fmt.Println(found, ok)
+
+	// Output: 2 true
+}
+
+func ExampleFind_notFound() {
+	found, ok := it.Find(slices.Values([]int{1, 2, 3}), func(i int) bool {
+		return i == 4
+	})
+	fmt.Println(found, ok)
+
+	// Output: 0 false
+}
+
+func ExampleFind2() {
+	index, value, ok := it.Find2(it.Enumerate(slices.Values([]int{1, 2, 3})), func(i, v int) bool {
+		return i == 2
+	})
+	fmt.Println(index, value, ok)
+
+	// Output: 2 3 true
+}
+
+func ExampleFind2_notFound() {
+	index, value, ok := it.Find2(it.Enumerate(slices.Values([]int{1, 2, 3})), func(i, v int) bool {
+		return i == 4
+	})
+	fmt.Println(index, value, ok)
+
+	// Output: 0 0 false
+}

@@ -42,3 +42,13 @@ func (iterator Iterator[V]) ForEach(fn func(V)) {
 func (iterator Iterator2[V, W]) ForEach(fn func(V, W)) {
 	it.ForEach2(iter.Seq2[V, W](iterator), fn)
 }
+
+// Find is a convenience method for chaining [it.Find] on [Iterator]s.
+func (iterator Iterator[V]) Find(predicate func(V) bool) (V, bool) {
+	return it.Find(iter.Seq[V](iterator), predicate)
+}
+
+// Find is a convenience method for chaining [it.Find2] on [Iterator2]s.
+func (iterator Iterator2[V, W]) Find(predicate func(V, W) bool) (V, W, bool) {
+	return it.Find2(iter.Seq2[V, W](iterator), predicate)
+}
