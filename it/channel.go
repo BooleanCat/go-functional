@@ -20,7 +20,7 @@ func FromChannel[V any](channel <-chan V) iter.Seq[V] {
 //
 // The channel is closed when the iterator is exhausted. Beware of leaked go
 // routines when using this function with an infinite iterator.
-func ToChannel[V any](seq iter.Seq[V]) <-chan V {
+func ToChannel[V any](seq func(func(V) bool)) <-chan V {
 	channel := make(chan V)
 
 	go func() {

@@ -1,10 +1,6 @@
 package itx
 
-import (
-	"iter"
-
-	"github.com/BooleanCat/go-functional/v2/it"
-)
+import "github.com/BooleanCat/go-functional/v2/it"
 
 // FromChannel yields values from a channel.
 //
@@ -17,5 +13,5 @@ func FromChannel[V any](channel <-chan V) Iterator[V] {
 // ToChannel is a convenience method for chaining [it.ToChannel] on
 // [Iterator]s.
 func (iterator Iterator[V]) ToChannel() <-chan V {
-	return it.ToChannel(iter.Seq[V](iterator))
+	return it.ToChannel(iterator)
 }

@@ -2,6 +2,7 @@ package itx_test
 
 import (
 	"fmt"
+	"maps"
 
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
@@ -12,6 +13,6 @@ func ExampleRepeat() {
 }
 
 func ExampleRepeat2() {
-	fmt.Println(itx.MapsCollect(itx.Repeat2(1, 2).Take(5)))
+	fmt.Println(maps.Collect(itx.Repeat2(1, 2).Take(5).Seq()))
 	// Output: map[1:2]
 }

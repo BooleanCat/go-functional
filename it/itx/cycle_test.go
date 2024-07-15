@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"iter"
 	"maps"
+	"slices"
 
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
 
 func ExampleIterator_Cycle() {
-	numbers := itx.SlicesValues([]int{1, 2}).Cycle().Take(5).Collect()
+	numbers := itx.From(slices.Values([]int{1, 2})).Cycle().Take(5).Collect()
 
 	fmt.Println(numbers)
 	// Output: [1 2 1 2 1]

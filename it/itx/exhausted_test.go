@@ -2,6 +2,7 @@ package itx_test
 
 import (
 	"fmt"
+	"maps"
 
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
@@ -12,6 +13,6 @@ func ExampleExhausted() {
 }
 
 func ExampleExhausted2() {
-	fmt.Println(len(itx.MapsCollect(itx.Exhausted2[int, string]())))
+	fmt.Println(len(maps.Collect(itx.Exhausted2[int, string]().Seq())))
 	// Output: 0
 }

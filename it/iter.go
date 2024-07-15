@@ -6,25 +6,25 @@ import (
 )
 
 // ForEach consumes an iterator and applies a function to each value yielded.
-func ForEach[V any](iter iter.Seq[V], fn func(V)) {
-	for item := range iter {
+func ForEach[V any](iterator func(func(V) bool), fn func(V)) {
+	for item := range iterator {
 		fn(item)
 	}
 }
 
 // ForEach2 consumes an iterator and applies a function to each pair of values.
-func ForEach2[V, W any](iter iter.Seq2[V, W], fn func(V, W)) {
-	for v, w := range iter {
+func ForEach2[V, W any](iterator func(func(V, W) bool), fn func(V, W)) {
+	for v, w := range iterator {
 		fn(v, w)
 	}
 }
 
 // Reduce consumes an iterator and applies a function to each value yielded,
 // accumulating a single result.
-func Reduce[V, R any](iter iter.Seq[V], fn func(R, V) R, initial R) R {
+func Reduce[V, R any](iterator func(func(V) bool), fn func(R, V) R, initial R) R {
 	result := initial
 
-	for item := range iter {
+	for item := range iterator {
 		result = fn(result, item)
 	}
 
@@ -33,10 +33,10 @@ func Reduce[V, R any](iter iter.Seq[V], fn func(R, V) R, initial R) R {
 
 // Reduce2 consumes an iterator and applies a function to each pair of values,
 // accumulating a single result.
-func Reduce2[V, W, R any](iter iter.Seq2[V, W], fn func(R, V, W) R, initial R) R {
+func Reduce2[V, W, R any](iterator func(func(V, W) bool), fn func(R, V, W) R, initial R) R {
 	result := initial
 
-	for v, w := range iter {
+	for v, w := range iterator {
 		result = fn(result, v, w)
 	}
 
@@ -46,7 +46,7 @@ func Reduce2[V, W, R any](iter iter.Seq2[V, W], fn func(R, V, W) R, initial R) R
 // Max consumes an iterator and returns the maximum value yielded and true if
 // there was at least one value, or the zero value and false if the iterator
 // was empty.
-func Max[V cmp.Ordered](iterator iter.Seq[V]) (V, bool) {
+func Max[V cmp.Ordered](iterator func(func(V) bool)) (V, bool) {
 	var (
 		max V
 		set bool
@@ -73,7 +73,7 @@ func Max[V cmp.Ordered](iterator iter.Seq[V]) (V, bool) {
 // Min consumes an iterator and returns the minimum value yielded and true if
 // there was at least one value, or the zero value and false if the iterator
 // was empty.
-func Min[V cmp.Ordered](iterator iter.Seq[V]) (V, bool) {
+func Min[V cmp.Ordered](iterator func(func(V) bool)) (V, bool) {
 	var (
 		min V
 		set bool
@@ -100,8 +100,8 @@ func Min[V cmp.Ordered](iterator iter.Seq[V]) (V, bool) {
 // Find consumes an iterator until a value is found that satisfies a predicate.
 // It returns the value and true if one was found, or the zero value and false
 // if the iterator was exhausted.
-func Find[V any](iter iter.Seq[V], pred func(V) bool) (V, bool) {
-	for item := range iter {
+func Find[V any](iterator func(func(V) bool), pred func(V) bool) (V, bool) {
+	for item := range iterator {
 		if pred(item) {
 			return item, true
 		}
@@ -114,8 +114,8 @@ func Find[V any](iter iter.Seq[V], pred func(V) bool) (V, bool) {
 // Find2 consumes an iterator until a pair of values is found that satisfies a
 // predicate. It returns the pair and true if one was found, or the zero values
 // and false if the iterator was exhausted.
-func Find2[V, W any](iter iter.Seq2[V, W], pred func(V, W) bool) (V, W, bool) {
-	for v, w := range iter {
+func Find2[V, W any](iterator func(func(V, W) bool), pred func(V, W) bool) (V, W, bool) {
+	for v, w := range iterator {
 		if pred(v, w) {
 			return v, w, true
 		}

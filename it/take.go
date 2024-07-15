@@ -1,7 +1,9 @@
 package it
 
+import "iter"
+
 // Take yields the first `limit` values from a delegate iterator.
-func Take[V any](delegate func(func(V) bool), limit int) func(func(V) bool) {
+func Take[V any](delegate func(func(V) bool), limit int) iter.Seq[V] {
 	return func(yield func(V) bool) {
 		if limit <= 0 {
 			return
@@ -21,7 +23,7 @@ func Take[V any](delegate func(func(V) bool), limit int) func(func(V) bool) {
 }
 
 // Take2 yields the first `limit` pairs of values from a delegate iterator.
-func Take2[V, W any](delegate func(func(V, W) bool), limit int) func(func(V, W) bool) {
+func Take2[V, W any](delegate func(func(V, W) bool), limit int) iter.Seq2[V, W] {
 	return func(yield func(V, W) bool) {
 		if limit <= 0 {
 			return

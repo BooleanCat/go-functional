@@ -8,7 +8,7 @@ import "iter"
 //
 // Note: memory usage will grow until all values from the underlying iterator
 // are stored in memory.
-func Cycle[V any](delegate iter.Seq[V]) iter.Seq[V] {
+func Cycle[V any](delegate func(func(V) bool)) iter.Seq[V] {
 	return func(yield func(V) bool) {
 		var items []V
 
@@ -35,7 +35,7 @@ func Cycle[V any](delegate iter.Seq[V]) iter.Seq[V] {
 //
 // Note: memory usage will grow until all values from the underlying iterator
 // are stored in memory.
-func Cycle2[V, W any](delegate iter.Seq2[V, W]) iter.Seq2[V, W] {
+func Cycle2[V, W any](delegate func(func(V, W) bool)) iter.Seq2[V, W] {
 	return func(yield func(V, W) bool) {
 		var items []struct {
 			v V

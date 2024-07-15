@@ -17,6 +17,16 @@ type (
 	Iterator2[V, W any] iter.Seq2[V, W]
 )
 
+// From converts an iterator in an [Iterator] to support method chaining.
+func From[V any](iterator func(func(V) bool)) Iterator[V] {
+	return Iterator[V](iterator)
+}
+
+// From2 converts an iterator in an [Iterator2] to support method chaining.
+func From2[V, W any](iterator func(func(V, W) bool)) Iterator2[V, W] {
+	return Iterator2[V, W](iterator)
+}
+
 // Seq converts an [Iterator] to an [iter.Seq].
 func (iterator Iterator[V]) Seq() iter.Seq[V] {
 	return iter.Seq[V](iterator)
@@ -35,20 +45,20 @@ func (iterator Iterator[V]) Collect() []V {
 
 // ForEach is a convenience method for chaining [it.ForEach] on [Iterator]s.
 func (iterator Iterator[V]) ForEach(fn func(V)) {
-	it.ForEach(iter.Seq[V](iterator), fn)
+	it.ForEach(iterator, fn)
 }
 
 // ForEach is a convenience method for chaining [it.ForEach2] on [Iterator2]s.
 func (iterator Iterator2[V, W]) ForEach(fn func(V, W)) {
-	it.ForEach2(iter.Seq2[V, W](iterator), fn)
+	it.ForEach2(iterator, fn)
 }
 
 // Find is a convenience method for chaining [it.Find] on [Iterator]s.
 func (iterator Iterator[V]) Find(predicate func(V) bool) (V, bool) {
-	return it.Find(iter.Seq[V](iterator), predicate)
+	return it.Find(iterator, predicate)
 }
 
 // Find is a convenience method for chaining [it.Find2] on [Iterator2]s.
 func (iterator Iterator2[V, W]) Find(predicate func(V, W) bool) (V, W, bool) {
-	return it.Find2(iter.Seq2[V, W](iterator), predicate)
+	return it.Find2(iterator, predicate)
 }
