@@ -1,6 +1,9 @@
 package assert
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 func True(t *testing.T, value bool) {
 	t.Helper()
@@ -29,15 +32,8 @@ func Equal[T comparable](t *testing.T, a, b T) {
 func SliceEqual[T comparable](t *testing.T, a, b []T) {
 	t.Helper()
 
-	if len(a) != len(b) {
-		t.Errorf("expected `%v` to equal `%v` but lengths differ", a, b)
-		return
-	}
-
-	for i, v := range a {
-		if v != b[i] {
-			t.Errorf("expected `%v` to equal `%v`", a, b)
-		}
+	if !slices.Equal(a, b) {
+		t.Errorf("expected `%v` to equal `%v`", a, b)
 	}
 }
 
