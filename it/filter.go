@@ -1,9 +1,7 @@
 package it
 
-import "iter"
-
 // Filter yields values from an iterator that satisfy a predicate.
-func Filter[V any](delegate iter.Seq[V], predicate func(V) bool) iter.Seq[V] {
+func Filter[V any](delegate func(func(V) bool), predicate func(V) bool) func(func(V) bool) {
 	return func(yield func(V) bool) {
 		for value := range delegate {
 			if predicate(value) {
@@ -16,12 +14,12 @@ func Filter[V any](delegate iter.Seq[V], predicate func(V) bool) iter.Seq[V] {
 }
 
 // Exclude yields values from an iterator that do not satisfy a predicate.
-func Exclude[V any](delegate iter.Seq[V], predicate func(V) bool) iter.Seq[V] {
+func Exclude[V any](delegate func(func(V) bool), predicate func(V) bool) func(func(V) bool) {
 	return Filter(delegate, not(predicate))
 }
 
 // Filter2 yields values from an iterator that satisfy a predicate.
-func Filter2[V, W any](delegate iter.Seq2[V, W], predicate func(V, W) bool) iter.Seq2[V, W] {
+func Filter2[V, W any](delegate func(func(V, W) bool), predicate func(V, W) bool) func(func(V, W) bool) {
 	return func(yield func(V, W) bool) {
 		for k, v := range delegate {
 			if predicate(k, v) {
@@ -34,7 +32,7 @@ func Filter2[V, W any](delegate iter.Seq2[V, W], predicate func(V, W) bool) iter
 }
 
 // Exclude2 yields values from an iterator that do not satisfy a predicate.
-func Exclude2[V, W any](delegate iter.Seq2[V, W], predicate func(V, W) bool) iter.Seq2[V, W] {
+func Exclude2[V, W any](delegate func(func(V, W) bool), predicate func(V, W) bool) func(func(V, W) bool) {
 	return Filter2(delegate, not2(predicate))
 }
 

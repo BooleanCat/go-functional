@@ -8,7 +8,7 @@ import (
 )
 
 // Zip yields pairs of values from two iterators.
-func Zip[V, W any](left iter.Seq[V], right iter.Seq[W]) iter.Seq2[V, W] {
+func Zip[V, W any](left func(func(V) bool), right func(func(W) bool)) func(func(V, W) bool) {
 	return func(yield func(V, W) bool) {
 		left, stop := iter.Pull(left)
 		defer stop()
@@ -31,17 +31,18 @@ func Zip[V, W any](left iter.Seq[V], right iter.Seq[W]) iter.Seq2[V, W] {
 	}
 }
 
-// Unzip returns two [Iterator]s from a single [Iterator2].
+// Unzip returns two iterators yielding single values from an iterator yielding
+// pairs of values.
 //
-// Each returned [Iterator] yields the left and right values from the original
-// [Iterator2], respectively.
+// Each returned iterator yields the left and right values from the original
+// iterator, respectively.
 //
-// It is safe to concurrently pull from the returned [Iterator]s.
+// It is safe to concurrently pull from the returned iterators.
 //
-// Both returned [Iterator]s must be stopped, the underlying [Iterator2] is
-// stopped when both are stopped. It is safe to stop one of the returned
-// [Iterator]s immediately and continue pulling from the other.
-func Unzip[V, W any](delegate iter.Seq2[V, W]) (iter.Seq[V], iter.Seq[W]) {
+// Both returned iterators must be stopped, the underlying iterators is stopped
+// when both are stopped. It is safe to stop one of the returned iterators
+// immediately and continue pulling from the other.
+func Unzip[V, W any](delegate func(func(V, W) bool)) (func(func(V) bool), func(func(W) bool)) {
 	mutex := sync.Mutex{}
 
 	next, stop := iter.Pull2(delegate)
@@ -109,9 +110,9 @@ func Unzip[V, W any](delegate iter.Seq2[V, W]) (iter.Seq[V], iter.Seq[W]) {
 		}
 }
 
-// Left is a convenience function that unzips an [iter.Seq2] and returns the
-// left iterator, closing the right iterator.
-func Left[V, W any](delegate iter.Seq2[V, W]) iter.Seq[V] {
+// Left is a convenience function that unzips an iterator and returns the left
+// iterator, closing the right iterator.
+func Left[V, W any](delegate func(func(V, W) bool)) func(func(V) bool) {
 	left, right := Unzip(delegate)
 
 	_, stop := iter.Pull(right)
@@ -120,9 +121,9 @@ func Left[V, W any](delegate iter.Seq2[V, W]) iter.Seq[V] {
 	return left
 }
 
-// Right is a convenience function that unzips an [iter.Seq2] and returns the
-// right iterator, closing the left iterator
-func Right[V, W any](delegate iter.Seq2[V, W]) iter.Seq[W] {
+// Right is a convenience function that unzips an iterator and returns the
+// right iterator, closing the left iterator.
+func Right[V, W any](delegate func(func(V, W) bool)) func(func(W) bool) {
 	left, right := Unzip(delegate)
 
 	_, stop := iter.Pull(left)

@@ -3,13 +3,12 @@ package it
 import (
 	"bufio"
 	"io"
-	"iter"
 )
 
 // Lines yields lines from an io.Reader.
 //
 // Note: lines longer than 65536 will cauese an error.
-func Lines(r io.Reader) iter.Seq2[[]byte, error] {
+func Lines(r io.Reader) func(func([]byte, error) bool) {
 	return func(yield func([]byte, error) bool) {
 		scanner := bufio.NewScanner(r)
 		for scanner.Scan() {
@@ -29,7 +28,7 @@ func Lines(r io.Reader) iter.Seq2[[]byte, error] {
 // LinesString yields lines from an io.Reader as strings.
 //
 // Note: lines longer than 65536 will cauese an error.
-func LinesString(r io.Reader) iter.Seq2[string, error] {
+func LinesString(r io.Reader) func(func(string, error) bool) {
 	return Map2(Lines(r), func(b []byte, err error) (string, error) {
 		return string(b), err
 	})
