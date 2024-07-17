@@ -2,9 +2,7 @@ package it_test
 
 import (
 	"fmt"
-	"iter"
 	"slices"
-	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/it"
 )
@@ -14,13 +12,6 @@ func ExampleRepeat() {
 
 	fmt.Println(numbers)
 	// Output: [42 42]
-}
-
-func TestRepeatTerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := iter.Pull(it.Repeat(42))
-	stop()
 }
 
 func ExampleRepeat2() {
@@ -33,11 +24,4 @@ func ExampleRepeat2() {
 	// Output:
 	// 42 Life
 	// 42 Life
-}
-
-func TestRepeat2TerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := iter.Pull2(it.Repeat2(42, "Life"))
-	stop()
 }

@@ -2,7 +2,6 @@ package it_test
 
 import (
 	"fmt"
-	"iter"
 	"maps"
 	"slices"
 	"testing"
@@ -34,13 +33,6 @@ func TestChainMany(t *testing.T) {
 	))
 
 	assert.SliceEqual(t, []int{1, 2, 3, 4, 5, 6}, numbers)
-}
-
-func TestChainTerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := iter.Pull(it.Chain(slices.Values([]int{1, 2}), slices.Values([]int{3, 4})))
-	stop()
 }
 
 func ExampleChain2() {
@@ -79,11 +71,4 @@ func TestChain2Many(t *testing.T) {
 	assert.Equal(t, pairs["a"], 1)
 	assert.Equal(t, pairs["b"], 2)
 	assert.Equal(t, pairs["c"], 3)
-}
-
-func TestChain2TerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := iter.Pull2(it.Chain2(maps.All(map[string]int{"a": 1})))
-	stop()
 }

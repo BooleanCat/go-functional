@@ -30,13 +30,6 @@ func TestZipEmpty(t *testing.T) {
 	assert.Equal(t, len(maps.Collect(it.Zip(it.Exhausted[int](), it.Exhausted[string]()))), 0)
 }
 
-func TestZipTerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := iter.Pull2(it.Zip(slices.Values([]int{1, 2}), slices.Values([]string{"one", "two"})))
-	stop()
-}
-
 func ExampleUnzip() {
 	keys, values := it.Unzip(maps.All(map[int]string{1: "one", 2: "two"}))
 

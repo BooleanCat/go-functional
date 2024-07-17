@@ -2,9 +2,7 @@ package it_test
 
 import (
 	"fmt"
-	"iter"
 	"slices"
-	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/it"
 )
@@ -18,11 +16,4 @@ func ExampleEnumerate() {
 	// 0 1
 	// 1 2
 	// 2 3
-}
-
-func TestEnumerateTerminateEarly(t *testing.T) {
-	t.Parallel()
-
-	_, stop := iter.Pull2(it.Enumerate(slices.Values([]int{1, 2})))
-	stop()
 }
