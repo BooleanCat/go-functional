@@ -4,16 +4,15 @@ import "iter"
 
 // Drop yields all values from a delegate iterator except the first `count`
 // values.
-func Drop[V any](delegate func(func(V) bool), count int) iter.Seq[V] {
+func Drop[V any](delegate func(func(V) bool), count uint) iter.Seq[V] {
 	return func(yield func(V) bool) {
 		for value := range delegate {
-			if count > 0 {
+			if count == 0 {
+				if !yield(value) {
+					return
+				}
+			} else {
 				count--
-				continue
-			}
-
-			if !yield(value) {
-				return
 			}
 		}
 	}
@@ -21,16 +20,15 @@ func Drop[V any](delegate func(func(V) bool), count int) iter.Seq[V] {
 
 // Drop2 yields all pairs of values from a delegate iterator except the first
 // `count` pairs.
-func Drop2[V, W any](delegate func(func(V, W) bool), count int) iter.Seq2[V, W] {
+func Drop2[V, W any](delegate func(func(V, W) bool), count uint) iter.Seq2[V, W] {
 	return func(yield func(V, W) bool) {
 		for v, w := range delegate {
-			if count > 0 {
+			if count == 0 {
+				if !yield(v, w) {
+					return
+				}
+			} else {
 				count--
-				continue
-			}
-
-			if !yield(v, w) {
-				return
 			}
 		}
 	}
