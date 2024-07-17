@@ -3,6 +3,7 @@ package itx_test
 import (
 	"fmt"
 	"maps"
+	"strings"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
@@ -29,10 +30,10 @@ func TestUnzipMethod(t *testing.T) {
 }
 
 func ExampleIterator2_Left() {
-	for key := range itx.From2(maps.All(map[int]string{1: "one"})).Left() {
-		fmt.Println(key)
-	}
-	// Output: 1
+	text := strings.NewReader("one\ntwo\nthree\n")
+
+	fmt.Println(itx.LinesString(text).Left().Collect())
+	// Output: [one two three]
 }
 
 func ExampleIterator2_Right() {

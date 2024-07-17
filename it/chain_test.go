@@ -29,7 +29,7 @@ func TestChainMany(t *testing.T) {
 
 	numbers := slices.Collect(it.Chain(
 		slices.Values([]int{1, 2}),
-		it.Take(it.Drop(it.Count[int](), 3), 2),
+		it.Take(it.Drop(it.NaturalNumbers[int](), 3), 2),
 		slices.Values([]int{5, 6}),
 	))
 

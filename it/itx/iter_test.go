@@ -9,7 +9,7 @@ import (
 )
 
 func ExampleIterator_Seq() {
-	fmt.Println(slices.Collect(itx.Count[int]().Take(3).Seq()))
+	fmt.Println(slices.Collect(itx.NaturalNumbers[int]().Take(3).Seq()))
 	// Output: [0 1 2]
 }
 
