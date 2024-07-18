@@ -10,11 +10,11 @@ import (
 type (
 	// Iterator is a wrapper around [iter.Seq] that allows for method chaining of
 	// most iterators found in the `it` package.
-	Iterator[V any] iter.Seq[V]
+	Iterator[V any] func(func(V) bool)
 
 	// Iterator2 is a wrapper around [iter.Seq2] that allows for method chaining
 	// of most iterators found in the `it` package.
-	Iterator2[V, W any] iter.Seq2[V, W]
+	Iterator2[V, W any] func(func(V, W) bool)
 )
 
 // From converts an iterator in an [Iterator] to support method chaining.

@@ -31,7 +31,7 @@ func TestZipEmpty(t *testing.T) {
 }
 
 func ExampleUnzip() {
-	keys, values := it.Unzip(maps.All(map[int]string{1: "one", 2: "two"}))
+	keys, values := it.Unzip(maps.All(map[int]string{1: "one"}))
 
 	for key := range keys {
 		fmt.Println(key)
@@ -40,6 +40,10 @@ func ExampleUnzip() {
 	for value := range values {
 		fmt.Println(value)
 	}
+
+	// Output:
+	// 1
+	// one
 }
 
 func TestUnzip(t *testing.T) {

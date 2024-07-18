@@ -11,7 +11,7 @@ import (
 )
 
 func ExampleIterator2_Unzip() {
-	keys, values := itx.From2(maps.All(map[int]string{1: "one", 2: "two"})).Unzip()
+	keys, values := itx.From2(maps.All(map[int]string{1: "one"})).Unzip()
 
 	for key := range keys {
 		fmt.Println(key)
@@ -20,6 +20,10 @@ func ExampleIterator2_Unzip() {
 	for value := range values {
 		fmt.Println(value)
 	}
+
+	// Output:
+	// 1
+	// one
 }
 
 func TestUnzipMethod(t *testing.T) {
