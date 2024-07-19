@@ -2,7 +2,6 @@ package itx_test
 
 import (
 	"fmt"
-	"slices"
 
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
@@ -26,7 +25,7 @@ func ExampleFromChannel() {
 }
 
 func ExampleIterator_ToChannel() {
-	channel := itx.From(slices.Values([]int{1, 2, 3})).ToChannel()
+	channel := itx.FromSlice([]int{1, 2, 3}).ToChannel()
 
 	for number := range channel {
 		fmt.Println(number)
