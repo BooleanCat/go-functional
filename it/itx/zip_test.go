@@ -2,7 +2,6 @@ package itx_test
 
 import (
 	"fmt"
-	"maps"
 	"strings"
 	"testing"
 
@@ -11,7 +10,7 @@ import (
 )
 
 func ExampleIterator2_Unzip() {
-	keys, values := itx.From2(maps.All(map[int]string{1: "one"})).Unzip()
+	keys, values := itx.FromMap(map[int]string{1: "one"}).Unzip()
 
 	for key := range keys {
 		fmt.Println(key)
@@ -27,7 +26,7 @@ func ExampleIterator2_Unzip() {
 }
 
 func TestUnzipMethod(t *testing.T) {
-	keys, values := itx.From2(maps.All(map[int]string{1: "one"})).Unzip()
+	keys, values := itx.FromMap(map[int]string{1: "one"}).Unzip()
 
 	assert.SliceEqual(t, keys.Collect(), []int{1})
 	assert.SliceEqual(t, values.Collect(), []string{"one"})
@@ -41,7 +40,7 @@ func ExampleIterator2_Left() {
 }
 
 func ExampleIterator2_Right() {
-	for value := range itx.From2(maps.All(map[int]string{1: "one"})).Right() {
+	for value := range itx.FromMap(map[int]string{1: "one"}).Right() {
 		fmt.Println(value)
 	}
 	// Output: one

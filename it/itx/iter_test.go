@@ -14,17 +14,17 @@ func ExampleIterator_Seq() {
 }
 
 func ExampleIterator2_Seq() {
-	fmt.Println(maps.Collect(itx.From2(maps.All(map[int]int{1: 2})).Seq()))
+	fmt.Println(maps.Collect(itx.FromMap(map[int]int{1: 2}).Seq()))
 	// Output: map[1:2]
 }
 
 func ExampleIterator_Collect() {
-	fmt.Println(itx.From(slices.Values([]int{1, 2, 3})).Collect())
+	fmt.Println(itx.FromSlice([]int{1, 2, 3}).Collect())
 	// Output: [1 2 3]
 }
 
 func ExampleIterator_ForEach() {
-	itx.From(slices.Values([]int{1, 2, 3})).ForEach(func(number int) {
+	itx.FromSlice([]int{1, 2, 3}).ForEach(func(number int) {
 		fmt.Println(number)
 	})
 	// Output:
@@ -34,7 +34,7 @@ func ExampleIterator_ForEach() {
 }
 
 func ExampleIterator2_ForEach() {
-	itx.From(slices.Values([]int{1, 2, 3})).Enumerate().ForEach(func(index int, number int) {
+	itx.FromSlice([]int{1, 2, 3}).Enumerate().ForEach(func(index int, number int) {
 		fmt.Println(index, number)
 	})
 	// Output:
@@ -44,15 +44,36 @@ func ExampleIterator2_ForEach() {
 }
 
 func ExampleIterator_Find() {
-	fmt.Println(itx.From(slices.Values([]int{1, 2, 3})).Find(func(number int) bool {
+	fmt.Println(itx.FromSlice([]int{1, 2, 3}).Find(func(number int) bool {
 		return number == 2
 	}))
 	// Output: 2 true
 }
 
 func ExampleIterator2_Find() {
-	fmt.Println(itx.From(slices.Values([]int{1, 2, 3})).Enumerate().Find(func(index int, number int) bool {
+	fmt.Println(itx.FromSlice([]int{1, 2, 3}).Enumerate().Find(func(index int, number int) bool {
 		return index == 1
 	}))
 	// Output: 1 2 true
+}
+
+func ExampleFrom() {
+	fmt.Println(itx.From(slices.Values([]int{1, 2, 3})).Collect())
+	// Output: [1 2 3]
+}
+
+func ExampleFrom2() {
+	numbers := maps.All(map[int]string{1: "one"})
+	fmt.Println(maps.Collect(itx.From2(numbers).Seq()))
+	// Output: map[1:one]
+}
+
+func ExampleFromSlice() {
+	fmt.Println(itx.FromSlice([]int{1, 2, 3}).Collect())
+	// Output: [1 2 3]
+}
+
+func ExampleFromMap() {
+	fmt.Println(itx.FromMap(map[int]int{1: 2}).Right().Collect())
+	// Output: [2]
 }

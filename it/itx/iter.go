@@ -2,6 +2,7 @@ package itx
 
 import (
 	"iter"
+	"maps"
 	"slices"
 
 	"github.com/BooleanCat/go-functional/v2/it"
@@ -25,6 +26,16 @@ func From[V any](iterator func(func(V) bool)) Iterator[V] {
 // From2 converts an iterator in an [Iterator2] to support method chaining.
 func From2[V, W any](iterator func(func(V, W) bool)) Iterator2[V, W] {
 	return Iterator2[V, W](iterator)
+}
+
+// FromSlice converts a slice to an [Iterator].
+func FromSlice[V any](slice []V) Iterator[V] {
+	return Iterator[V](slices.Values(slice))
+}
+
+// FromMap converts a map to an [Iterator2].
+func FromMap[V comparable, W any](m map[V]W) Iterator2[V, W] {
+	return Iterator2[V, W](maps.All(m))
 }
 
 // Seq converts an [Iterator] to an [iter.Seq].
