@@ -2,16 +2,17 @@ package it_test
 
 import (
 	"fmt"
-	"maps"
-	"slices"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleOnce() {
-	fmt.Println(slices.Collect(it.Once(42)))
-	// Output: [42]
+	for number := range it.Once(42) {
+		fmt.Println(number)
+	}
+
+	// Output: 42
 }
 
 func TestOnceYieldsFalse(t *testing.T) {
@@ -25,8 +26,11 @@ func TestOnceYieldsFalse(t *testing.T) {
 }
 
 func ExampleOnce2() {
-	fmt.Println(maps.Collect(it.Once2(1, 2)))
-	// Output: map[1:2]
+	for key, value := range it.Once2(1, 2) {
+		fmt.Println(key, value)
+	}
+
+	// Output: 1 2
 }
 
 func TestOnce2YieldsFalse(t *testing.T) {

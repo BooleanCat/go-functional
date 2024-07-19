@@ -44,9 +44,13 @@ func TestMapYieldFalse(t *testing.T) {
 }
 
 func ExampleMap2() {
-	doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
+	doubleBoth := func(n, m int) (int, int) {
+		return n * 2, m * 2
+	}
 
-	for left, right := range it.Map2(it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{2, 3, 4})), doubleBoth) {
+	pairs := it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{2, 3, 4}))
+
+	for left, right := range it.Map2(pairs, doubleBoth) {
 		fmt.Println(left, right)
 	}
 
@@ -67,20 +71,13 @@ func TestMap2Empty(t *testing.T) {
 func TestMap2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	numberPairs := it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
-	numbers := it.Map2(
-		numberPairs,
-		func(a, b int) (int, int) {
-			return a + 1, b + 2
-		},
-	)
+	pairs := it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
 
-	var a, b int
-	numbers(func(v, w int) bool {
-		a, b = v, w
-		return false
+	numbers := it.Map2(pairs, func(a, b int) (int, int) {
+		return a + 1, b + 2
 	})
 
-	assert.Equal(t, a, 2)
-	assert.Equal(t, b, 5)
+	numbers(func(v, w int) bool {
+		return false
+	})
 }

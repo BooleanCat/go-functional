@@ -14,7 +14,10 @@ import (
 )
 
 func ExampleZip() {
-	for left, right := range it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]string{"one", "two", "three"})) {
+	numbers := slices.Values([]int{1, 2, 3})
+	strings := slices.Values([]string{"one", "two", "three"})
+
+	for left, right := range it.Zip(numbers, strings) {
 		fmt.Println(left, right)
 	}
 
@@ -56,6 +59,8 @@ func TestUnzip(t *testing.T) {
 }
 
 func TestUnzipRace(t *testing.T) {
+	t.Parallel()
+
 	limit := 100000
 
 	numbers := make([]int, 0, limit)
