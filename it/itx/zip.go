@@ -2,12 +2,6 @@ package itx
 
 import "github.com/BooleanCat/go-functional/v2/it"
 
-// Unzip is a convenience method for chaining [it.Unzip] on [Iterator2]s.
-func (iterator Iterator2[V, W]) Unzip() (Iterator[V], Iterator[W]) {
-	left, right := it.Unzip(iterator)
-	return Iterator[V](left), Iterator[W](right)
-}
-
 // Left is a convenience method that unzips an [Iterator2] and returns the left
 // iterator, closing the right iterator.
 func (iterator Iterator2[V, W]) Left() Iterator[V] {
