@@ -2,7 +2,6 @@ package itx_test
 
 import (
 	"fmt"
-	"iter"
 	"maps"
 
 	"github.com/BooleanCat/go-functional/v2/it/itx"
@@ -18,6 +17,6 @@ func ExampleIterator_Chain() {
 func ExampleIterator2_Chain() {
 	pairs := itx.FromMap(map[string]int{"a": 1}).Chain(maps.All(map[string]int{"b": 2}))
 
-	fmt.Println(len(maps.Collect(iter.Seq2[string, int](pairs))))
+	fmt.Println(len(maps.Collect(pairs.Seq())))
 	// Output: 2
 }
