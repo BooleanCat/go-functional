@@ -88,3 +88,13 @@ func ExampleCollectErr() {
 	// <nil>
 	// [one two three]
 }
+
+func ExampleIterator_Len() {
+	fmt.Println(itx.FromSlice([]int{1, 2, 3}).Len())
+	// Output: 3
+}
+
+func ExampleIterator2_Len() {
+	fmt.Println(itx.FromSlice([]int{1, 2, 3}).Enumerate().Len())
+	// Output: 3
+}

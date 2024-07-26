@@ -79,3 +79,13 @@ func (iterator Iterator2[V, W]) Find(predicate func(V, W) bool) (V, W, bool) {
 func CollectErr[V any](iterator Iterator2[V, error]) ([]V, error) {
 	return it.CollectErr(iter.Seq2[V, error](iterator))
 }
+
+// Len is a convenience method for chaining [it.Len] on [Iterator]s.
+func (iterator Iterator[V]) Len() int {
+	return it.Len(iterator)
+}
+
+// Len is a convenience method for chaining [it.Len2] on [Iterator2]s.
+func (iterator Iterator2[V, W]) Len() int {
+	return it.Len2(iterator)
+}

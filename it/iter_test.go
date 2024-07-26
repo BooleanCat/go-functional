@@ -141,3 +141,27 @@ func ExampleCollectErr() {
 	// <nil>
 	// [one two three]
 }
+
+func ExampleLen() {
+	fmt.Println(it.Len(slices.Values([]int{1, 2, 3})))
+
+	// Output: 3
+}
+
+func TestLenEmpty(t *testing.T) {
+	t.Parallel()
+
+	assert.Equal(t, it.Len(it.Exhausted[int]()), 0)
+}
+
+func ExampleLen2() {
+	fmt.Println(it.Len2(it.Enumerate(slices.Values([]int{1, 2, 3}))))
+
+	// Output: 3
+}
+
+func TestLen2Empty(t *testing.T) {
+	t.Parallel()
+
+	assert.Equal(t, it.Len2(it.Enumerate(it.Exhausted[int]())), 0)
+}

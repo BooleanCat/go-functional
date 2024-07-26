@@ -142,3 +142,26 @@ func CollectErr[V any](delegate func(func(V, error) bool)) ([]V, error) {
 
 	return values, errors.Join(errs...)
 }
+
+// Len consumes an [iter.Seq] and returns the number of values yielded.
+func Len[V any](iterator func(func(V) bool)) int {
+	var length int
+
+	for range iterator {
+		length++
+	}
+
+	return length
+}
+
+// Len2 consumes an [iter.Seq2] and returns the number of pairs of values
+// yielded.
+func Len2[V, W any](iterator func(func(V, W) bool)) int {
+	var length int
+
+	for range iterator {
+		length++
+	}
+
+	return length
+}
