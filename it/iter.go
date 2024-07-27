@@ -2,7 +2,6 @@ package it
 
 import (
 	"cmp"
-	"errors"
 	"iter"
 )
 
@@ -127,20 +126,35 @@ func Find2[V, W any](iterator func(func(V, W) bool), pred func(V, W) bool) (V, W
 	return zeroV, zeroW, false
 }
 
-// CollectErr consumes an [iter.Seq2] where the right side yields errors and
-// returns a slice of values and all errors joined together.
-func CollectErr[V any](delegate func(func(V, error) bool)) ([]V, error) {
-	var (
-		values []V
-		errs   []error
-	)
+// TryCollect consumes an [iter.Seq2] where the right side yields errors and
+// returns a slice of values and the first error encountered. Iteration stops
+// at the first error.
+func TryCollect[V any](iterator func(func(V, error) bool)) ([]V, error) {
+	var values []V
 
-	for v, err := range delegate {
+	for v, err := range iterator {
+		if err != nil {
+			return values, err
+		}
 		values = append(values, v)
-		errs = append(errs, err)
 	}
 
-	return values, errors.Join(errs...)
+	return values, nil
+}
+
+// Collect2 consumes an [iter.Seq2] and returns two slices of values.
+func Collect2[V, W any](iterator func(func(V, W) bool)) ([]V, []W) {
+	var (
+		lefts  []V
+		rights []W
+	)
+
+	for v, w := range iterator {
+		lefts = append(lefts, v)
+		rights = append(rights, w)
+	}
+
+	return lefts, rights
 }
 
 // Len consumes an [iter.Seq] and returns the number of values yielded.
