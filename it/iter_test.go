@@ -30,7 +30,7 @@ func TestForEachEmpty(t *testing.T) {
 }
 
 func ExampleForEach2() {
-	it.ForEach2(it.Enumerate(slices.Values([]int{1, 2, 3})), func(index int, number int) {
+	it.ForEach2(slices.All([]int{1, 2, 3}), func(index int, number int) {
 		fmt.Println(index, number)
 	})
 	// Output:
@@ -59,7 +59,7 @@ func TestReduceEmpty(t *testing.T) {
 }
 
 func ExampleReduce2() {
-	fmt.Println(it.Reduce2(it.Enumerate(slices.Values([]int{1, 2, 3})), func(i, a, b int) int {
+	fmt.Println(it.Reduce2(slices.All([]int{1, 2, 3}), func(i, a, b int) int {
 		return i + 1
 	}, 0))
 
@@ -115,7 +115,7 @@ func ExampleFind_notFound() {
 }
 
 func ExampleFind2() {
-	index, value, ok := it.Find2(it.Enumerate(slices.Values([]int{1, 2, 3})), func(i, v int) bool {
+	index, value, ok := it.Find2(slices.All([]int{1, 2, 3}), func(i, v int) bool {
 		return i == 2
 	})
 	fmt.Println(index, value, ok)
@@ -124,7 +124,7 @@ func ExampleFind2() {
 }
 
 func ExampleFind2_notFound() {
-	index, value, ok := it.Find2(it.Enumerate(slices.Values([]int{1, 2, 3})), func(i, v int) bool {
+	index, value, ok := it.Find2(slices.All([]int{1, 2, 3}), func(i, v int) bool {
 		return i == 4
 	})
 
@@ -132,14 +132,36 @@ func ExampleFind2_notFound() {
 	// Output: 0 0 false
 }
 
-func ExampleCollectErr() {
-	data := strings.NewReader("one\ntwo\nthree\n")
-	lines, err := it.CollectErr(it.LinesString(data))
+func ExampleCollect2() {
+	indicies, values := it.Collect2(slices.All([]int{1, 2, 3}))
+	fmt.Println(values)
+	fmt.Println(indicies)
+
+	// Output:
+	// [1 2 3]
+	// [0 1 2]
+}
+
+func ExampleTryCollect() {
+	text := strings.NewReader("one\ntwo\nthree\n")
+
+	lines, err := it.TryCollect(it.LinesString(text))
 	fmt.Println(err)
 	fmt.Println(lines)
+
 	// Output:
 	// <nil>
 	// [one two three]
+}
+
+func TestTryCollectError(t *testing.T) {
+	t.Parallel()
+
+	text := new(failSecondTime)
+	lines, err := it.TryCollect(it.LinesString(text))
+
+	assert.Equal(t, err.Error(), "read error")
+	assert.SliceEqual(t, lines, []string{"o"})
 }
 
 func ExampleLen() {
@@ -155,7 +177,7 @@ func TestLenEmpty(t *testing.T) {
 }
 
 func ExampleLen2() {
-	fmt.Println(it.Len2(it.Enumerate(slices.Values([]int{1, 2, 3}))))
+	fmt.Println(it.Len2(slices.All([]int{1, 2, 3})))
 
 	// Output: 3
 }

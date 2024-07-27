@@ -79,14 +79,25 @@ func ExampleFromMap() {
 	// Output: [2]
 }
 
-func ExampleCollectErr() {
-	data := strings.NewReader("one\ntwo\nthree\n")
-	lines, err := itx.CollectErr(itx.LinesString(data))
+func ExampleTryCollect() {
+	text := strings.NewReader("one\ntwo\nthree\n")
+	lines, err := itx.TryCollect(itx.LinesString(text))
 	fmt.Println(err)
 	fmt.Println(lines)
+
 	// Output:
 	// <nil>
 	// [one two three]
+}
+
+func ExampleIterator2_Collect() {
+	indicies, values := itx.FromSlice([]int{1, 2, 3}).Enumerate().Collect()
+	fmt.Println(values)
+	fmt.Println(indicies)
+
+	// Output:
+	// [1 2 3]
+	// [0 1 2]
 }
 
 func ExampleIterator_Len() {
