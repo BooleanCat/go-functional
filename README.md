@@ -25,15 +25,59 @@ _[Reference documentation](https://pkg.go.dev/github.com/BooleanCat/go-functiona
 go get github.com/BooleanCat/go-functional/v2@latest
 ```
 
-## Iterators
+## Overview
+
+Most functions offered by this package are either consumers or iterators.
+
+[Consumers](#consumers) will iterate over an iterator and completely or partially drain them
+of values and (in most cases) collect the values into a data type.
+
+[Iterators](#iterators) are functions that yield new values and can be ranged over. See Go's
+documentation for iterators for more details.
+
+<h2 id="consumers">Consumers</h2>
+
+The standard libary provides functions to collect iterators in the `slices` and
+`maps` packages that should satisfy most cases where collection is needed.
+
+This package provides additional collection methods and makes existing
+consumers from the standard library chainable.
+
+> [!WARNING]
+> Attempting to collect infinite iterators will cause an infinite loop and
+> likely deadlock. Consider bounding infinite iterators before collect (for
+> example using `Take`).
+
+### Collect
+
+In most cases `slices.Collect` from the standard library may be used to collect
+items from an iterator into a slice. There are several other variants of
+collect available for use for different use cases.
+
+```go
+// Chainable
+numbers := itx.NaturalNumbers[int]().Take(5).Collect()
+
+// Collect an `iter.Seq2[V, W] into two slices
+keys, values := it.Collect2(maps.All(map[string]int{"one": 1, "two": 2}))
+
+// As above, but chainable
+keys, values := itx.FromMap(map[string]int{"one": 1, "two": 2}).Collect()
+```
+
+<h2 id="iterators">Iterators</h2>
 
 This library contains two kinds of iterators in the `it` and `itx` packages. In
 most cases you'll find the same iterators in each package, the difference
 between them being that the iterators in the `itx` package can be "dot-chained"
 (e.g. `iter.Filter(...).Take(3).Collect()`) and those in `it` cannot.
 
-Iterators and functions that work with them come in several varieties and it's
-important to be aware of the distinction between them.
+Iterators within the `it` package are of the type `iter.Seq[V]` or
+`iter.Seq2[V, W]` (from the standard library). Iterators within the `itx`
+package are of the type `itx.Iterator[V]` or `itx.Iterator2[V, W]`.
+
+Iterators come in several varieties and it's important to be aware of the
+distinction between them.
 
 - Most iterators are `🔵 finite`, but some are `🔴 infinite` (never terminate)
   and care should be taken when consuming `🔴 infinite` iterators to avoid
@@ -42,8 +86,6 @@ important to be aware of the distinction between them.
   create new iterators and do not consume other iterators (e.g.
   `it.NaturalNumbers`). `🟡 secondary` iterators consume other iterators (e.g.
   `it.Filter`).
-- `🟢 consumer`s are not iterators but either partially or completely consume an
-  iterator (e.g. `it.Find`).
 
 Iterators documented below will be tagged with the above information.
 
@@ -80,22 +122,3 @@ for i := range itx.Integers[uint](0, 3, 1).Drop(1) {
 	fmt.Println(i)
 }
 ```
-
-## Iterator Chaining
-
-The iterators in this package were designed to be used with the native
-`iter.Seq` from Go's standard library. In order to facilitate complex
-sequences of iterators, the
-[`itx`](https://github.com/BooleanCat/go-functional/tree/main/it/itx) package
-provides `Iterator` and `Iterator2` as wrappers around `iter.Seq` and
-`iter.Seq2` that allow for chaining operations.
-
-Let's take a look at an example:
-
-```go
-// The first 10 odd integers
-itx.NaturalNumbers[int]().Filter(filter.IsOdd).Take(10).Collect()
-```
-
-Most iterators support chaining. A notable exception is `it.Map` which cannot
-support chaining due to limitations on Go's type system.
