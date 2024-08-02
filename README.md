@@ -137,7 +137,7 @@ distinction between them.
 
 Iterators documented below will be tagged with the above information.
 
-### NaturalNumbers (`🟣 primary`, `🔴 infinite`)
+### NaturalNumbers <sup>`🟣 primary` `🔴 infinite`</sup>
 
 NaturalNumbers yields all non-negative integers in ascending order.
 
@@ -156,7 +156,7 @@ for i := range itx.NaturalNumbers[int]().Take(3) {
 > There is no protection against overflowing whatever integer type is used for
 > this iterator.
 
-### Integers (`🟣 primary`, `🔵 finite`)
+### Integers <sup>`🟣 primary` `🔵 finite`</sup>
 
 Integers yields all integers in the range [start, stop) with the given step.
 
