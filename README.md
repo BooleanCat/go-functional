@@ -65,6 +65,29 @@ keys, values := it.Collect2(maps.All(map[string]int{"one": 1, "two": 2}))
 keys, values := itx.FromMap(map[string]int{"one": 1, "two": 2}).Collect()
 ```
 
+### TryCollect
+
+Dealing with iterators that return `T, error` can involve the boilerplate of
+checking that the returned slice of errors only contains `nil`. `TryCollect`
+solves this by collecting all values into a slice and returning a single error:
+the first one encountered.
+
+```go
+text := strings.NewReader("one\ntwo\nthree\n")
+
+if lines, err := it.TryCollect(it.LinesString(text)); err != nil {
+	fmt.Println(lines)
+}
+```
+
+> [!NOTE]
+> If an error is encountered, collection stops. This means the iterator being
+> collected may not be fully drained.
+
+> [!NOTE]
+> Although the `itx` package also contains `TryCollect`, it is not chainable
+> due to limitations with Go's type system.
+
 <h2 id="iterators">Iterators</h2>
 
 This library contains two kinds of iterators in the `it` and `itx` packages. In
