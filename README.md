@@ -85,8 +85,8 @@ if lines, err := it.TryCollect(it.LinesString(text)); err != nil {
 > collected may not be fully drained.
 
 > [!NOTE]
-> Although the `itx` package also contains `TryCollect`, it is not chainable
-> due to limitations with Go's type system.
+> The `itx` package does not contain `TryCollect` due to limitations with Go's
+> type system.
 
 ### ForEach
 
@@ -112,6 +112,24 @@ itx.FromSlice([]int{1, 2, 3}).Enumerate().ForEach(func(index int, number int) {
 	fmt.Println(index, number)
 })
 ```
+
+### Fold
+
+Fold every element into an accumulator by applying a function and passing an
+initial value.
+
+```go
+it.Fold(slices.Values([]int{1, 2, 3}), op.Add, 0)
+
+// Fold an iter.Seq2
+it.Fold2(slices.All([]int{1, 2, 3}), func(i, a, b int) int {
+	return i + 1
+}, 0)
+```
+
+> [!NOTE]
+> The `itx` package does not contain `Fold` due to limitations with Go's type
+> system.
 
 <h2 id="iterators">Iterators</h2>
 
