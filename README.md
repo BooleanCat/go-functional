@@ -47,16 +47,17 @@ important to be aware of the distinction between them.
 
 Iterators documented below will be tagged with the above information.
 
-### `it.NaturalNumbers` (`🟣 primary`, `🔴 infinite`)
+### NaturalNumbers (`🟣 primary`, `🔴 infinite`)
 
 NaturalNumbers yields all non-negative integers in ascending order.
 
 ```go
-for i := range it.NaturalNumbers[int]() {
-	if i >= 3 {
-		break
-	}
+for i := range it.Take(it.NaturalNumbers[int](), 3) {
+	fmt.Println(i)
+}
 
+// Chainable
+for i := range itx.NaturalNumbers[int]().Take(3) {
 	fmt.Println(i)
 }
 ```
@@ -64,6 +65,21 @@ for i := range it.NaturalNumbers[int]() {
 > [!WARNING]
 > There is no protection against overflowing whatever integer type is used for
 > this iterator.
+
+### Integers (`🟣 primary`, `🔵 finite`)
+
+Integers yields all integers in the range [start, stop) with the given step.
+
+```go
+for i := range it.Integers[uint](0, 3, 1) {
+	fmt.Println(i)
+}
+
+// Chainable
+for i := range itx.Integers[uint](0, 3, 1).Drop(1) {
+	fmt.Println(i)
+}
+```
 
 ## Iterator Chaining
 
