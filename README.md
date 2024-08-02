@@ -17,13 +17,53 @@ evens := it.Filter(it.NaturalNumbers[int](), filter.IsEven)
 numbers := it.Map(it.NaturalNumbers[int](), strconv.Itoa)
 ```
 
-_[Read the docs](https://pkg.go.dev/github.com/BooleanCat/go-functional/v2)_ to see the full iterator library.
+_[Reference documentation](https://pkg.go.dev/github.com/BooleanCat/go-functional/v2)_
 
 ## Installation
 
 ```terminal
 go get github.com/BooleanCat/go-functional/v2@latest
 ```
+
+## Iterators
+
+This library contains two kinds of iterators in the `it` and `itx` packages. In
+most cases you'll find the same iterators in each package, the difference
+between them being that the iterators in the `itx` package can be "dot-chained"
+(e.g. `iter.Filter(...).Take(3).Collect()`) and those in `it` cannot.
+
+Iterators and functions that work with them come in several varieties and it's
+important to be aware of the distinction between them.
+
+- Most iterators are `🔵 finite`, but some are `🔴 infinite` (never terminate)
+  and care should be taken when consuming `🔴 infinite` iterators to avoid
+  deadlocking.
+- Iterators are either `🟣 primary` or `🟡 secondary`. `🟣 primary` iterators
+  create new iterators and do not consume other iterators (e.g.
+  `it.NaturalNumbers`). `🟡 secondary` iterators consume other iterators (e.g.
+  `it.Filter`).
+- `🟢 consumer`s are not iterators but either partially or completely consume an
+  iterator (e.g. `it.Find`).
+
+Iterators documented below will be tagged with the above information.
+
+### `it.NaturalNumbers` (`🟣 primary`, `🔴 infinite`)
+
+NaturalNumbers yields all non-negative integers in ascending order.
+
+```go
+for i := range it.NaturalNumbers[int]() {
+	if i >= 3 {
+		break
+	}
+
+	fmt.Println(i)
+}
+```
+
+> [!WARNING]
+> There is no protection against overflowing whatever integer type is used for
+> this iterator.
 
 ## Iterator Chaining
 
