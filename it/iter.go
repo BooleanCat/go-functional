@@ -19,9 +19,9 @@ func ForEach2[V, W any](iterator func(func(V, W) bool), fn func(V, W)) {
 	}
 }
 
-// Reduce consumes an iterator and applies a function to each value yielded,
-// accumulating a single result.
-func Reduce[V, R any](iterator func(func(V) bool), fn func(R, V) R, initial R) R {
+// Fold will fold every element into an accumulator by applying a function and
+// passing an initial value.
+func Fold[V, R any](iterator func(func(V) bool), fn func(R, V) R, initial R) R {
 	result := initial
 
 	for item := range iterator {
@@ -31,9 +31,9 @@ func Reduce[V, R any](iterator func(func(V) bool), fn func(R, V) R, initial R) R
 	return result
 }
 
-// Reduce2 consumes an iterator and applies a function to each pair of values,
-// accumulating a single result.
-func Reduce2[V, W, R any](iterator func(func(V, W) bool), fn func(R, V, W) R, initial R) R {
+// Fold2 will fold every element into an accumulator by applying a function and
+// passing an initial value.
+func Fold2[V, W, R any](iterator func(func(V, W) bool), fn func(R, V, W) R, initial R) R {
 	result := initial
 
 	for v, w := range iterator {

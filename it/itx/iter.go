@@ -74,13 +74,6 @@ func (iterator Iterator2[V, W]) Find(predicate func(V, W) bool) (V, W, bool) {
 	return it.Find2(iterator, predicate)
 }
 
-// TryCollect consumes an [iter.Seq2] where the right side yields errors and
-// returns a slice of values and the first error encountered. Iteration stops
-// at the first error.
-func TryCollect[V any](iterator func(func(V, error) bool)) ([]V, error) {
-	return it.TryCollect(iterator)
-}
-
 // Collect2 consumes an [iter.Seq2] and returns two slices of values.
 func (iterator Iterator2[V, W]) Collect() ([]V, []W) {
 	return it.Collect2(iterator)

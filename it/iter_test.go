@@ -47,19 +47,19 @@ func TestForEach2Empty(t *testing.T) {
 	})
 }
 
-func ExampleReduce() {
-	fmt.Println(it.Reduce(slices.Values([]int{1, 2, 3}), op.Add, 0))
+func ExampleFold() {
+	fmt.Println(it.Fold(slices.Values([]int{1, 2, 3}), op.Add, 0))
 	// Output: 6
 }
 
-func TestReduceEmpty(t *testing.T) {
+func TestFoldEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, it.Reduce(it.Exhausted[int](), func(int, int) int { return 0 }, 0), 0)
+	assert.Equal(t, it.Fold(it.Exhausted[int](), func(int, int) int { return 0 }, 0), 0)
 }
 
-func ExampleReduce2() {
-	fmt.Println(it.Reduce2(slices.All([]int{1, 2, 3}), func(i, a, b int) int {
+func ExampleFold2() {
+	fmt.Println(it.Fold2(slices.All([]int{1, 2, 3}), func(i, a, b int) int {
 		return i + 1
 	}, 0))
 

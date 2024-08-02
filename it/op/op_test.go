@@ -9,11 +9,11 @@ import (
 )
 
 func ExampleAdd() {
-	fmt.Println(it.Reduce(slices.Values([]int{1, 2, 3}), op.Add, 0))
+	fmt.Println(it.Fold(slices.Values([]int{1, 2, 3}), op.Add, 0))
 	// Output: 6
 }
 
 func ExampleAdd_string() {
-	fmt.Println(it.Reduce(slices.Values([]string{"a", "b", "c"}), op.Add, ""))
+	fmt.Println(it.Fold(slices.Values([]string{"a", "b", "c"}), op.Add, ""))
 	// Output: abc
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"maps"
 	"slices"
-	"strings"
 
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
@@ -77,17 +76,6 @@ func ExampleFromSlice() {
 func ExampleFromMap() {
 	fmt.Println(itx.FromMap(map[int]int{1: 2}).Right().Collect())
 	// Output: [2]
-}
-
-func ExampleTryCollect() {
-	text := strings.NewReader("one\ntwo\nthree\n")
-	lines, err := itx.TryCollect(itx.LinesString(text))
-	fmt.Println(err)
-	fmt.Println(lines)
-
-	// Output:
-	// <nil>
-	// [one two three]
 }
 
 func ExampleIterator2_Collect() {
