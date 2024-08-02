@@ -88,6 +88,31 @@ if lines, err := it.TryCollect(it.LinesString(text)); err != nil {
 > Although the `itx` package also contains `TryCollect`, it is not chainable
 > due to limitations with Go's type system.
 
+### ForEach
+
+ForEach consumes an iterator and applies a function to each value yielded.
+
+```go
+it.ForEach(slices.Values([]int{1, 2, 3}), func(number int) {
+	fmt.Println(number)
+})
+
+// Chainable
+itx.FromSlice([]int{1, 2, 3}).ForEach(func(number int) {
+	fmt.Println(number)
+})
+
+// For each member of an iter.Seq2
+it.ForEach2(slices.All([]int{1, 2, 3}), func(index int, number int) {
+	fmt.Println(index, number)
+})
+
+// As above, but chainable
+itx.FromSlice([]int{1, 2, 3}).Enumerate().ForEach(func(index int, number int) {
+	fmt.Println(index, number)
+})
+```
+
 <h2 id="iterators">Iterators</h2>
 
 This library contains two kinds of iterators in the `it` and `itx` packages. In
