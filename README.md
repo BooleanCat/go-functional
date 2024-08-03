@@ -390,6 +390,23 @@ numbers := it.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 1)
 numbers := itx.FromMap(map[int]string{1: "one", 2: "two", 3: "three"}).Drop(1)
 ```
 
+### Enumerate
+
+Enumerating an `iter.Seq` like iterator returns an `iter.Seq2` like iterator yielding the index of
+each value and the value.
+
+```go
+indexedValues := it.Enumerate(slices.Values([]int{1, 2, 3}))
+
+// Chainable
+indexedValues := itx.FromSlice([]int{1, 2, 3}).Enumerate()
+```
+
+<!-- prettier-ignore -->
+> [!TIP]
+> When iterating over a slice and immediately enumerating, consider instead using the standard
+> library's `slices.All` function rather than this.
+
 ### Integers
 
 Integers yields all integers in the range [start, stop) with the given step.
