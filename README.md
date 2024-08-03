@@ -369,6 +369,27 @@ numbers := itx.FromMap(map[int]string{1: "one"}).Cycle().Take(5)
 > otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
 > iterator before consuming (e.g. using Take).
 
+### Drop
+
+Drop yields all values from a delegate iterator after dropping a number of values from the
+beginning. Values are not dropped immediately, but when consumption begins.
+
+When dropping a number of values larger than the length of the iterator, it behaves like
+`it.Exhausted`.
+
+```go
+numbers := it.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2)
+
+// Chainable
+numbers := itx.FromSlice([]int{1, 2, 3, 4, 5}).Drop(2)
+
+// Dropping on iter.Seq2
+numbers := it.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 1)
+
+// As above, but chainable
+numbers := itx.FromMap(map[int]string{1: "one", 2: "two", 3: "three"}).Drop(1)
+```
+
 ### Integers
 
 Integers yields all integers in the range [start, stop) with the given step.
