@@ -258,6 +258,11 @@ for number := range channel {
 }
 ```
 
+<!-- prettier-ignore -->
+> [!NOTE]
+> Unlike most consumers, the iterator is not immediately consumed by ToChannel. Instead is it
+> consumed as values are pulled from the channel.
+
 <h2 id="iterators">Iterators</h2>
 
 This library contains two kinds of iterators in the `it` and `itx` packages. In most cases you'll
