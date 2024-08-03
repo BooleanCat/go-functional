@@ -127,9 +127,115 @@ it.Fold2(slices.All([]int{1, 2, 3}), func(i, a, b int) int {
 }, 0)
 ```
 
+> [!TIP]
+> The [op package](it/op/op.go) contains some simple, pre-defined operation
+> functions.
+
 > [!NOTE]
 > The `itx` package does not contain `Fold` due to limitations with Go's type
 > system.
+
+### Max & Min
+
+Max and Min consume an iterator and return the maximum or minimum value yielded
+and true if the iterator contained at least one value, or the zero value and
+false if the iterator was empty.
+
+The type of the value yielded by the iterator must be `comparable`.
+
+```go
+max, ok := it.Max(slices.Values([]int{1, 2, 3}))
+min, ok := it.Min(slices.Values([]int{1, 2, 3}))
+```
+
+> [!NOTE]
+> The `itx` package does not contain `Fold` due to limitations with Go's type
+> system.
+
+### Len
+
+Len consumes an iterator and returns the number of values yielded.
+
+```go
+it.Len(slices.Values([]int{1, 2, 3}))
+
+// Chainable
+itx.FromSlice([]int{1, 2, 3}).Len()
+
+// Len of an iter.Seq2
+it.Len2(slices.All([]int{1, 2, 3}))
+
+// As above, but chainable
+itx.FromSlice([]int{1, 2, 3}).Enumerate().Len()
+```
+
+### Find
+
+Find consumes an iterator until a value is found that satisfies a predicate. It
+returns the value and true if one was found, or the zero value and false if the
+iterator was exhausted before a value was found.
+
+```go
+found, ok := it.Find(slices.Values([]int{1, 2, 3}), func(i int) bool {
+	return i == 2
+})
+
+// Chainable
+value, ok := itx.FromSlice([]int{1, 2, 3}).Find(func(number int) bool {
+	return number == 2
+})
+
+// Finding within an iter.Seq2
+index, value, ok := it.Find2(slices.All([]int{1, 2, 3}), func(i, v int) bool {
+	return i == 2
+})
+
+// As above, but chainable
+index, value, ok := itx.FromSlice([]int{1, 2, 3}).Enumerate().Find(func(index int, number int) bool {
+	return index == 1
+})
+```
+
+> [!TIP]
+> The [filter package](it/filter/filter.go) contains some simple, pre-defined
+> predicate functions.
+
+### From, FromSlice, FromMap & Seq
+
+The itx package contains some helper functions to convert iterators, slices or
+maps directly into chainable iterators to avoid some boilerplate.
+
+```go
+itx.From(slices.Values([]int{1, 2, 3})).Collect()
+
+itx.From2(maps.All(map[int]string{1: "one"}))
+
+itx.FromSlice([]int{1, 2, 3}).Collect()
+
+itx.FromMap(map[int]int{1: 2}).Collect()
+```
+
+The `itx` package also contains a helper function Seq that will convert a
+chainable iterator into an `iter.Seq` so that it can be used in functions that
+accept that type (such as the standard library).
+
+The standard library functions that work with iterators (such as
+`slices.Collect`) accept the `iter.Seq` family of types. This precludes those
+functions from accepting types with another alias (such as `itx.Iterator`) with
+the same type definition. This means it is necessary to "covert" an
+`itx.Iterator` into an `iter.Seq` before passing the iterator into those
+functions.
+
+```go
+slices.Collect(itx.NaturalNumbers[int]().Take(3).Seq())
+```
+
+> [!TIP]
+> go-functional's functions that accept iterators always accept
+> `func(func(V) bool)` or `func(func(V, W) bool)` rather than any specific type
+> alias so that they can accept any type alias with the definitions `iter.Seq`,
+> `iter.Seq2`, `itx.Iterator`, `itx.Iterator2` or any other third-party types
+> aliased to the same type.
 
 <h2 id="iterators">Iterators</h2>
 
