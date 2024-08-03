@@ -340,6 +340,35 @@ for number := range itx.FromChannel(items).Exclude(filter.IsZero) {
 > In order to prevent a deadlock, the channel must be closed before attemping to stop the iterator
 > when it's used in a pull style. See `iter.Pull`.
 
+### Cycle
+
+Cycle yields all values from an iterator before returning to the beginning and yielding all values
+again (indefinitely).
+
+```go
+numbers := it.Take(it.Cycle(slices.Values([]int{1, 2})), 5)
+
+// Chainable
+numbers := itx.FromSlice([]int{1, 2}).Cycle().Take(5)
+
+// Cycling an iter.Seq2
+numbers := it.Take2(it.Cycle2(maps.All(map[int]string{1: "one"})), 5)
+
+// As above, but chainable
+numbers := itx.FromMap(map[int]string{1: "one"}).Cycle().Take(5)
+```
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> Since cycle needs to store all values yielded in memory, its memory usage will grow as the first
+> cycle is consumed and remain at a constant size on subsequent cycles.
+
+<!-- prettier-ignore -->
+> [!WARNING]
+> This iterator yields an infinite number of values and care should be taken when consuming it
+> otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
+> iterator before consuming (e.g. using Take).
+
 ### Integers
 
 Integers yields all integers in the range [start, stop) with the given step.
