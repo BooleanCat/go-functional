@@ -247,17 +247,16 @@ Iterators within the `it` package are of the type `iter.Seq[V]` or `iter.Seq2[V,
 standard library). Iterators within the `itx` package are of the type `itx.Iterator[V]` or
 `itx.Iterator2[V, W]`.
 
-Iterators come in several varieties and it's important to be aware of the distinction between them.
+There are two important factors to consider when using iterators:
 
-- Most iterators are `🔵 finite`, but some are `🔴 infinite` (never terminate) and care should be
-  taken when consuming `🔴 infinite` iterators to avoid deadlocking.
-- Iterators are either `🟣 primary` or `🟡 secondary`. `🟣 primary` iterators create new iterators
-  and do not consume other iterators (e.g. `it.NaturalNumbers`). `🟡 secondary` iterators consume
-  other iterators (e.g. `it.Filter`).
+1. Some iterators yield an infinite number of values and care should be taken to avoid consuming
+   (using functions such as `slices.Collect`) otherwise it's likely to cause an infinite while loop.
+2. Many iterators take another iterator as an argument (such as Filter or Map). Avoid using an
+   iterator after it has been passed to another iterator otherwise you'll risk multiple functions
+   consuming a single (likely not thread-safe) iterator and causing confusing and difficult to debug
+   behaviour.
 
-Iterators documented below will be tagged with the above information.
-
-### NaturalNumbers <sup>`🟣 primary` `🔴 infinite`</sup>
+### NaturalNumbers
 
 NaturalNumbers yields all non-negative integers in ascending order.
 
@@ -274,9 +273,15 @@ for i := range itx.NaturalNumbers[int]().Take(3) {
 
 <!-- prettier-ignore -->
 > [!WARNING]
+> This iterator yields an infinite number of values and care should be taken when consuming it
+> otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
+> iterator before consuming (e.g. using Take).
+
+<!-- prettier-ignore -->
+> [!WARNING]
 > There is no protection against overflowing whatever integer type is used for this iterator.
 
-### Integers <sup>`🟣 primary` `🔵 finite`</sup>
+### Integers
 
 Integers yields all integers in the range [start, stop) with the given step.
 
