@@ -1,6 +1,10 @@
 # Functional Programming in Go
 
-[![GitHub release (with filter)](https://img.shields.io/github/v/release/BooleanCat/go-functional?sort=semver&logo=Go&color=%23007D9C&include_prereleases)](https://github.com/BooleanCat/go-functional/releases) [![Actions Status](https://github.com/BooleanCat/go-functional/workflows/test/badge.svg)](https://github.com/BooleanCat/go-functional/actions) [![Go Reference](https://pkg.go.dev/badge/github.com/BooleanCat/go-functional/v2.svg)](https://pkg.go.dev/github.com/BooleanCat/go-functional/v2) [![Go Report Card](https://goreportcard.com/badge/github.com/BooleanCat/go-functional/v2)](https://goreportcard.com/report/github.com/BooleanCat/go-functional/v2) [![codecov](https://codecov.io/gh/BooleanCat/go-functional/branch/main/graph/badge.svg?token=N2E43RSR14)](https://codecov.io/gh/BooleanCat/go-functional)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/BooleanCat/go-functional?sort=semver&logo=Go&color=%23007D9C&include_prereleases)](https://github.com/BooleanCat/go-functional/releases)
+[![Actions Status](https://github.com/BooleanCat/go-functional/workflows/test/badge.svg)](https://github.com/BooleanCat/go-functional/actions)
+[![Go Reference](https://pkg.go.dev/badge/github.com/BooleanCat/go-functional/v2.svg)](https://pkg.go.dev/github.com/BooleanCat/go-functional/v2)
+[![Go Report Card](https://goreportcard.com/badge/github.com/BooleanCat/go-functional/v2)](https://goreportcard.com/report/github.com/BooleanCat/go-functional/v2)
+[![codecov](https://codecov.io/gh/BooleanCat/go-functional/branch/main/graph/badge.svg?token=N2E43RSR14)](https://codecov.io/gh/BooleanCat/go-functional)
 
 A library of iterators for use with `iter.Seq`. Requires Go 1.23+.
 
@@ -29,30 +33,30 @@ go get github.com/BooleanCat/go-functional/v2@latest
 
 Most functions offered by this package are either consumers or iterators.
 
-[Consumers](#consumers) will iterate over an iterator and completely or partially drain them
-of values and (in most cases) collect the values into a data type.
+[Consumers](#consumers) will iterate over an iterator and completely or partially drain them of
+values and (in most cases) collect the values into a data type.
 
 [Iterators](#iterators) are functions that yield new values and can be ranged over. See Go's
 documentation for iterators for more details.
 
 <h2 id="consumers">Consumers</h2>
 
-The standard libary provides functions to collect iterators in the `slices` and
-`maps` packages that should satisfy most cases where collection is needed.
+The standard libary provides functions to collect iterators in the `slices` and `maps` packages that
+should satisfy most cases where collection is needed.
 
-This package provides additional collection methods and makes existing
-consumers from the standard library chainable.
+This package provides additional collection methods and makes existing consumers from the standard
+library chainable.
 
+<!-- prettier-ignore -->
 > [!WARNING]
-> Attempting to collect infinite iterators will cause an infinite loop and
-> likely deadlock. Consider bounding infinite iterators before collect (for
-> example using `Take`).
+> Attempting to collect infinite iterators will cause an infinite loop and likely deadlock. Consider
+> bounding infinite iterators before collect (for example using `Take`).
 
 ### Collect
 
-In most cases `slices.Collect` from the standard library may be used to collect
-items from an iterator into a slice. There are several other variants of
-collect available for use for different use cases.
+In most cases `slices.Collect` from the standard library may be used to collect items from an
+iterator into a slice. There are several other variants of collect available for use for different
+use cases.
 
 ```go
 // Chainable
@@ -67,10 +71,9 @@ keys, values := itx.FromMap(map[string]int{"one": 1, "two": 2}).Collect()
 
 ### TryCollect
 
-Dealing with iterators that return `T, error` can involve the boilerplate of
-checking that the returned slice of errors only contains `nil`. `TryCollect`
-solves this by collecting all values into a slice and returning a single error:
-the first one encountered.
+Dealing with iterators that return `T, error` can involve the boilerplate of checking that the
+returned slice of errors only contains `nil`. `TryCollect` solves this by collecting all values into
+a slice and returning a single error: the first one encountered.
 
 ```go
 text := strings.NewReader("one\ntwo\nthree\n")
@@ -80,13 +83,14 @@ if lines, err := it.TryCollect(it.LinesString(text)); err != nil {
 }
 ```
 
+<!-- prettier-ignore -->
 > [!NOTE]
-> If an error is encountered, collection stops. This means the iterator being
-> collected may not be fully drained.
+> If an error is encountered, collection stops. This means the iterator being collected may not be
+> fully drained.
 
+<!-- prettier-ignore -->
 > [!NOTE]
-> The `itx` package does not contain `TryCollect` due to limitations with Go's
-> type system.
+> The `itx` package does not contain `TryCollect` due to limitations with Go's type system.
 
 ### ForEach
 
@@ -115,8 +119,7 @@ itx.FromSlice([]int{1, 2, 3}).Enumerate().ForEach(func(index int, number int) {
 
 ### Fold
 
-Fold every element into an accumulator by applying a function and passing an
-initial value.
+Fold every element into an accumulator by applying a function and passing an initial value.
 
 ```go
 it.Fold(slices.Values([]int{1, 2, 3}), op.Add, 0)
@@ -127,19 +130,18 @@ it.Fold2(slices.All([]int{1, 2, 3}), func(i, a, b int) int {
 }, 0)
 ```
 
+<!-- prettier-ignore -->
 > [!TIP]
-> The [op package](it/op/op.go) contains some simple, pre-defined operation
-> functions.
+> The [op package](it/op/op.go) contains some simple, pre-defined operation functions.
 
+<!-- prettier-ignore -->
 > [!NOTE]
-> The `itx` package does not contain `Fold` due to limitations with Go's type
-> system.
+> The `itx` package does not contain `Fold` due to limitations with Go's type system.
 
 ### Max & Min
 
-Max and Min consume an iterator and return the maximum or minimum value yielded
-and true if the iterator contained at least one value, or the zero value and
-false if the iterator was empty.
+Max and Min consume an iterator and return the maximum or minimum value yielded and true if the
+iterator contained at least one value, or the zero value and false if the iterator was empty.
 
 The type of the value yielded by the iterator must be `comparable`.
 
@@ -148,9 +150,9 @@ max, ok := it.Max(slices.Values([]int{1, 2, 3}))
 min, ok := it.Min(slices.Values([]int{1, 2, 3}))
 ```
 
+<!-- prettier-ignore -->
 > [!NOTE]
-> The `itx` package does not contain `Fold` due to limitations with Go's type
-> system.
+> The `itx` package does not contain `Fold` due to limitations with Go's type system.
 
 ### Len
 
@@ -171,9 +173,9 @@ itx.FromSlice([]int{1, 2, 3}).Enumerate().Len()
 
 ### Find
 
-Find consumes an iterator until a value is found that satisfies a predicate. It
-returns the value and true if one was found, or the zero value and false if the
-iterator was exhausted before a value was found.
+Find consumes an iterator until a value is found that satisfies a predicate. It returns the value
+and true if one was found, or the zero value and false if the iterator was exhausted before a value
+was found.
 
 ```go
 found, ok := it.Find(slices.Values([]int{1, 2, 3}), func(i int) bool {
@@ -196,14 +198,14 @@ index, value, ok := itx.FromSlice([]int{1, 2, 3}).Enumerate().Find(func(index in
 })
 ```
 
+<!-- prettier-ignore -->
 > [!TIP]
-> The [filter package](it/filter/filter.go) contains some simple, pre-defined
-> predicate functions.
+> The [filter package](it/filter/filter.go) contains some simple, pre-defined predicate functions.
 
 ### From, FromSlice, FromMap & Seq
 
-The itx package contains some helper functions to convert iterators, slices or
-maps directly into chainable iterators to avoid some boilerplate.
+The itx package contains some helper functions to convert iterators, slices or maps directly into
+chainable iterators to avoid some boilerplate.
 
 ```go
 itx.From(slices.Values([]int{1, 2, 3})).Collect()
@@ -215,49 +217,43 @@ itx.FromSlice([]int{1, 2, 3}).Collect()
 itx.FromMap(map[int]int{1: 2}).Collect()
 ```
 
-The `itx` package also contains a helper function Seq that will convert a
-chainable iterator into an `iter.Seq` so that it can be used in functions that
-accept that type (such as the standard library).
+The `itx` package also contains a helper function Seq that will convert a chainable iterator into an
+`iter.Seq` so that it can be used in functions that accept that type (such as the standard library).
 
-The standard library functions that work with iterators (such as
-`slices.Collect`) accept the `iter.Seq` family of types. This precludes those
-functions from accepting types with another alias (such as `itx.Iterator`) with
-the same type definition. This means it is necessary to "covert" an
-`itx.Iterator` into an `iter.Seq` before passing the iterator into those
-functions.
+The standard library functions that work with iterators (such as `slices.Collect`) accept the
+`iter.Seq` family of types. This precludes those functions from accepting types with another alias
+(such as `itx.Iterator`) with the same type definition. This means it is necessary to "covert" an
+`itx.Iterator` into an `iter.Seq` before passing the iterator into those functions.
 
 ```go
 slices.Collect(itx.NaturalNumbers[int]().Take(3).Seq())
 ```
 
+<!-- prettier-ignore -->
 > [!TIP]
-> go-functional's functions that accept iterators always accept
-> `func(func(V) bool)` or `func(func(V, W) bool)` rather than any specific type
-> alias so that they can accept any type alias with the definitions `iter.Seq`,
-> `iter.Seq2`, `itx.Iterator`, `itx.Iterator2` or any other third-party types
-> aliased to the same type.
+> go-functional's functions that accept iterators always accept `func(func(V) bool)` or
+> `func(func(V, W) bool)` rather than any specific type alias so that they can accept any type alias
+> with the definitions `iter.Seq`, `iter.Seq2`, `itx.Iterator`, `itx.Iterator2` or any other
+> third-party types aliased to the same type.
 
 <h2 id="iterators">Iterators</h2>
 
-This library contains two kinds of iterators in the `it` and `itx` packages. In
-most cases you'll find the same iterators in each package, the difference
-between them being that the iterators in the `itx` package can be "dot-chained"
-(e.g. `iter.Filter(...).Take(3).Collect()`) and those in `it` cannot.
+This library contains two kinds of iterators in the `it` and `itx` packages. In most cases you'll
+find the same iterators in each package, the difference between them being that the iterators in the
+`itx` package can be "dot-chained" (e.g. `iter.Filter(...).Take(3).Collect()`) and those in `it`
+cannot.
 
-Iterators within the `it` package are of the type `iter.Seq[V]` or
-`iter.Seq2[V, W]` (from the standard library). Iterators within the `itx`
-package are of the type `itx.Iterator[V]` or `itx.Iterator2[V, W]`.
+Iterators within the `it` package are of the type `iter.Seq[V]` or `iter.Seq2[V, W]` (from the
+standard library). Iterators within the `itx` package are of the type `itx.Iterator[V]` or
+`itx.Iterator2[V, W]`.
 
-Iterators come in several varieties and it's important to be aware of the
-distinction between them.
+Iterators come in several varieties and it's important to be aware of the distinction between them.
 
-- Most iterators are `🔵 finite`, but some are `🔴 infinite` (never terminate)
-  and care should be taken when consuming `🔴 infinite` iterators to avoid
-  deadlocking.
-- Iterators are either `🟣 primary` or `🟡 secondary`. `🟣 primary` iterators
-  create new iterators and do not consume other iterators (e.g.
-  `it.NaturalNumbers`). `🟡 secondary` iterators consume other iterators (e.g.
-  `it.Filter`).
+- Most iterators are `🔵 finite`, but some are `🔴 infinite` (never terminate) and care should be
+  taken when consuming `🔴 infinite` iterators to avoid deadlocking.
+- Iterators are either `🟣 primary` or `🟡 secondary`. `🟣 primary` iterators create new iterators
+  and do not consume other iterators (e.g. `it.NaturalNumbers`). `🟡 secondary` iterators consume
+  other iterators (e.g. `it.Filter`).
 
 Iterators documented below will be tagged with the above information.
 
@@ -276,9 +272,9 @@ for i := range itx.NaturalNumbers[int]().Take(3) {
 }
 ```
 
+<!-- prettier-ignore -->
 > [!WARNING]
-> There is no protection against overflowing whatever integer type is used for
-> this iterator.
+> There is no protection against overflowing whatever integer type is used for this iterator.
 
 ### Integers <sup>`🟣 primary` `🔵 finite`</sup>
 
