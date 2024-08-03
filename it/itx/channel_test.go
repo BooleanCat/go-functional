@@ -3,6 +3,7 @@ package itx_test
 import (
 	"fmt"
 
+	"github.com/BooleanCat/go-functional/v2/it/filter"
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
 
@@ -13,9 +14,10 @@ func ExampleFromChannel() {
 		defer close(items)
 		items <- 1
 		items <- 2
+		items <- 0
 	}()
 
-	for number := range itx.FromChannel(items) {
+	for number := range itx.FromChannel(items).Exclude(filter.IsZero) {
 		fmt.Println(number)
 	}
 

@@ -229,6 +229,28 @@ The standard library functions that work with iterators (such as `slices.Collect
 slices.Collect(itx.NaturalNumbers[int]().Take(3).Seq())
 ```
 
+### ToChannel
+
+ToChannel sends yielded values to a channel.
+
+The channel is closed when the iterator is exhausted. Beware of leaked go routines when using this
+function with an infinite iterator.
+
+```go
+channel := it.ToChannel(slices.Values([]int{1, 2, 3}))
+
+for number := range channel {
+	fmt.Println(number)
+}
+
+// Chainable
+channel := itx.FromSlice([]int{1, 2, 3}).ToChannel()
+
+for number := range channel {
+	fmt.Println(number)
+}
+```
+
 <!-- prettier-ignore -->
 > [!TIP]
 > go-functional's functions that accept iterators always accept `func(func(V) bool)` or
@@ -272,6 +294,46 @@ pairs := it.Chain2(maps.All(map[string]int{"a": 1}), maps.All(map[string]int{"b"
 
 pairs := itx.FromMap(map[string]int{"a": 1}).Chain(maps.All(map[string]int{"b": 2}))
 ```
+
+### FromChannel
+
+FromChannel pulls values from a channel and yields them via an iterator. The usual concerns around
+channel deadlocks apply here.
+
+The iterator is exhausted when the channel is closed and it is the responsibility of the caller to
+close the channel.
+
+```go
+items := make(chan int)
+
+go func() {
+	defer close(items)
+	items <- 1
+	items <- 2
+}()
+
+for number := range it.FromChannel(items) {
+	fmt.Println(number)
+}
+
+// Chainable
+items := make(chan int)
+
+go func() {
+	defer close(items)
+	items <- 1
+	items <- 0
+}()
+
+for number := range itx.FromChannel(items).Exclude(filter.IsZero) {
+	fmt.Println(number)
+}
+```
+
+<!-- prettier-ignore -->
+> [!WARNING]
+> In order to prevent a deadlock, the channel must be closed before attemping to stop the iterator
+> when it's used in a pull style. See `iter.Pull`.
 
 ### Integers
 
