@@ -256,6 +256,38 @@ There are two important factors to consider when using iterators:
    consuming a single (likely not thread-safe) iterator and causing confusing and difficult to debug
    behaviour.
 
+### Chain
+
+Chain yields values from multiple iterators in the sequence they are provided in. Think of it as
+glueing many iterators together.
+
+When provided zero iterators it will behave like `it.Exhausted`.
+
+```go
+numbers := it.Chain(slices.Values([]int{1, 2}), slices.Values([]int{3, 4}))
+
+pairs := itx.FromSlice([]int{1, 2}).Chain(slices.Values([]int{3, 4}))
+
+pairs := it.Chain2(maps.All(map[string]int{"a": 1}), maps.All(map[string]int{"b": 2}))
+
+pairs := itx.FromMap(map[string]int{"a": 1}).Chain(maps.All(map[string]int{"b": 2}))
+```
+
+### Integers
+
+Integers yields all integers in the range [start, stop) with the given step.
+
+```go
+for i := range it.Integers[uint](0, 3, 1) {
+	fmt.Println(i)
+}
+
+// Chainable
+for i := range itx.Integers[uint](0, 3, 1).Drop(1) {
+	fmt.Println(i)
+}
+```
+
 ### NaturalNumbers
 
 NaturalNumbers yields all non-negative integers in ascending order.
@@ -280,18 +312,3 @@ for i := range itx.NaturalNumbers[int]().Take(3) {
 <!-- prettier-ignore -->
 > [!WARNING]
 > There is no protection against overflowing whatever integer type is used for this iterator.
-
-### Integers
-
-Integers yields all integers in the range [start, stop) with the given step.
-
-```go
-for i := range it.Integers[uint](0, 3, 1) {
-	fmt.Println(i)
-}
-
-// Chainable
-for i := range itx.Integers[uint](0, 3, 1).Drop(1) {
-	fmt.Println(i)
-}
-```
