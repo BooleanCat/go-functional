@@ -229,6 +229,13 @@ The standard library functions that work with iterators (such as `slices.Collect
 slices.Collect(itx.NaturalNumbers[int]().Take(3).Seq())
 ```
 
+<!-- prettier-ignore -->
+> [!TIP]
+> go-functional's functions that accept iterators always accept `func(func(V) bool)` or
+> `func(func(V, W) bool)` rather than any specific type alias so that they can accept any type alias
+> with the definitions `iter.Seq`, `iter.Seq2`, `itx.Iterator`, `itx.Iterator2` or any other
+> third-party types aliased to the same type.
+
 ### ToChannel
 
 ToChannel sends yielded values to a channel.
@@ -250,13 +257,6 @@ for number := range channel {
 	fmt.Println(number)
 }
 ```
-
-<!-- prettier-ignore -->
-> [!TIP]
-> go-functional's functions that accept iterators always accept `func(func(V) bool)` or
-> `func(func(V, W) bool)` rather than any specific type alias so that they can accept any type alias
-> with the definitions `iter.Seq`, `iter.Seq2`, `itx.Iterator`, `itx.Iterator2` or any other
-> third-party types aliased to the same type.
 
 <h2 id="iterators">Iterators</h2>
 
