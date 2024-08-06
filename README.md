@@ -596,3 +596,21 @@ for i := range itx.NaturalNumbers[int]().Take(3) {
 <!-- prettier-ignore -->
 > [!WARNING]
 > There is no protection against overflowing whatever integer type is used for this iterator.
+
+### Once
+
+Once yields the provided value once before being exhausted.
+
+```go
+slices.Collect(it.Once(42))
+
+// Chainable
+
+itx.Once(42).Collect()
+
+// For iter.Seq2
+maps.Collect(it.Once2(42, "42"))
+
+// As above, but chainable
+itx.Once(42, "42").Collect()
+```
