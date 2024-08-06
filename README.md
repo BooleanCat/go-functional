@@ -605,7 +605,6 @@ Once yields the provided value once before being exhausted.
 slices.Collect(it.Once(42))
 
 // Chainable
-
 itx.Once(42).Collect()
 
 // For iter.Seq2
