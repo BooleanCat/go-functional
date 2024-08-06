@@ -278,10 +278,10 @@ There are two important factors to consider when using iterators:
 
 1. Some iterators yield an infinite number of values and care should be taken to avoid consuming
    (using functions such as `slices.Collect`) otherwise it's likely to cause an infinite while loop.
-2. Many iterators take another iterator as an argument (such as Filter or Map). Avoid using an
-   iterator after it has been passed to another iterator otherwise you'll risk multiple functions
-   consuming a single (likely not thread-safe) iterator and causing confusing and difficult to debug
-   behaviour.
+2. Many iterators take another iterator as an argument (such as [Filter](#filter) or Map). Avoid
+   using an iterator after it has been passed to another iterator otherwise you'll risk multiple
+   functions consuming a single (likely not thread-safe) iterator and causing confusing and
+   difficult to debug behaviour.
 
 ### Chain
 
@@ -423,6 +423,34 @@ maps.Collect(it.Exhausted2[int, string]())
 // As above, but chainable
 itx.Exhausted2[int, string]().Collect()
 ```
+
+<h3 id="filter">Filter & Exclude</h3>
+
+Filter yields values from an iterator that satisfy a predicate. Likewise, exclude yields values from
+an iterator that do not satisfy a predicate.
+
+```go
+it.Filter(slices.Values([]int{1, 2, 3, 4, 5}), filter.IsEven)
+it.Exclude(slices.Values([]int{1, 2, 3, 4, 5}), filter.IsEven)
+
+// Chainable
+itx.FromSlice([]int{1, 2, 3, 4, 5}).Filter(filter.IsEven)
+itx.FromSlice([]int{1, 2, 3, 4, 5}).Exclude(filter.IsEven)
+
+// Filtering an iter.Seq2
+isOne := func(n int, _ string) bool { return n == 1 }
+
+it.Filter2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), isOne)
+it.Exclude2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), isOne)
+
+// As above, but chainable
+itx.FromMap(map[int]string{1: "one", 2: "two", 3: "three"}).Filter(isOne)
+itx.FromMap(map[int]string{1: "one", 2: "two", 3: "three"}).Exclude(isOne)
+```
+
+<!-- prettier-ignore -->
+> [!TIP]
+> The [filter package](it/filter/filter.go) contains some simple, pre-defined predicate functions.
 
 ### Integers
 
