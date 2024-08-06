@@ -614,3 +614,26 @@ maps.Collect(it.Once2(42, "42"))
 // As above, but chainable
 itx.Once(42, "42").Collect()
 ```
+
+### Repeat
+
+Repeat yields the same value indefinitely.
+
+```go
+slices.Collect(it.Take(it.Repeat(42), 5))
+
+// Chainable
+itx.Repeat(42).Take(5).Collect()
+
+// For iter.Seq2
+maps.Collect(it.Take2(it.Repeat(42, "42"), 5))
+
+// As above, but chainable
+itx.Repeat2(42, "42").Take(5).Collect()
+```
+
+<!-- prettier-ignore -->
+> [!WARNING]
+> This iterator yields an infinite number of values and care should be taken when consuming it
+> otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
+> iterator before consuming (e.g. using Take).
