@@ -2,12 +2,6 @@ package itx
 
 import "github.com/BooleanCat/go-functional/v2/it"
 
-// Map is a convenience method [it.Map] returning an [Iterator] to support
-// chaining.
-func Map[V any, W any](iterator func(func(V) bool), f func(V) W) Iterator[W] {
-	return Iterator[W](it.Map(iterator, f))
-}
-
 // Transform is a convenience method for chaining [it.Map] on [Iterator]s where
 // the provided functions argument type is the same as its return type.
 //
