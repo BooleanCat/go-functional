@@ -51,7 +51,7 @@ library chainable.
 <!-- prettier-ignore -->
 > [!WARNING]
 > Attempting to collect infinite iterators will cause an infinite loop and likely deadlock. Consider
-> bounding infinite iterators before collect (for example using `Take`).
+> bounding infinite iterators before collect (for example using [Take](#take)).
 
 ### Collect
 
@@ -373,7 +373,7 @@ numbers := itx.FromMap(map[int]string{1: "one"}).Cycle().Take(5)
 > [!WARNING]
 > This iterator yields an infinite number of values and care should be taken when consuming it
 > otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
-> iterator before consuming (e.g. using Take).
+> iterator before consuming (e.g. using [Take](#take)).
 
 ### Drop
 
@@ -591,7 +591,7 @@ for i := range itx.NaturalNumbers[int]().Take(3) {
 > [!WARNING]
 > This iterator yields an infinite number of values and care should be taken when consuming it
 > otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
-> iterator before consuming (e.g. using Take).
+> iterator before consuming (e.g. using [Take](#take)).
 
 <!-- prettier-ignore -->
 > [!WARNING]
@@ -636,4 +636,22 @@ itx.Repeat2(42, "42").Take(5).Collect()
 > [!WARNING]
 > This iterator yields an infinite number of values and care should be taken when consuming it
 > otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
-> iterator before consuming (e.g. using Take).
+> iterator before consuming (e.g. using [Take](#take)).
+
+### Take
+
+Take limits the number of values of an iterator to a specified size. If the iterator has fewer
+values than the provided number then it behaves as though the original iterator is not changed.
+
+```go
+slices.Collect(it.Take(slices.Values([]int{1, 2, 3}), 2))
+
+// Chainable
+itx.FromSlice([]int{1, 2, 3}).Take(2).Collect()
+
+// Taking from iter.Seq2
+maps.Collect(it.Take2(slices.All([]int{1, 2, 3}), 2))
+
+// As above, but chainable
+itx.FromSlice([]int{1, 2, 3}).Enumerate().Take(2).Collect()
+```
