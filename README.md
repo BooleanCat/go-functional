@@ -39,7 +39,7 @@ values and (in most cases) collect the values into a data type.
 [Iterators](#iterators) are functions that yield new values and can be ranged over. See Go's
 documentation for iterators for more details.
 
-<h2 id="consumers">Consumers</h2>
+## Consumers
 
 The standard libary provides functions to collect iterators in the `slices` and `maps` packages that
 should satisfy most cases where collection is needed.
@@ -62,7 +62,7 @@ use cases.
 // Chainable
 numbers := itx.NaturalNumbers[int]().Take(5).Collect()
 
-// Collect an `iter.Seq2[V, W] into two slices
+// Collect an iter.Seq2[V, W] into two slices
 keys, values := it.Collect2(maps.All(map[string]int{"one": 1, "two": 2}))
 
 // As above, but chainable
@@ -263,7 +263,7 @@ for number := range channel {
 > Unlike most consumers, the iterator is not immediately consumed by ToChannel. Instead is it
 > consumed as values are pulled from the channel.
 
-<h2 id="iterators">Iterators</h2>
+## Iterators
 
 This library contains two kinds of iterators in the `it` and `itx` packages. In most cases you'll
 find the same iterators in each package, the difference between them being that the iterators in the
@@ -288,7 +288,7 @@ There are two important factors to consider when using iterators:
 Chain yields values from multiple iterators in the sequence they are provided in. Think of it as
 glueing many iterators together.
 
-When provided zero iterators it will behave like `it.Exhausted`.
+When provided zero iterators it will behave like [Exhausted](#exhausted).
 
 ```go
 numbers := it.Chain(slices.Values([]int{1, 2}), slices.Values([]int{3, 4}))
@@ -375,7 +375,7 @@ Drop yields all values from a delegate iterator after dropping a number of value
 beginning. Values are not dropped immediately, but when consumption begins.
 
 When dropping a number of values larger than the length of the iterator, it behaves like
-`it.Exhausted`.
+[Exhausted](#exhausted).
 
 ```go
 numbers := it.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2)
@@ -406,6 +406,23 @@ indexedValues := itx.FromSlice([]int{1, 2, 3}).Enumerate()
 > [!TIP]
 > When iterating over a slice and immediately enumerating, consider instead using the standard
 > library's `slices.All` function rather than this.
+
+### Exhausted
+
+Exhausted is an iterator that yields no values.
+
+```go
+slices.Collect(it.Exhausted[int]())
+
+// Chainable
+it.Exhausted[int]().Collect()
+
+// Exhausted iter.Seq2
+maps.Collect(it.Exhausted2[int, string]())
+
+// As above, but chainable
+itx.Exhausted2[int, string]().Collect()
+```
 
 ### Integers
 
