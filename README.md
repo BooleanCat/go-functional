@@ -6,7 +6,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/BooleanCat/go-functional/v2)](https://goreportcard.com/report/github.com/BooleanCat/go-functional/v2)
 [![codecov](https://codecov.io/gh/BooleanCat/go-functional/branch/main/graph/badge.svg?token=N2E43RSR14)](https://codecov.io/gh/BooleanCat/go-functional)
 
-A library of iterators for use with `iter.Seq`. Requires Go 1.23+.
+A library of iterators for use with [iter.Seq](https://pkg.go.dev/iter#Seq). Requires Go 1.23+.
 
 ```go
 // The first 5 natural numbers
@@ -655,3 +655,44 @@ maps.Collect(it.Take2(slices.All([]int{1, 2, 3}), 2))
 // As above, but chainable
 itx.FromSlice([]int{1, 2, 3}).Enumerate().Take(2).Collect()
 ```
+
+### Zip, Left & Right
+
+`Zip` yields pairs of values from two iterators. It is exhausted when one of the two provided
+iterators is exhausted.
+
+```go
+numbers := []int{1, 2, 3}
+strings := []string{"one", "two", "three"}
+
+maps.Collect(it.Zip(slices.Values(numbers), slices.Values(strings)))
+```
+
+`Left` and `Right` are functions that discard the left or right values of an
+[iter.Seq2](https://pkg.go.dev/iter#Seq2).
+
+```go
+slices.Collect(it.Left(slices.All([]int{1, 2, 3})))
+slices.Collect(it.Right(slices.All([]int{1, 2, 3})))
+
+// Chainable
+itx.FromSlice([]int{1, 2, 3}).Enumerate().Left().Collect()
+itx.FromSlice([]int{1, 2, 3}).Enumerate().Right().Collect()
+```
+
+<!-- prettier-ignore -->
+> [!TIP]
+> A common pattern when working with `Zip` iterators in other languages is to fill excess values
+> with some constant value. This pattern can easily to replicated here by using [Chain](#chain) and
+> [Repeat](#repeat):
+>
+> ```go
+> numbers := itx.FromSlice([]int{1, 2, 3, 4})
+> strings := itx.FromSlice([]string{"one", "two"})
+>
+> it.Zip(numbers, strings.Chain(it.Repeat("missing")))
+> ```
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> The `itx` package does not contain `Zip` due to limitations with Go's type system.
