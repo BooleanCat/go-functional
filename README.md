@@ -558,9 +558,8 @@ itx.FromMap(map[int]int{1: 2}).Transform(doubleBoth)
 
 <!-- prettier-ignore -->
 > [!TIP]
-
-> If you wish to chain operations on Map, you can do so by first converting it to an itx.Iterator
-> like so:
+> If you wish to chain operations on `Map`, you can do so by first converting it to an
+> `itx.Iterator` like so:
 >
 > ```go
 > itx.From(it.Map(slices.Values([]int{1, 2, 3}), double)).Collect()
