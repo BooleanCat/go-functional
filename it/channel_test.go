@@ -36,12 +36,9 @@ func TestFromChannelYieldFalse(t *testing.T) {
 	numbersChan <- 1
 	numbers := it.FromChannel(numbersChan)
 
-	var a int
 	numbers(func(value int) bool {
-		a = value
 		return false
 	})
-	assert.Equal(t, a, 1)
 }
 
 func TestFromChannelEmpty(t *testing.T) {

@@ -41,8 +41,9 @@ documentation for iterators for more details.
 
 ## Consumers
 
-The standard libary provides functions to collect iterators in the `slices` and `maps` packages that
-should satisfy most cases where collection is needed.
+The standard libary provides functions to collect iterators in the
+[slices](https://pkg.go.dev/slices) and [maps](https://pkg.go.dev/maps) packages that should satisfy
+most cases where collection is needed.
 
 This package provides additional collection methods and makes existing consumers from the standard
 library chainable.
@@ -54,9 +55,9 @@ library chainable.
 
 ### Collect
 
-In most cases `slices.Collect` from the standard library may be used to collect items from an
-iterator into a slice. There are several other variants of collect available for use for different
-use cases.
+In most cases [slices.Collect](https://pkg.go.dev/slices#Collect) from the standard library may be
+used to collect items from an iterator into a slice. There are several other variants of collect
+available for use for different use cases.
 
 ```go
 // Chainable
@@ -140,7 +141,7 @@ it.Fold2(slices.All([]int{1, 2, 3}), func(i, a, b int) int {
 
 ### Max & Min
 
-Max and Min consume an iterator and return the maximum or minimum value yielded and true if the
+`Max` and `Min` consume an iterator and return the maximum or minimum value yielded and true if the
 iterator contained at least one value, or the zero value and false if the iterator was empty.
 
 The type of the value yielded by the iterator must be `comparable`.
@@ -152,7 +153,7 @@ min, ok := it.Min(slices.Values([]int{1, 2, 3}))
 
 <!-- prettier-ignore -->
 > [!NOTE]
-> The `itx` package does not contain `Fold` due to limitations with Go's type system.
+> The `itx` package does not contain `Max` or `Min` due to limitations with Go's type system.
 
 ### Len
 
@@ -218,12 +219,15 @@ itx.FromMap(map[int]int{1: 2}).Collect()
 ```
 
 The `itx` package also contains a helper function Seq that will convert a chainable iterator into an
-`iter.Seq` so that it can be used in functions that accept that type (such as the standard library).
+[iter.Seq](https://pkg.go.dev/iter#Seq) so that it can be used in functions that accept that type
+(such as the standard library).
 
-The standard library functions that work with iterators (such as `slices.Collect`) accept the
-`iter.Seq` family of types. This precludes those functions from accepting types with another alias
-(such as `itx.Iterator`) with the same type definition. This means it is necessary to "covert" an
-`itx.Iterator` into an `iter.Seq` before passing the iterator into those functions.
+The standard library functions that work with iterators (such as
+[slices.Collect](https://pkg.go.dev/slices#Collect)) accept the
+[iter.Seq](https://pkg.go.dev/iter#Seq) family of types. This precludes those functions from
+accepting types with another alias (such as `itx.Iterator`) with the same type definition. This
+means it is necessary to "covert" an `itx.Iterator` into an [iter.Seq](https://pkg.go.dev/iter#Seq)
+before passing the iterator into those functions.
 
 ```go
 slices.Collect(itx.NaturalNumbers[int]().Take(3).Seq())
@@ -233,7 +237,8 @@ slices.Collect(itx.NaturalNumbers[int]().Take(3).Seq())
 > [!TIP]
 > go-functional's functions that accept iterators always accept `func(func(V) bool)` or
 > `func(func(V, W) bool)` rather than any specific type alias so that they can accept any type alias
-> with the definitions `iter.Seq`, `iter.Seq2`, `itx.Iterator`, `itx.Iterator2` or any other
+> with the definitions [iter.Seq](https://pkg.go.dev/iter#Seq),
+> [iter.Seq2](https://pkg.go.dev/iter#Seq2), `itx.Iterator`, `itx.Iterator2` or any other
 > third-party types aliased to the same type.
 
 ### ToChannel
@@ -270,14 +275,15 @@ find the same iterators in each package, the difference between them being that 
 `itx` package can be "dot-chained" (e.g. `iter.Filter(...).Take(3).Collect()`) and those in `it`
 cannot.
 
-Iterators within the `it` package are of the type `iter.Seq[V]` or `iter.Seq2[V, W]` (from the
-standard library). Iterators within the `itx` package are of the type `itx.Iterator[V]` or
-`itx.Iterator2[V, W]`.
+Iterators within the `it` package are of the type [iter.Seq](https://pkg.go.dev/iter#Seq) or
+[iter.Seq2](https://pkg.go.dev/iter#Seq2) (from the standard library). Iterators within the `itx`
+package are of the type `itx.Iterator[V]` or `itx.Iterator2[V, W]`.
 
 There are two important factors to consider when using iterators:
 
 1. Some iterators yield an infinite number of values and care should be taken to avoid consuming
-   (using functions such as `slices.Collect`) otherwise it's likely to cause an infinite while loop.
+   (using functions such as [slices.Collect](https://pkg.go.dev/slices#Collect)) otherwise it's
+   likely to cause an infinite while loop.
 2. Many iterators take another iterator as an argument (such as [Filter](#filter) or Map). Avoid
    using an iterator after it has been passed to another iterator otherwise you'll risk multiple
    functions consuming a single (likely not thread-safe) iterator and causing confusing and
@@ -338,7 +344,7 @@ for number := range itx.FromChannel(items).Exclude(filter.IsZero) {
 <!-- prettier-ignore -->
 > [!WARNING]
 > In order to prevent a deadlock, the channel must be closed before attemping to stop the iterator
-> when it's used in a pull style. See `iter.Pull`.
+> when it's used in a pull style. See [iter.Pull](https://pkg.go.dev/iter#Pull).
 
 ### Cycle
 
@@ -392,8 +398,9 @@ numbers := itx.FromMap(map[int]string{1: "one", 2: "two", 3: "three"}).Drop(1)
 
 ### Enumerate
 
-Enumerating an `iter.Seq` like iterator returns an `iter.Seq2` like iterator yielding the index of
-each value and the value.
+Enumerating an [iter.Seq](https://pkg.go.dev/iter#Seq) like iterator returns an
+[iter.Seq2](https://pkg.go.dev/iter#Seq2) like iterator yielding the index of each value and the
+value.
 
 ```go
 indexedValues := it.Enumerate(slices.Values([]int{1, 2, 3}))
@@ -405,7 +412,7 @@ indexedValues := itx.FromSlice([]int{1, 2, 3}).Enumerate()
 <!-- prettier-ignore -->
 > [!TIP]
 > When iterating over a slice and immediately enumerating, consider instead using the standard
-> library's `slices.All` function rather than this.
+> library's [slices.All](https://pkg.go.dev/slices#All) function rather than this.
 
 ### Exhausted
 

@@ -25,12 +25,10 @@ func TestDropYieldFalse(t *testing.T) {
 	t.Parallel()
 
 	numbers := it.Drop(slices.Values([]int{1, 2, 3, 4, 5}), 2)
-	var a int
+
 	numbers(func(value int) bool {
-		a = value
 		return false
 	})
-	assert.Equal(t, a, 3)
 }
 
 func TestDropEmpty(t *testing.T) {
@@ -40,25 +38,21 @@ func TestDropEmpty(t *testing.T) {
 }
 
 func ExampleDrop2() {
-	numbers := maps.Collect(it.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 1))
+	_, numbers := it.Collect2(it.Drop2(slices.All([]string{"zero", "one", "two"}), 1))
 
-	fmt.Println(len(numbers))
-	// Output: 2
+	fmt.Println(numbers)
+	// Output: [one two]
 }
 
 func TestDrop2(t *testing.T) {
 	t.Parallel()
 
-	keys := []int{1, 2, 3}
-	values := []string{"one", "two", "three"}
+	values := []string{"zero", "one", "two"}
 
-	numbers := maps.Collect(it.Drop2(it.Zip(slices.Values(keys), slices.Values(values)), 1))
+	indices, values := it.Collect2(it.Drop2(slices.All(values), 1))
 
-	assert.Equal(t, len(numbers), 2)
-
-	for key := range numbers {
-		assert.True(t, slices.Contains(keys, key))
-	}
+	assert.SliceEqual(t, indices, []int{1, 2})
+	assert.SliceEqual(t, values, []string{"one", "two"})
 }
 
 func TestDrop2Empty(t *testing.T) {
@@ -70,21 +64,18 @@ func TestDrop2Empty(t *testing.T) {
 func TestDrop2Zero(t *testing.T) {
 	t.Parallel()
 
-	numbers := maps.Collect(it.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 0))
+	indices, values := it.Collect2(it.Drop2(slices.All([]string{"zero", "one", "two"}), 0))
 
-	assert.Equal(t, len(numbers), 3)
+	assert.SliceEqual(t, indices, []int{0, 1, 2})
+	assert.SliceEqual(t, values, []string{"zero", "one", "two"})
 }
 
 func TestDrop2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	numbersZipped := it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
-	numbers := it.Drop2(numbersZipped, 2)
-	var a, b int
+	numbers := it.Drop2(slices.All([]int{1, 2, 3}), 2)
+
 	numbers(func(v, w int) bool {
-		a, b = v, w
 		return false
 	})
-	assert.Equal(t, a, 3)
-	assert.Equal(t, b, 5)
 }

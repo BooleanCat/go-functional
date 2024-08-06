@@ -71,7 +71,7 @@ func TestMap2Empty(t *testing.T) {
 func TestMap2YieldFalse(t *testing.T) {
 	t.Parallel()
 
-	pairs := it.Zip(slices.Values([]int{1, 2, 3}), slices.Values([]int{3, 4, 5}))
+	pairs := slices.All([]int{1, 2, 3})
 
 	numbers := it.Map2(pairs, func(a, b int) (int, int) {
 		return a + 1, b + 2

@@ -23,14 +23,14 @@ func ExampleNaturalNumbers() {
 }
 
 func ExampleIntegers() {
-	for i := range it.Integers[uint](0, 3, 1) {
+	for i := range it.Integers[uint](0, 5, 2) {
 		fmt.Println(i)
 	}
 
 	// Output:
 	// 0
-	// 1
 	// 2
+	// 4
 }
 
 func TestIntegersYieldFalse(t *testing.T) {

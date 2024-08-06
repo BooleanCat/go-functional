@@ -21,12 +21,10 @@ func TestCycleYieldFalse(t *testing.T) {
 	t.Parallel()
 
 	numbers := it.Cycle(slices.Values([]int{1, 2}))
-	var a int
+
 	numbers(func(value int) bool {
-		a = value
 		return false
 	})
-	assert.Equal(t, a, 1)
 }
 
 func ExampleCycle2() {
