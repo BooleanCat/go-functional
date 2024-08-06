@@ -467,6 +467,63 @@ for i := range itx.Integers[uint](0, 3, 1).Drop(1) {
 }
 ```
 
+### Lines & LinesString
+
+Lines yields lines from an [io.Reader](https://pkg.go.dev/io#Reader). Lines are split using the
+standard library's [bufio.Scanner](https://pkg.go.dev/bufio#Scanner). Each value yielded from the
+iterator is a line from the provided reader. Empty lines will result in empty values.
+
+Since reading from an [io.Reader](https://pkg.go.dev/io#Reader) can fail, each line is returned with
+a corresponding `error` value.
+
+LinesString behaves exactly like Lines except that its value are strings rather than byte slices.
+
+```go
+buffer := strings.NewReader("one\ntwo\nthree\n")
+
+for line, err := range it.Lines(buffer) {
+	if err != nil {
+		fmt.Println(err)
+		break
+	}
+
+	fmt.Println(string(line))
+}
+
+for line, err := range it.LinesString(buffer) {
+	if err != nil {
+		fmt.Println(err)
+		break
+	}
+
+	fmt.Println(line)
+}
+```
+
+<!-- prettier-ignore -->
+> [!TIP]
+> Consider using [TryCollect](#trycollect) in conjunction with Lines to make error collection less
+> cumbersome:
+>
+> ```go
+> lines, err := it.TryCollect(it.LinesString(buffer))
+> ```
+
+<!-- prettier-ignore -->
+> [!TIP]
+> For cases where errors will never result from reading, such as with
+> [bytes.Buffer](https://pkg.go.dev/bytes#Buffer), consider dropping the error value before
+> collection:
+>
+> ```go
+> lines := itx.LinesString(buffer).Left().Collect()
+> ```
+
+<!-- prettier-ignore -->
+> [!WARNING]
+> As with [bufio.Scanner](https://pkg.go.dev/bufio#Scanner), there is a maximum line length per line
+> of 65536 characters.
+
 ### NaturalNumbers
 
 NaturalNumbers yields all non-negative integers in ascending order.
