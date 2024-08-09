@@ -459,6 +459,22 @@ itx.FromMap(map[int]string{1: "one", 2: "two", 3: "three"}).Exclude(isOne)
 > [!TIP]
 > The [filter package](it/filter/filter.go) contains some simple, pre-defined predicate functions.
 
+### FilterError & ExcludeError
+
+Similar to [Filter and Exclude](#filter), these functions filter values from an iterator using a
+predicate that may return an error.
+
+```go
+isFoo := func(s string) (bool, error) { return s == "foo", nil }
+
+values, err := it.TryCollect(it.FilterError(slices.Values([]string{"foo", "bar"}), isFoo))
+values, err := it.TryCollect(it.ExcludeError(slices.Values([]string{"foo", "bar"}), isFoo))
+
+// Chainable
+values, err := it.TryCollect(itx.FromSlice([]int{"foo", "bar"}).FilterError(isFoo))
+values, err := it.TryCollect(itx.FromSlice([]int{"foo", "bar"}).ExcludeError(isFoo))
+```
+
 ### Integers
 
 Integers yields all integers in the range [start, stop) with the given step.
