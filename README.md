@@ -547,7 +547,7 @@ for line, err := range it.LinesString(buffer) {
 > As with [bufio.Scanner](https://pkg.go.dev/bufio#Scanner), there is a maximum line length per line
 > of 65536 characters.
 
-### Map & Transform
+<h3 id="map">Map & Transform</h3
 
 Map yields values from an iterator that have had the provided function applied to each value.
 Transform serves the same purpose but contrains the return type to the type of the iterator's values
@@ -586,6 +586,38 @@ itx.FromMap(map[int]int{1: 2}).Transform(doubleBoth)
 >
 > ```go
 > itx.From(it.Map(slices.Values([]int{1, 2, 3}), double)).Collect()
+> ```
+
+### MapError & TransformError
+
+`MapError` and `TransformError` behave like [Map and Transform](#map) except that they accept a
+function that may return an error.
+
+```go
+double := func(n int, err error) int { return n * 2, nil }
+
+it.MapError(slices.Values([]int{1, 2, 3}), double)
+
+// Limited chainable flavour of MapError
+itx.FromSlice([]int{1, 2, 3}).TransformError(double)
+```
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> The `itx` package does not contain `MapError` due to limitations with Go's type system. Instead a
+> limited from of `MapError` called `TransformError` is provided where the type returned from
+> operations is the same as a type of the iterator's values.
+>
+> A chainable MapError will be added should Go's type system ever support new generic type
+> parameters on methods.
+
+<!-- prettier-ignore -->
+> [!TIP]
+> If you wish to chain operations on `MapError`, you can do so by first converting it to an
+> `itx.Iterator2` like so:
+>
+> ```go
+> itx.From2(it.MapError(slices.Values([]int{1, 2, 3}), double)).Collect()
 > ```
 
 ### NaturalNumbers
