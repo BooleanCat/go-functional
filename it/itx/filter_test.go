@@ -3,6 +3,7 @@ package itx_test
 import (
 	"fmt"
 
+	"github.com/BooleanCat/go-functional/v2/it"
 	"github.com/BooleanCat/go-functional/v2/it/filter"
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
@@ -48,4 +49,26 @@ func ExampleIterator2_Exclude() {
 	}
 
 	// Output: 3 three
+}
+
+func ExampleIterator_FilterError() {
+	isEven := func(n int) (bool, error) { return n%2 == 0, nil }
+
+	evens, err := it.TryCollect(itx.FromSlice([]int{1, 2, 3, 4, 5}).FilterError(isEven))
+	if err == nil {
+		fmt.Println(evens)
+	}
+
+	// Output: [2 4]
+}
+
+func ExampleIterator_ExcludeError() {
+	isEven := func(n int) (bool, error) { return n%2 == 0, nil }
+
+	odds, err := it.TryCollect(itx.FromSlice([]int{1, 2, 3, 4, 5}).ExcludeError(isEven))
+	if err == nil {
+		fmt.Println(odds)
+	}
+
+	// Output: [1 3 5]
 }

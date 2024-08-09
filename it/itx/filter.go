@@ -21,3 +21,15 @@ func (iterator Iterator2[V, W]) Filter(predicate func(V, W) bool) Iterator2[V, W
 func (iterator Iterator2[V, W]) Exclude(predicate func(V, W) bool) Iterator2[V, W] {
 	return Iterator2[V, W](it.Exclude2(iterator, predicate))
 }
+
+// FilterError is a convenience method for chaining [it.FilterError] on
+// [Iterator]s.
+func (iterator Iterator[V]) FilterError(predicate func(V) (bool, error)) Iterator2[V, error] {
+	return Iterator2[V, error](it.FilterError(iterator, predicate))
+}
+
+// ExcludeError is a convenience method for chaining [it.ExcludeError] on
+// [Iterator]s.
+func (iterator Iterator[V]) ExcludeError(predicate func(V) (bool, error)) Iterator2[V, error] {
+	return Iterator2[V, error](it.ExcludeError(iterator, predicate))
+}
