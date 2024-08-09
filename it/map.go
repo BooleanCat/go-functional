@@ -25,3 +25,21 @@ func Map2[V, W, X, Y any](delegate func(func(V, W) bool), f func(V, W) (X, Y)) i
 		}
 	}
 }
+
+// MapError yields values from an iterator that have had the provided function
+// applied to each value where the function can return an error.
+func MapError[V, W any](delegate func(func(V) bool), f func(V) (W, error)) iter.Seq2[W, error] {
+	return func(yield func(W, error) bool) {
+		for value := range delegate {
+			if result, err := f(value); err != nil {
+				if !yield(result, err) {
+					return
+				}
+			} else {
+				if !yield(result, nil) {
+					return
+				}
+			}
+		}
+	}
+}
