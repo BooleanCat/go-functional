@@ -23,6 +23,12 @@ numbers := it.Map(it.NaturalNumbers[int](), strconv.Itoa)
 
 _[Reference documentation](https://pkg.go.dev/github.com/BooleanCat/go-functional/v2)_
 
+<picture>
+	<source media="(prefers-color-scheme: dark)" srcset="assets/banner_dark.png" />
+	<source media="(prefers-color-scheme: light)" srcset="assets/banner_light.png" />
+	<img alt="go-functional gopher banner image" src="assets/banner_light.png" />
+</picture>
+
 ## Installation
 
 ```terminal
