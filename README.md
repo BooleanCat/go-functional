@@ -749,3 +749,10 @@ itx.FromSlice([]int{1, 2, 3}).Enumerate().Right().Collect()
 <!-- prettier-ignore -->
 > [!NOTE]
 > The `itx` package does not contain `Zip` due to limitations with Go's type system.
+
+## Attributions
+
+In addition to those listed as code contributors on this repository, I'd like to also thank:
+
+- [**_Henry Wong_**](https://www.behance.net/henrywong) for designing the banner images and
+  stickers.
