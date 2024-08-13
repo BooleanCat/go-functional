@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: 1.23.0-rc.2
+          go-version: "1.23"
           cache: false
       - run: make check
         env: { SKIP_LINT: true }
@@ -28,6 +28,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: 1.23.0-rc.2
+          go-version: "1.23"
           cache: false
       - run: make test
