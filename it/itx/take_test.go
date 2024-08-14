@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"maps"
 
+	"github.com/BooleanCat/go-functional/v2/it/filter"
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
 
@@ -23,4 +24,23 @@ func ExampleIterator2_Take() {
 
 	fmt.Println(len(numbers))
 	// Output: 2
+}
+
+func ExampleIterator_TakeWhile() {
+	for number := range itx.FromSlice([]int{1, 2, 3, 4, 5}).TakeWhile(filter.LessThan(4)) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
+func ExampleIterator2_TakeWhile() {
+	lessThanFour := func(int, v int) bool { return v < 4 }
+
+	_, numbers := itx.FromSlice([]int{1, 2, 3, 4, 5}).Enumerate().TakeWhile(lessThanFour).Collect()
+	fmt.Println(numbers)
+	// Output: [1 2 3]
 }
