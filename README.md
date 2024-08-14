@@ -691,7 +691,7 @@ itx.Repeat2(42, "42").Take(5).Collect()
 > otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
 > iterator before consuming (e.g. using [Take](#take)).
 
-### Take
+<h3 id="take">Take & TakeWhile</h3>
 
 Take limits the number of values of an iterator to a specified size. If the iterator has fewer
 values than the provided number then it behaves as though the original iterator is not changed.
@@ -707,6 +707,26 @@ maps.Collect(it.Take2(slices.All([]int{1, 2, 3}), 2))
 
 // As above, but chainable
 itx.FromSlice([]int{1, 2, 3}).Enumerate().Take(2).Collect()
+```
+
+TakeWhile yields values from the provided iterator whilst the predicate returns true for each value.
+After the first value results in the predicate returning false, the iterator is exhausted.
+
+```go
+lessThanThree := func(number int) { number < 3 }
+
+slices.Collect(it.TakeWhile(slices.Values([]int{1, 2, 3}), lessThanThree))
+
+// Chainable
+itx.FromSlice([]int{1, 2, 3}).TakeWhile(lessThanThree).Collect()
+
+lessThanThreeRight := func(_ string, number int) { return number < 3 }
+
+// Taking from iter.Seq2
+maps.Collect(it.TakeWhile2(maps.All(map[string]int{"one": 1, "four": 4}), lessThanThreeRight))
+
+// As above, but chainable
+itx.FromMap(map[string]int{"one": 1, "four": 4}).TakeWhile(lessThanThreeRight).Collect()
 ```
 
 ### Zip, Left & Right
