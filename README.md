@@ -381,7 +381,7 @@ numbers := itx.FromMap(map[int]string{1: "one"}).Cycle().Take(5)
 > otherwise it's likely to result in an infinite while loop. Consider bounding the size of the
 > iterator before consuming (e.g. using [Take](#take)).
 
-### Drop
+<h3 id="drop">Drop & DropWhile</h3>
 
 Drop yields all values from a delegate iterator after dropping a number of values from the
 beginning. Values are not dropped immediately, but when consumption begins.
@@ -400,6 +400,24 @@ numbers := it.Drop2(maps.All(map[int]string{1: "one", 2: "two", 3: "three"}), 1)
 
 // As above, but chainable
 numbers := itx.FromMap(map[int]string{1: "one", 2: "two", 3: "three"}).Drop(1)
+```
+
+DropWhile drops values from the provided iterator whilst the predicate returns true for each value.
+After the first value results in the predicate returning false, the iterator resumes as normal.
+
+```go
+slices.Collect(it.DropWhile(slices.Values([]int{1, 2, 3, 4, 5}), filter.LessThan(3)))
+
+// Chainable
+itx.FromSlice([]int{1, 2, 3, 4, 5}).DropWhile(filter.LessThan(3)).Collect()
+
+lessThanThree := func(string, number int) { return number < 3 }
+
+// Taking from iter.Seq2
+maps.Collect(it.DropWhile2(maps.All(map[string]int{"one": 1, "four": 4}), lessThanThree))
+
+// As above, but chainable
+itx.FromMap(map[string]int{"one": 1, "four": 4}).DropWhile(lessThanThree).Collect()
 ```
 
 ### Enumerate
@@ -713,20 +731,18 @@ TakeWhile yields values from the provided iterator whilst the predicate returns 
 After the first value results in the predicate returning false, the iterator is exhausted.
 
 ```go
-lessThanThree := func(number int) { number < 3 }
-
-slices.Collect(it.TakeWhile(slices.Values([]int{1, 2, 3}), lessThanThree))
+slices.Collect(it.TakeWhile(slices.Values([]int{1, 2, 3}), filter.LessThan(3)))
 
 // Chainable
-itx.FromSlice([]int{1, 2, 3}).TakeWhile(lessThanThree).Collect()
+itx.FromSlice([]int{1, 2, 3}).TakeWhile(filter.LessThan(3)).Collect()
 
-lessThanThreeRight := func(_ string, number int) { return number < 3 }
+lessThanThree := func(string, number int) { return number < 3 }
 
 // Taking from iter.Seq2
-maps.Collect(it.TakeWhile2(maps.All(map[string]int{"one": 1, "four": 4}), lessThanThreeRight))
+maps.Collect(it.TakeWhile2(maps.All(map[string]int{"one": 1, "four": 4}), lessThanThree))
 
 // As above, but chainable
-itx.FromMap(map[string]int{"one": 1, "four": 4}).TakeWhile(lessThanThreeRight).Collect()
+itx.FromMap(map[string]int{"one": 1, "four": 4}).TakeWhile(lessThanThree).Collect()
 ```
 
 ### Zip, Left & Right
