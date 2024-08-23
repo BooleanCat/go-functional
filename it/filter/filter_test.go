@@ -3,6 +3,7 @@ package filter_test
 import (
 	"fmt"
 	"maps"
+	"regexp"
 	"slices"
 
 	"github.com/BooleanCat/go-functional/v2/it"
@@ -128,4 +129,28 @@ func ExampleOr() {
 	// 1
 	// 2
 	// 4
+}
+
+func ExampleMatch_string() {
+	pattern := regexp.MustCompile(`^foo`)
+
+	strings := slices.Values([]string{"foobar", "barfoo"})
+
+	for match := range it.Filter(strings, filter.Match[string](pattern)) {
+		fmt.Println(match)
+	}
+
+	// Output: foobar
+}
+
+func ExampleMatch_bytes() {
+	pattern := regexp.MustCompile(`^foo`)
+
+	strings := slices.Values([][]byte{[]byte("foobar"), []byte("barfoo")})
+
+	for match := range it.Filter(strings, filter.Match[[]byte](pattern)) {
+		fmt.Println(string(match))
+	}
+
+	// Output: foobar
 }

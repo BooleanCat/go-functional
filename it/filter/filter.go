@@ -1,7 +1,10 @@
 // This package contains functions intended for use with [iter.Filter].
 package filter
 
-import "cmp"
+import (
+	"cmp"
+	"regexp"
+)
 
 // IsEven returns true when the provided integer is even.
 func IsEven[T ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr | ~int | ~int8 | ~int16 | ~int32 | ~int64](integer T) bool {
@@ -93,5 +96,11 @@ func Or[T any](filters ...func(T) bool) func(T) bool {
 		}
 
 		return false
+	}
+}
+
+func Match[T string | []byte](pattern *regexp.Regexp) func(T) bool {
+	return func(term T) bool {
+		return pattern.MatchString(string(term))
 	}
 }
