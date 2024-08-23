@@ -99,6 +99,8 @@ func Or[T any](filters ...func(T) bool) func(T) bool {
 	}
 }
 
+// Match returns a function that returns true when the provided string or byte
+// slice matches a pattern. See [regexp.MatchString].
 func Match[T string | []byte](pattern *regexp.Regexp) func(T) bool {
 	return func(term T) bool {
 		return pattern.MatchString(string(term))
