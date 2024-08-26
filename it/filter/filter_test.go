@@ -154,3 +154,23 @@ func ExampleMatch_bytes() {
 
 	// Output: foobar
 }
+
+func ExampleContains_string() {
+	strings := slices.Values([]string{"foobar", "barfoo"})
+
+	for element := range it.Filter(strings, filter.Contains("rfoo")) {
+		fmt.Println(element)
+	}
+
+	// Output: barfoo
+}
+
+func ExampleContains_bytes() {
+	strings := slices.Values([][]byte{[]byte("foobar"), []byte("barfoo")})
+
+	for element := range it.Filter(strings, filter.Contains([]byte("rfoo"))) {
+		fmt.Println(string(element))
+	}
+
+	// Output: barfoo
+}

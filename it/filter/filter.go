@@ -2,8 +2,10 @@
 package filter
 
 import (
+	"bytes"
 	"cmp"
 	"regexp"
+	"strings"
 )
 
 // IsEven returns true when the provided integer is even.
@@ -105,4 +107,15 @@ func Match[T string | []byte](pattern *regexp.Regexp) func(T) bool {
 	return func(term T) bool {
 		return pattern.MatchString(string(term))
 	}
+}
+
+// Contains returns a function that returns true when the provided string or
+// byte slice is found within another string or byte slice. See
+// [strings.Contains] and [bytes.Contains].
+func Contains[T string | []byte](t T) func(T) bool {
+	if s, ok := any(t).(string); ok {
+		return func(v T) bool { return strings.Contains(any(v).(string), s) }
+	}
+
+	return func(v T) bool { return bytes.Contains(any(v).([]byte), any(t).([]byte)) }
 }
