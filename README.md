@@ -209,6 +209,19 @@ index, value, ok := itx.FromSlice([]int{1, 2, 3}).Enumerate().Find(func(index in
 > [!TIP]
 > The [filter package](it/filter/filter.go) contains some simple, pre-defined predicate functions.
 
+### Contains
+
+Contains consumes an iterator until the provided value is found, returning true if the value was
+found or false if the iterator was exhausted.
+
+```go
+ok := it.Contains(slices.Values([]int{1, 2, 3}), 2)
+```
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> The `itx` package does not contain `Contains` due to limitations with Go's type system.
+
 ### From, FromSlice, FromMap & Seq
 
 The itx package contains some helper functions to convert iterators, slices or maps directly into
