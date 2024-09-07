@@ -187,3 +187,13 @@ func TestLen2Empty(t *testing.T) {
 
 	assert.Equal(t, it.Len2(it.Enumerate(it.Exhausted[int]())), 0)
 }
+
+func ExampleContains() {
+	numbers := slices.Values([]int{1, 2, 3})
+	fmt.Println(it.Contains(numbers, 2))
+	// Output: true
+}
+
+func TestContainsFalse(t *testing.T) {
+	assert.False(t, it.Contains(slices.Values([]int{1, 2, 3}), 4))
+}

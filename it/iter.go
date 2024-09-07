@@ -179,3 +179,16 @@ func Len2[V, W any](iterator func(func(V, W) bool)) int {
 
 	return length
 }
+
+// Contains consumes an [iter.Seq] until the provided value is found and
+// returns true. If the value is not found, it returns false when the iterator
+// is exhausted.
+func Contains[V comparable](iterator func(func(V) bool), v V) bool {
+	for value := range iterator {
+		if value == v {
+			return true
+		}
+	}
+
+	return false
+}
