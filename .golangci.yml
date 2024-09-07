@@ -6,15 +6,13 @@ linters-settings:
     package-average: 0.5
     skip-tests: false
 
-  govet:
-    check-shadowing: true
-    enable-all: true
+  govet: { enable-all: true }
 
   misspell: { locale: US }
 
   depguard:
     rules:
-      main: { allow: ["$gostd", "github.com/BooleanCat/go-functional"] }
+      main: { allow: ["$gostd", "github.com/BooleanCat/go-functional/v2"] }
 
 linters:
   disable-all: true

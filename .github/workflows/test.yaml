@@ -13,8 +13,8 @@ jobs:
           cache: false
       - run: make check
         env: { SKIP_LINT: true }
-      # - uses: golangci/golangci-lint-action@v4
-      #   with: { version: "latest" }
+      - uses: golangci/golangci-lint-action@v6
+        with: { version: "latest" }
       - run: make cov
         env: { GOEXPERIMENT: rangefunc }
       - uses: codecov/codecov-action@v4
