@@ -192,3 +192,21 @@ func Contains[V comparable](iterator func(func(V) bool), v V) bool {
 
 	return false
 }
+
+// Drain consumes an [iter.Seq] completely, dropping all values.
+//
+// You may wish to use this to execute side effects without needing to collect
+// values.
+func Drain[V any](iterator func(func(V) bool)) {
+	for range iterator {
+	}
+}
+
+// Drain2 consumes an [iter.Seq2] completely, dropping all values.
+//
+// You may wish to use this to execute side effects without needing to collect
+// values.
+func Drain2[V, W any](iterator func(func(V, W) bool)) {
+	for range iterator {
+	}
+}

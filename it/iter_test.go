@@ -197,3 +197,31 @@ func ExampleContains() {
 func TestContainsFalse(t *testing.T) {
 	assert.False(t, it.Contains(slices.Values([]int{1, 2, 3}), 4))
 }
+
+func ExampleDrain() {
+	numbers := it.Map(slices.Values([]int{1, 2, 3}), func(n int) int {
+		fmt.Println(n)
+		return n
+	})
+
+	it.Drain(numbers)
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
+func ExampleDrain2() {
+	numbers := it.Map2(slices.All([]int{1, 2, 3}), func(i, n int) (int, int) {
+		fmt.Println(n)
+		return i, n
+	})
+
+	it.Drain2(numbers)
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}

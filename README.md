@@ -287,6 +287,38 @@ for number := range channel {
 > Unlike most consumers, the iterator is not immediately consumed by ToChannel. Instead is it
 > consumed as values are pulled from the channel.
 
+### Drain
+
+Drain consumes an iterator's values and drops them.
+
+```go
+printValue := func(n int) int {
+	fmt.Println(n)
+	return n
+}
+
+it.Drain(it.Map(slices.Values([]int{1, 2, 3}), printValue))
+
+// Chainable
+itx.From(it.Map(slices.Values([]int{1, 2, 3}), printValue)).Drain()
+
+// Drain an iter.Seq2
+printValue2 := func(i, n int) (int, int) {
+	fmt.Println(n)
+	return i, n
+}
+
+it.Drain2(it.Map2(slices.All([]int{1, 2, 3}), printValue2))
+
+// As above, but chainable
+itx.From2(it.Map2(slices.All([]int{1, 2, 3}), printValue2)).Drain()
+```
+
+<!-- prettier-ignore -->
+> [!TIP]
+> Use Drain to consume an iterator to invoke any side effects when you don't need to collect the
+> values.
+
 ## Iterators
 
 This library contains two kinds of iterators in the `it` and `itx` packages. In most cases you'll

@@ -88,3 +88,13 @@ func (iterator Iterator[V]) Len() int {
 func (iterator Iterator2[V, W]) Len() int {
 	return it.Len2(iterator)
 }
+
+// Drain is a convenience method for chaining [it.Drain] on [Iterator]s.
+func (iterator Iterator[V]) Drain() {
+	it.Drain(iterator)
+}
+
+// Drain2 is a convenience method for chaining [it.Drain2] on [Iterator2]s.
+func (iterator Iterator2[V, W]) Drain() {
+	it.Drain2(iterator)
+}

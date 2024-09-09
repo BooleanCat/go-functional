@@ -5,6 +5,7 @@ import (
 	"maps"
 	"slices"
 
+	"github.com/BooleanCat/go-functional/v2/it"
 	"github.com/BooleanCat/go-functional/v2/it/itx"
 )
 
@@ -96,4 +97,28 @@ func ExampleIterator_Len() {
 func ExampleIterator2_Len() {
 	fmt.Println(itx.FromSlice([]int{1, 2, 3}).Enumerate().Len())
 	// Output: 3
+}
+
+func ExampleIterator_Drain() {
+	itx.From(it.Map(slices.Values([]int{1, 2, 3}), func(n int) int {
+		fmt.Println(n)
+		return n
+	})).Drain()
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
+func ExampleIterator2_Drain() {
+	itx.From2(it.Map2(slices.All([]int{1, 2, 3}), func(i, n int) (int, int) {
+		fmt.Println(n)
+		return i, n
+	})).Drain()
+
+	// Output:
+	// 1
+	// 2
+	// 3
 }
