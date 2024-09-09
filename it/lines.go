@@ -8,7 +8,7 @@ import (
 
 // Lines yields lines from an io.Reader.
 //
-// Note: lines longer than 65536 will cauese an error.
+// Note: lines longer than 65536 will cause an error.
 func Lines(r io.Reader) iter.Seq2[[]byte, error] {
 	return func(yield func([]byte, error) bool) {
 		scanner := bufio.NewScanner(r)
