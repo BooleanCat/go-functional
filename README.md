@@ -76,7 +76,7 @@ keys, values := it.Collect2(maps.All(map[string]int{"one": 1, "two": 2}))
 keys, values := itx.FromMap(map[string]int{"one": 1, "two": 2}).Collect()
 ```
 
-### TryCollect
+<h3 id="trycollect">TryCollect & MustCollect</h3>
 
 Dealing with iterators that return `T, error` can involve the boilerplate of checking that the
 returned slice of errors only contains `nil`. `TryCollect` solves this by collecting all values into
@@ -90,6 +90,19 @@ if lines, err := it.TryCollect(it.LinesString(text)); err != nil {
 }
 ```
 
+MustCollect is similar except that if an error is encountered then a panic will occur.
+
+```go
+text := strings.NewReader("one\ntwo\nthree\n")
+
+lines := it.MustCollect(it.LinesString(text))
+```
+
+<!-- prettier-ignore -->
+> [!TIP]
+> Use `MustCollect` when you can guarantee that no error will occur (such as with
+> [strings.Reader](https://pkg.go.dev/strings#Reader)).
+
 <!-- prettier-ignore -->
 > [!NOTE]
 > If an error is encountered, collection stops. This means the iterator being collected may not be
@@ -97,7 +110,8 @@ if lines, err := it.TryCollect(it.LinesString(text)); err != nil {
 
 <!-- prettier-ignore -->
 > [!NOTE]
-> The `itx` package does not contain `TryCollect` due to limitations with Go's type system.
+> The `itx` package does not contain `TryCollect` or `MustCollect` due to limitations with Go's type
+> system.
 
 ### ForEach
 
@@ -316,7 +330,7 @@ itx.From2(it.Map2(slices.All([]int{1, 2, 3}), printValue2)).Drain()
 
 <!-- prettier-ignore -->
 > [!TIP]
-> Use Drain to consume an iterator to invoke any side effects when you don't need to collect the
+> Use `Drain` to consume an iterator to invoke any side effects when you don't need to collect the
 > values.
 
 ## Iterators

@@ -2,6 +2,7 @@ package it
 
 import (
 	"cmp"
+	"fmt"
 	"iter"
 )
 
@@ -140,6 +141,22 @@ func TryCollect[V any](iterator func(func(V, error) bool)) ([]V, error) {
 	}
 
 	return values, nil
+}
+
+// MustCollect consumes an [iter.Seq2] where the right side yields errors and
+// returns a slice of values. If an error is encountered this function will
+// panic.
+func MustCollect[V any](iterator func(func(V, error) bool)) []V {
+	var values []V
+
+	for v, err := range iterator {
+		if err != nil {
+			panic(fmt.Sprintf("it: MustCollect: error yielded by iterator: %s", err.Error()))
+		}
+		values = append(values, v)
+	}
+
+	return values
 }
 
 // Collect2 consumes an [iter.Seq2] and returns two slices of values.

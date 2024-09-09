@@ -225,3 +225,29 @@ func ExampleDrain2() {
 	// 2
 	// 3
 }
+
+func ExampleMustCollect() {
+	buffer := strings.NewReader("one\ntwo")
+	lines := it.MustCollect(it.LinesString(buffer))
+
+	fmt.Println(lines)
+	// Output: [one two]
+}
+
+func TestMustCollectPanic(t *testing.T) {
+	t.Parallel()
+
+	defer func() {
+		r := recover()
+
+		if r == nil {
+			t.Errorf("expected panic")
+		}
+
+		if fmt.Sprint(r) != "it: MustCollect: error yielded by iterator: read error" {
+			t.Errorf("wrong panic message")
+		}
+	}()
+
+	it.MustCollect(it.LinesString(new(failSecondTime)))
+}
