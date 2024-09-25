@@ -59,6 +59,26 @@ library chainable.
 > Attempting to collect infinite iterators will cause an infinite loop and likely deadlock. Consider
 > bounding infinite iterators before collect (for example using [Take](#take)).
 
+### All & Any
+
+`All` will return `true` if all values yielded by an iterator are true, or false otherwise.
+Iteration will terminate early if a `false` is encountered. Empty iterators will return `true`.
+
+```go
+it.All(slices.Values([]bool{true, false, true}))  // true
+```
+
+`Any` will return `true` if any value yielded by an iterator is true, or false otherwise. Iteration
+will terminate early if a `true` is encountered. Empty iterators will return `false`.
+
+```go
+it.Any(slices.Values([]bool{false, false, true}))  // true
+```
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> The `itx` package does not contain `All` or `Any` due to limitations with Go's type system.
+
 ### Collect
 
 In most cases [slices.Collect](https://pkg.go.dev/slices#Collect) from the standard library may be
