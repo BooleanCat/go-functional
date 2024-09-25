@@ -110,7 +110,7 @@ if lines, err := it.TryCollect(it.LinesString(text)); err != nil {
 }
 ```
 
-MustCollect is similar except that if an error is encountered then a panic will occur.
+`MustCollect` is similar except that if an error is encountered then a panic will occur.
 
 ```go
 text := strings.NewReader("one\ntwo\nthree\n")
