@@ -582,7 +582,7 @@ iterator is a line from the provided reader. Empty lines will result in empty va
 Since reading from an [io.Reader](https://pkg.go.dev/io#Reader) can fail, each line is returned with
 a corresponding `error` value.
 
-LinesString behaves exactly like Lines except that its value are strings rather than byte slices.
+LinesString behaves exactly like Lines except that its values are strings rather than byte slices.
 
 ```go
 buffer := strings.NewReader("one\ntwo\nthree\n")
