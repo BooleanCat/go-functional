@@ -227,3 +227,29 @@ func Drain2[V, W any](iterator func(func(V, W) bool)) {
 	for range iterator {
 	}
 }
+
+// All consumes an [iter.Seq] of `bool`s and returns true if all values are
+// true, or false otherwise. Iteration will terminate early if a `false` is
+// encountered.
+func All(iterator func(func(bool) bool)) bool {
+	for item := range iterator {
+		if !item {
+			return false
+		}
+	}
+
+	return true
+}
+
+// All consumes an [iter.Seq] of `bool`s and returns true if any of the values
+// are true, or false otherwise. Iteration will terminate early if a `true` is
+// encountered.
+func Any(iterator func(func(bool) bool)) bool {
+	for item := range iterator {
+		if item {
+			return true
+		}
+	}
+
+	return false
+}

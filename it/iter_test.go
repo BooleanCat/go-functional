@@ -251,3 +251,31 @@ func TestMustCollectPanic(t *testing.T) {
 
 	it.MustCollect(it.LinesString(new(failSecondTime)))
 }
+
+func ExampleAll() {
+	truths := []bool{true, true, true}
+	fmt.Println(it.All(slices.Values(truths)))
+	// Output: true
+}
+
+func TestAllEmpty(t *testing.T) {
+	assert.True(t, it.All(it.Exhausted[bool]()))
+}
+
+func TestAllWithFalse(t *testing.T) {
+	assert.False(t, it.All(slices.Values([]bool{true, false, true})))
+}
+
+func ExampleAny() {
+	aTrue := []bool{false, true, false}
+	fmt.Println(it.Any(slices.Values(aTrue)))
+	// Output: true
+}
+
+func TestAnyEmpty(t *testing.T) {
+	assert.False(t, it.Any(it.Exhausted[bool]()))
+}
+
+func TestAnyAllFalse(t *testing.T) {
+	assert.False(t, it.Any(slices.Values([]bool{false, false})))
+}
