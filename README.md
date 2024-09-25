@@ -61,15 +61,15 @@ library chainable.
 
 ### All & Any
 
-`All` will return `true` if all values yielded by an iterator are true, or false otherwise.
-Iteration will terminate early if a `false` is encountered. Empty iterators will return `true`.
+`All` will return `true` if all values yielded by an iterator are `true`, or `false` otherwise.
+Iteration will terminate early if `false` is encountered. Empty iterators will return `true`.
 
 ```go
 it.All(slices.Values([]bool{true, false, true}))  // true
 ```
 
-`Any` will return `true` if any value yielded by an iterator is true, or false otherwise. Iteration
-will terminate early if a `true` is encountered. Empty iterators will return `false`.
+`Any` will return `true` if any value yielded by an iterator is `true`, or `false` otherwise.
+Iteration will terminate early if `true` is encountered. Empty iterators will return `false`.
 
 ```go
 it.Any(slices.Values([]bool{false, false, true}))  // true
