@@ -16,7 +16,6 @@ jobs:
       - uses: golangci/golangci-lint-action@v6
         with: { version: "latest" }
       - run: make cov
-        env: { GOEXPERIMENT: rangefunc }
       - uses: codecov/codecov-action@v4
         env: { CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}" }
   test:
