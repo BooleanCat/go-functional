@@ -431,6 +431,19 @@ for number := range itx.FromChannel(items).Exclude(filter.IsZero) {
 > In order to prevent a deadlock, the channel must be closed before attemping to stop the iterator
 > when it's used in a pull style. See [iter.Pull](https://pkg.go.dev/iter#Pull).
 
+### Compact
+
+Compact yields all values from a delegate iterator that are not zero values. It is functionally
+equivalent to `it.Filter(delegate, filter.IsZero)`.
+
+```go
+words := it.Compact(slices.Values([]string{"foo", "", "bar", "", ""}))
+```
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> The `itx` package does not contain `Compact` due to limitations with Go's type system.
+
 ### Cycle
 
 Cycle yields all values from an iterator before returning to the beginning and yielding all values
