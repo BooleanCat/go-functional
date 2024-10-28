@@ -434,7 +434,7 @@ for number := range itx.FromChannel(items).Exclude(filter.IsZero) {
 ### Compact
 
 Compact yields all values from a delegate iterator that are not zero values. It is functionally
-equivalent to `it.Filter(delegate, filter.IsZero)`.
+equivalent to `it.Exclude(delegate, filter.IsZero)`.
 
 ```go
 words := it.Compact(slices.Values([]string{"foo", "", "bar", "", ""}))
