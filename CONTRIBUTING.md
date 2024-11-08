@@ -6,16 +6,8 @@ submit changes. Contributions can be made in the form of GitHub
 [pull requests](https://github.com/BooleanCat/go-functional/pulls).
 
 When submitting an issue, please choose the relevant template or choose a blank issue if your query
-doesn't naturally fit into an existing template.
-
-## TL;DR contribution checklist
-
-- [ ] My code is formatted (`make check`)
-- [ ] I have run tests (`make test`)
-- [ ] My code has no lint errors (`make lint`)
-- [ ] All commits in my PR conform to the commit hygiene section
-- [ ] I have added relevant tests
-- [ ] I have not added any dependencies
+doesn't naturally fit into an existing template. The pull request template contains a contribution
+checklist.
 
 ## Zero-dependency
 
@@ -24,6 +16,13 @@ must only incur one dependency: go-functional.
 
 Development dependencies are OK as they will not be included as dependencies to end-users (such as
 `golangci-lint`).
+
+## Development dependencies
+
+1. [golangci-lint](https://github.com/golangci/golangci-lint) is used to lint the project when
+   running `make check`.
+2. [counterfeiter](https://github.com/maxbrunsfeld/counterfeiter) is used to generate new fakes
+   (using `go generate ./...`). Fakes are declared in `internal/fakes/fakes.go`.
 
 ## Commit hygiene
 
