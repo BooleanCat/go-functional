@@ -1,12 +1,14 @@
 package it_test
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 	"strings"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
+	"github.com/BooleanCat/go-functional/v2/internal/fakes"
 	"github.com/BooleanCat/go-functional/v2/it"
 	"github.com/BooleanCat/go-functional/v2/it/op"
 )
@@ -157,11 +159,13 @@ func ExampleTryCollect() {
 func TestTryCollectError(t *testing.T) {
 	t.Parallel()
 
-	text := new(failSecondTime)
-	lines, err := it.TryCollect(it.LinesString(text))
+	reader := new(fakes.Reader)
+	reader.ReadReturns(0, errors.New("read error"))
+
+	lines, err := it.TryCollect(it.LinesString(reader))
 
 	assert.Equal(t, err.Error(), "read error")
-	assert.SliceEqual(t, lines, []string{"o"})
+	assert.Empty[string](t, lines)
 }
 
 func ExampleLen() {
@@ -249,7 +253,10 @@ func TestMustCollectPanic(t *testing.T) {
 		}
 	}()
 
-	it.MustCollect(it.LinesString(new(failSecondTime)))
+	reader := new(fakes.Reader)
+	reader.ReadReturns(0, errors.New("read error"))
+
+	it.MustCollect(it.LinesString(reader))
 }
 
 func ExampleAll() {

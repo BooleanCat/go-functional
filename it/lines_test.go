@@ -3,11 +3,11 @@ package it_test
 import (
 	"errors"
 	"fmt"
-	"io"
 	"strings"
 	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/internal/assert"
+	"github.com/BooleanCat/go-functional/v2/internal/fakes"
 	"github.com/BooleanCat/go-functional/v2/it"
 )
 
@@ -70,27 +70,6 @@ func TestLinesYieldsFalseWithError(t *testing.T) {
 	})
 }
 
-type failSecondTime struct {
-	count int
-}
-
-func (f *failSecondTime) Read(p []byte) (n int, err error) {
-	if f.count == 0 {
-		f.count++
-		copy(p, []byte("o"))
-		return 1, nil
-	}
-
-	if f.count == 1 {
-		f.count++
-		return 0, errors.New("read error")
-	}
-
-	return 0, io.EOF
-}
-
-var _ io.Reader = new(failSecondTime)
-
 func TestLinesFailsLater(t *testing.T) {
 	t.Parallel()
 
@@ -99,7 +78,11 @@ func TestLinesFailsLater(t *testing.T) {
 		lastErr error
 	)
 
-	for _, err := range it.LinesString(new(failSecondTime)) {
+	reader := new(fakes.Reader)
+	reader.ReadReturnsOnCall(0, 1, nil)
+	reader.ReadReturnsOnCall(1, 0, errors.New("read error"))
+
+	for _, err := range it.LinesString(reader) {
 		count++
 		lastErr = err
 	}
