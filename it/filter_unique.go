@@ -2,7 +2,7 @@ package it
 
 import "iter"
 
-// FilterUnique Yields all the unique values in an iterator.
+// FilterUnique yields all the unique values from an iterator.
 //
 // Note: All unique values seen from an iterator are stored in memory.
 func FilterUnique[V comparable](iterator func(func(V) bool)) iter.Seq[V] {
