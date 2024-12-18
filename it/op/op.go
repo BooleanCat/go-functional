@@ -4,3 +4,13 @@ package op
 func Add[V ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr | ~int | ~int8 | ~int16 | ~int32 | ~int64 | ~string | ~float32 | ~float64](a, b V) V {
 	return a + b
 }
+
+// Ref returns a reference to the provided value.
+func Ref[V any](v V) *V {
+	return &v
+}
+
+// Deref returns the value pointed to by the provided pointer.
+func Deref[V any](v *V) V {
+	return *v
+}
