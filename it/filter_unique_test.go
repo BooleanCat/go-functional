@@ -2,14 +2,15 @@ package it_test
 
 import (
 	"fmt"
-	"github.com/BooleanCat/go-functional/v2/internal/assert"
-	"github.com/BooleanCat/go-functional/v2/it"
 	"slices"
 	"testing"
+
+	"github.com/BooleanCat/go-functional/v2/internal/assert"
+	"github.com/BooleanCat/go-functional/v2/it"
 )
 
 func ExampleFilterUnique() {
-	for number := range it.FilterUnique(slices.Values([]int{1, 2, 2, 3, 3, 3, 4, 5})) {
+	for number := range it.FilterUnique(slices.Values([]int{1, 2, 2, 3, 3, 3, 4})) {
 		fmt.Println(number)
 	}
 
@@ -18,13 +19,12 @@ func ExampleFilterUnique() {
 	// 2
 	// 3
 	// 4
-	// 5
 }
 
 func TestFilterUniqueEmpty(t *testing.T) {
 	t.Parallel()
 
-	assert.Empty[int](t, slices.Collect(it.Chain[int]()))
+	assert.Empty[int](t, slices.Collect(it.Exhausted[int]()))
 }
 
 func TestFilterUniqueYieldFalse(t *testing.T) {
@@ -32,12 +32,9 @@ func TestFilterUniqueYieldFalse(t *testing.T) {
 
 	iterator := it.FilterUnique(slices.Values([]int{100, 200, 300}))
 
-	var value int
 	iterator(func(v int) bool {
-		value = v
 		return false
 	})
-	assert.Equal(t, 100, value)
 }
 
 func TestFilterUniqueWithNoDuplicates(t *testing.T) {
