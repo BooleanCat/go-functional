@@ -591,6 +591,23 @@ values, err := it.TryCollect(itx.FromSlice([]int{"foo", "bar"}).FilterError(isFo
 values, err := it.TryCollect(itx.FromSlice([]int{"foo", "bar"}).ExcludeError(isFoo))
 ```
 
+### FilterUnique
+
+FilterUnique yields only the unique values from an iterator.
+
+```go
+values := it.FilterUnique(slices.Values([]int{1, 2, 2, 3, 3, 3, 4}))
+```
+
+<!-- prettier-ignore -->
+> [!WARNING]
+> Unique values are stored in memory until the iterator is exhausted. Large iterators with
+> many unique values may use a large amount of memory.
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> The `itx` package does not contain `FilterUnique` due to limitations with Go's type system.
+
 ### Integers
 
 Integers yields all integers in the range [start, stop) with the given step.
