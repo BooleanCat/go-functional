@@ -65,7 +65,7 @@ library chainable.
 Iteration will terminate early if `false` is encountered. Empty iterators will return `true`.
 
 ```go
-it.All(slices.Values([]bool{true, false, true}))  // true
+it.All(slices.Values([]bool{true, false, true}))  // false
 ```
 
 `Any` will return `true` if any value yielded by an iterator is `true`, or `false` otherwise.
