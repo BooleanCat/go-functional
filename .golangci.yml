@@ -1,41 +1,58 @@
-run: { timeout: 3m }
-
-linters-settings:
-  cyclop:
-    max-complexity: 15
-    package-average: 0.5
-    skip-tests: false
-
-  govet: { enable-all: true }
-
-  misspell: { locale: US }
-
-  depguard:
-    rules:
-      main: { allow: ["$gostd", "github.com/BooleanCat/go-functional/v2"] }
-
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
-    - errcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - unused
     - asasalint
     - asciicheck
     - bidichk
     - decorder
     - depguard
     - durationcheck
+    - errcheck
     - errchkjson
     - errorlint
     - exhaustive
     - gochecknoglobals
     - gocritic
-    - gosec
-    - nilerr
-    - gofmt
     - gocyclo
+    - gosec
+    - govet
+    - ineffassign
     - misspell
+    - nilerr
+    - staticcheck
+    - unused
+  settings:
+    cyclop:
+      max-complexity: 15
+      package-average: 0.5
+    depguard:
+      rules:
+        main:
+          allow:
+            - $gostd
+            - github.com/BooleanCat/go-functional/v2
+    govet:
+      enable-all: true
+    misspell:
+      locale: US
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
