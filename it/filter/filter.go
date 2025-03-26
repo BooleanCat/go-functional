@@ -62,7 +62,7 @@ func Passthrough[V any](value V) bool {
 }
 
 // Passthrough2 returns a function that returns true for any pair of values.
-func Passthrough2[V any, W any](value1 V, value2 W) bool {
+func Passthrough2[V, W any](v V, w W) bool {
 	return true
 }
 
