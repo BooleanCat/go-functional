@@ -5,7 +5,10 @@ func Add[V ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr | ~int | ~int
 	return a + b
 }
 
-// Ref returns a reference to the provided value.
+// Ref returns a reference to a copy of the provided value.
+//
+// This may be useful when interacting with packages that use pointers as
+// proxies for optional values.
 func Ref[V any](v V) *V {
 	return &v
 }
