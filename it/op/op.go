@@ -17,3 +17,11 @@ func Ref[V any](v V) *V {
 func Deref[V any](v *V) V {
 	return *v
 }
+
+func Must[V any](v V, err error) V {
+	if err != nil {
+		panic(err)
+	}
+
+	return v
+}
