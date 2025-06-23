@@ -130,3 +130,71 @@ func TestMapErrorErrorYieldsFalse(t *testing.T) {
 		return false
 	})
 }
+
+func ExampleMapUp() {
+	identityAndDouble := func(n int) (int, int) { return n, n * 2 }
+
+	for left, right := range it.MapUp(slices.Values([]int{1, 2, 3}), identityAndDouble) {
+		fmt.Println(left, right)
+	}
+
+	// Output:
+	// 1 2
+	// 2 4
+	// 3 6
+}
+
+func TestMapUpEmpty(t *testing.T) {
+	t.Parallel()
+
+	identityAndDouble := func(n int) (int, int) { return n, n * 2 }
+
+	assert.Equal(t, len(maps.Collect(it.MapUp(it.Exhausted[int](), identityAndDouble))), 0)
+}
+
+func ExampleMapDown() {
+	ignoreErr := func(n int, err error) int {
+		return n
+	}
+
+	numbers := maps.All(map[int]error{
+		1: nil,
+		2: nil,
+		3: errors.New("Oops"),
+	})
+
+	for number := range it.MapDown(numbers, ignoreErr) {
+		fmt.Println(number)
+	}
+
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
+func TestMapDownEmpty(t *testing.T) {
+	t.Parallel()
+
+	ignoreErr := func(n int, err error) int {
+		return n
+	}
+	assert.Equal(t, len(slices.Collect(it.MapDown(it.Exhausted2[int, error](), ignoreErr))), 0)
+}
+
+func TestMapDownYieldFalse(t *testing.T) {
+	t.Parallel()
+
+	ignoreErr := func(n int, err error) int {
+		return n
+	}
+
+	numbers := it.MapDown(maps.All(map[int]error{
+		1: nil,
+		2: nil,
+	}), ignoreErr)
+
+	numbers(func(int) bool {
+		return false
+	})
+}
