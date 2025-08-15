@@ -753,6 +753,32 @@ itx.FromSlice([]int{1, 2, 3}).TransformError(double)
 > itx.From2(it.MapError(slices.Values([]int{1, 2, 3}), double)).Collect()
 > ```
 
+### MapUp & MapDown
+
+`MapUp` and `MapDown` are iterators for converting between `iter.Seq` and `iter.Seq2`. They behave
+similarly to the `Map` family of iterators except `MapUp` takes a function that receives one
+argument and returns two and `MapDown` does the inverse.
+
+```go
+numberAndString := func(n int) (int, string) {
+	return n, strconv.Itoa(n)
+}
+
+for n, s := range it.MapUp(slices.Values([]int{1, 2, 3})) {
+	fmt.Println(n, s)
+}
+
+lines := it.Lines(strings.NewReader("one\ntwo\nthree\n"))
+
+for line := range it.MapDown(lines, op.Must) {
+	fmt.Println(string(line))
+}
+```
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> The `itx` package does not contain `MapUp` and `MapDown` due to limitations with Go's type system.
+
 ### NaturalNumbers
 
 NaturalNumbers yields all non-negative integers in ascending order.

@@ -1,8 +1,11 @@
 package op_test
 
 import (
+	"errors"
 	"fmt"
+	"maps"
 	"slices"
+	"testing"
 
 	"github.com/BooleanCat/go-functional/v2/it"
 	"github.com/BooleanCat/go-functional/v2/it/op"
@@ -33,4 +36,34 @@ func ExampleDeref() {
 
 	fmt.Println(slices.Collect(it.Map(values, op.Deref)))
 	// Output: [4 5 6]
+}
+
+func ExampleMust() {
+	numbers := maps.All(map[int]error{
+		1: nil,
+		2: nil,
+		3: nil,
+	})
+
+	for number := range it.MapDown(numbers, op.Must) {
+		fmt.Println(number)
+	}
+}
+
+func TestMustPanic(t *testing.T) {
+	t.Parallel()
+
+	defer func() {
+		r := recover()
+
+		if r == nil {
+			t.Error("expected panic")
+		}
+	}()
+
+	slices.Collect(it.MapDown(maps.All(map[int]error{
+		1: nil,
+		2: nil,
+		3: errors.New("error"),
+	}), op.Must))
 }
