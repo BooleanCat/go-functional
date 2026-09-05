@@ -683,8 +683,7 @@ for line, err := range it.LinesString(buffer) {
 <h3 id="map">Map & Transform</h3
 
 Map yields values from an iterator that have had the provided function applied to each value.
-Transform serves the same purpose but contrains the return type to the type of the iterator's values
-(see note below).
+Transform (older version before Go 1.27) serves the same purpose but constrains the return type to the type of the iterator's values.
 
 ```go
 double := func(n int) int { return n * 2 }
@@ -696,30 +695,16 @@ doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
 
 it.Map2(maps.All(map[int]int{1: 2, 3: 4}), doubleBoth)
 
-// Limited chainable flavour of Map
-itx.FromSlice([]int{0, 1, 2}).Transform(double)
+// chainable flavour of Map
+itx.FromSlice([]int{0, 1, 2}).Map(double)
 
 // As above for iter.Seq2
-itx.FromMap(map[int]int{1: 2}).Transform(doubleBoth)
+itx.FromMap(map[int]int{1: 2}).Map(doubleBoth)
 ```
 
-<!-- prettier-ignore -->
-> [!NOTE]
-> The `itx` package does not contain `Map` due to limitations with Go's type system. Instead a
-> limited from of `Map` called `Transform` is provided where the type returned from operations is
-> the same as a type of the iterator's values.
->
-> A chainable Map will be added should Go's type system ever support new generic type parameters on
-> methods.
-
-<!-- prettier-ignore -->
-> [!TIP]
-> If you wish to chain operations on `Map`, you can do so by first converting it to an
-> `itx.Iterator` like so:
->
-> ```go
-> itx.From(it.Map(slices.Values([]int{1, 2, 3}), double)).Collect()
-> ```
+-<!-- prettier-ignore -->
+> [!WARNING]
+> Transform will be removed in later versions and clients should transition to Map.
 
 ### MapError & TransformError
 
@@ -731,27 +716,13 @@ double := func(n int, err error) int { return n * 2, nil }
 
 it.MapError(slices.Values([]int{1, 2, 3}), double)
 
-// Limited chainable flavour of MapError
-itx.FromSlice([]int{1, 2, 3}).TransformError(double)
+// chainable flavour of MapError
+itx.FromSlice([]int{1, 2, 3}).MapError(double)
 ```
 
-<!-- prettier-ignore -->
-> [!NOTE]
-> The `itx` package does not contain `MapError` due to limitations with Go's type system. Instead a
-> limited from of `MapError` called `TransformError` is provided where the type returned from
-> operations is the same as a type of the iterator's values.
->
-> A chainable MapError will be added should Go's type system ever support new generic type
-> parameters on methods.
-
-<!-- prettier-ignore -->
-> [!TIP]
-> If you wish to chain operations on `MapError`, you can do so by first converting it to an
-> `itx.Iterator2` like so:
->
-> ```go
-> itx.From2(it.MapError(slices.Values([]int{1, 2, 3}), double)).Collect()
-> ```
+-<!-- prettier-ignore -->
+> [!WARNING]
+> TransformError will be removed in later versions and clients should transition to MapError.
 
 ### NaturalNumbers
 
