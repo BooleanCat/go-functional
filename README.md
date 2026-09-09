@@ -683,7 +683,7 @@ for line, err := range it.LinesString(buffer) {
 <h3 id="map">Map & Transform</h3
 
 Map yields values from an iterator that have had the provided function applied to each value.
-Transform (older version before Go 1.27) serves the same purpose but constrains the return type to the type of the iterator's values.
+Transform serves the same purpose but constrains the return type to the type of the iterator's values.
 
 ```go
 double := func(n int) int { return n * 2 }
@@ -695,7 +695,7 @@ doubleBoth := func(n, m int) (int, int) { return n * 2, m * 2 }
 
 it.Map2(maps.All(map[int]int{1: 2, 3: 4}), doubleBoth)
 
-// chainable flavour of Map
+// Chainable
 itx.FromSlice([]int{0, 1, 2}).Map(double)
 
 // As above for iter.Seq2
@@ -716,7 +716,7 @@ double := func(n int, err error) int { return n * 2, nil }
 
 it.MapError(slices.Values([]int{1, 2, 3}), double)
 
-// chainable flavour of MapError
+// Chainable
 itx.FromSlice([]int{1, 2, 3}).MapError(double)
 ```
 
