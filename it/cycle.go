@@ -15,7 +15,7 @@ func Cycle[V any](delegate func(func(V) bool)) iter.Seq[V] {
 		for item := range delegate {
 			items = append(items, item)
 			if !yield(item) {
-				break
+				return
 			}
 		}
 
@@ -48,7 +48,7 @@ func Cycle2[V, W any](delegate func(func(V, W) bool)) iter.Seq2[V, W] {
 				w W
 			}{v, w})
 			if !yield(v, w) {
-				break
+				return
 			}
 		}
 
